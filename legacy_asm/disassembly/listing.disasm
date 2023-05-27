@@ -1,0 +1,2047 @@
+Disassembly Listing for MC-10_Tape_Drive
+Generated From:
+
+---  D:/Documents and Settings/Win2K/MPLABXProjects/MC-10_Tape_Drive.X/main.ASM  ------------------------
+                                                  1:     ;*********************************************************
+                                                  2:     ;*  TAPE DRIVE EMULATOR FOR FPGA IMPLEMENTATION OF THE   *
+                                                  3:     ;*  TRS80 MODEL MC-10 COMPUTER. DESIGNED FOR PIC16F747.  *
+                                                  4:     ;*  ALL CODE WRITTEN BY STEVE L00SER-ROJAS               *
+                                                  5:     ;*  SYSTEM CLOCK SHOULD BE 4 MHz.                        *
+                                                  6:     ;*********************************************************
+                                                  7:     
+                                                  8:         LIST P=PIC16F747
+                                                  9:         #INCLUDE <p16f747.inc>
+                                                  10:        __CONFIG	_CONFIG1, _CP_OFF & _CCP2_RC1 & _DEBUG_OFF & _VBOR_2_7 & _BOREN_0 & _MCLR_ON & _PWRTE_ON & _WDT_OFF & _EXTCLK
+                                                  11:        __CONFIG	_CONFIG2, _BORSEN_0 & _IESO_OFF & _FCMEN_OFF
+                                                  12:        ORG 0x000
+                                                  13:    
+                                                  14:    ;PIN USAGE:
+                                                  15:    ; PORTA,0 TXD (SOFTWARE UART) OUTPUT
+                                                  16:    ; PORTA,1 RXD (SOFTWARE UART) INPUT
+                                                  17:    ; PORTA,2 DISPLAY CE OUTPUT
+                                                  18:    ; PORTA,3 DISPLAY RS OUTPUT
+                                                  19:    ; PORTA,4 UNUSED (OPEN DRAIN) OUTPUT
+                                                  20:    ; PORTA,5 UNUSED OUTPUT
+                                                  21:    ; PORTA,6 CH376S CE OUTPUT
+                                                  22:    ; PORTA,7 CH376S RESET OUTPUT
+                                                  23:    ; PORTB,0 CH376S INTERRUPT INPUT
+                                                  24:    ; PORTB,1 TAPE INPUT
+                                                  25:    ; PORTB,2 TAPE OUTPUT
+                                                  26:    ; PORTB,3 BUTTON 1 INPUT
+                                                  27:    ; PORTB,4 BUTTON 2 INPUT
+                                                  28:    ; PORTB,5 BUTTON 3 INPUT
+                                                  29:    ; PORTB,6 BUTTON 4 INPUT    ICSP CLOCK
+                                                  30:    ; PORTB,7 RAM CE OUTPUT     ICSP DATA
+                                                  31:    ; PORTC,3 SCK (HARDWARE SPI) OUTPUT
+                                                  32:    ; PORTC,4 SDI (HARDWARE SPI) INPUT
+                                                  33:    ; PORTC,5 SDO (HARDWARE SPI) OUTPUT
+                                                  34:    ; PORTC,6 TXD (HARDWARE UART) INPUT (MUST BE CONFIGURED AS INPUT FOR UART MODULE TO WORK. THIS IS ACTUALLY AN OUTPUT)
+                                                  35:    ; PORTC,7 RXD (HARDWARE UART) INPUT
+                                                  36:    ; PORTD,0 UNUSED INPUT
+                                                  37:    ; PORTD,1 UNUSED INPUT
+                                                  38:    ; PORTD,2 UNUSED INPUT
+                                                  39:    ; PORTD,3 UNUSED INPUT
+                                                  40:    ; PORTD,4 TEST OUTPUT
+                                                  41:    ; PORTD,5 UNUSED INPUT
+                                                  42:    ; PORTD,6 DISPLAY CLOCK OUTPUT
+                                                  43:    ; PORTD,7 DISPLAY DATA OUTPUT
+                                                  44:    
+                                                  45:    ;REGISTER USAGE:
+                                                  46:    VARS    udata
+                                                  47:    DREG res 1	    ;USED TO STORE RECEIVED DATA, KB_SEND, KB_READ
+                                                  48:    TEMP1 RES 1	    ;USED FOR TEMPORARY STORAGE
+                                                  49:    TEMP2 RES 1
+                                                  50:    TEMP3 RES 1	    ;TEMPORARY VARIABLE FOR USE IN USER INTERFACE FUNCTIONS
+                                                  51:    TEMP4 RES 1	    ;USED TO STORE THE W REGISTER IN INTERRUPT HANDLERS
+                                                  52:    PULSE_LENGTH RES 1  ;LENGTH OF THE TAPE PULSE
+                                                  53:    RAM_ADDRESS_H RES 1 ;HIGH BYTE OF RAM ADDRESS
+                                                  54:    RAM_ADDRESS_L RES 1 ;LOW BYTE OF RAM ADDRESS
+                                                  55:    SDEL_COUNT RES 1    ;USED FOR SHORTDELAY
+                                                  56:    LDEL_COUNT RES 1    ;USED FOR LONGDELAY_LCD
+                                                  57:    GEN_COUNT RES 1     ;USED FOR FULLDELAY_232, HALFDELAY_232, TXDELAY_232
+                                                  58:    GEN_COUNT2 RES 1    ;SECOND COUNTER FOR NESTED LOOPS
+                                                  59:    GEN_COUNT3 RES 1    ;COUNTER FOR USE IN USER INTERFACE FUNCTIONS
+                                                  60:    GEN_COUNT4 RES 1    ;FOR USE IN USB AND BUILD_WORD SUBROUTINES
+                                                  61:    GEN_COUNT5 RES 1    ;FOR USB FUNCTIONS THAT CALL BUILD_WORD
+                                                  62:    GEN_COUNT6 RES 1    ;FOR USB FUNCTIONS
+                                                  63:    TAPE_NAME RES 8	    ;USED TO STORE THE NAME OF THE PROGRAM WHEN THE NAME BLOCK IS PARSED
+                                                  64:    TAPE_SIZE_HIGH RES 1	;HIGH BYTE OF TAPE SIZE
+                                                  65:    TAPE_SIZE_LOW RES 1	;LOW BYTE OF TAPE SIZE
+                                                  66:    BIT_COUNT RES 1	    ;KEEPS TRACK OF CURRENT BIT FOR TAPE OUT
+                                                  67:    HEX_CHAR_HIGH RES 1 ;FOR BYTE TO HEX CONVERSION
+                                                  68:    HEX_CHAR_LOW RES 1
+                                                  69:    USB_BYTES_SENT_HIGH RES 1
+                                                  70:    USB_BYTES_SENT_LOW RES 1
+                                                  71:    USB_FILE_SIZE_HIGH RES 1
+                                                  72:    USB_FILE_SIZE_LOW RES 1
+                                                  73:    USB_BYTES_READ_HIGH RES 1
+                                                  74:    USB_BYTES_READ_LOW RES 1
+                                                  75:    ;USB_DRIVE_SIZE0 RES 1  ;THE DRIVE SIZE IS GIVEN IN MULTIPLES OF 512, SO THE LSB IS ALWAYS 0
+                                                  76:    USB_DRIVE_SIZE1 RES 1
+                                                  77:    USB_DRIVE_SIZE2 RES 1
+                                                  78:    USB_DRIVE_SIZE3 RES 1   ;MSB OF DRIVE SIZE
+                                                  79:    ;USB_FREE_SPACE0 RES 1  ;FREE SPACE IS GIVEN IN MULTIPLES OF 512, SO THE LSB IS ALWAYS 0
+                                                  80:    USB_FREE_SPACE1 RES 1
+                                                  81:    USB_FREE_SPACE2 RES 1
+                                                  82:    USB_FREE_SPACE3 RES 1   ;MSB OF FREE SPCAE
+                                                  83:    ;USB_LOGICAL_BYTES0 RES 1   ;LOGICAL BYTES ARE SPECIFIED IN MULTIPLES OF 512, SO THE LSB IS ALWAYS 0
+                                                  84:    USB_LOGICAL_BYTES1 RES 1
+                                                  85:    USB_LOGICAL_BYTES2 RES 1
+                                                  86:    USB_LOGICAL_BYTES3 RES 1    ;MSB OF LOGICAL BYTES
+                                                  87:    USB_TARGET_STATUS RES 1 ;WAIT_STATUS WILL WAIT FOR THIS STATUS
+                                                  88:    S_REG_HIGH RES 1    ;HIGH BYTE OF RANDOM WORD
+                                                  89:    S_REG_LOW RES 1 ;LOW BYTE OF RANDOM WORD
+                                                  90:    TIMEOUT_LOW RES 1 ;LSB OF TIMEOUT IN MILLISECONDS
+                                                  91:    TIMEOUT_HIGH RES 1 ;MSB OF TIMEOUT IN MILLISECONDS
+                                                  92:    DELAY_COUNTER RES 1 ;FOR DELAY MILLIS
+                                                  93:    STRING_INDEX RES 1  ;OFFSET IN SELECTED STRING
+                                                  94:    STRING_ID   RES 1   ;SELECTS A STRING
+                                                  95:    FLAG_REG RES 1  ;BITS USED AS FLAGS FOR VARIOUS SUBROUTINES
+                                                  96:    
+                                                  97:    BUFS1 UDATA
+                                                  98:    BUFFER_1 RES D'80'
+                                                  99:    
+                                                  100:   BUFS2 UDATA
+                                                  101:   BUFFER_2 RES D'96'
+                                                  102:   
+                                                  103:   BUFS3 UDATA
+                                                  104:   BUFFER_3 RES D'96'
+                                                  105:   
+                                                  106:   ;FLAG REG USAGE:
+                                                  107:   ;BIT0 SET IF S_REG_LOW CONTAINS VALID DATA
+                                                  108:   ;BIT1 SET IF BUILD_BYTE IS WAITING FOR THE FIRST BYTE OF A TRANSMISSION (PREVENTS RESET IF TRANSMISSION FAILS)
+                                                  109:   ;BIT2 SET IF TIMEOUT OCCURED WHILE WAITING FOR USB STATUS
+                                                  110:   ;BIT3 SET IF FREE SPACE EXCEEDS TAPE SIZE
+                                                  111:   ;BIT4 SET IF FREE SPCAE EXCEEDS 0x20000
+                                                  112:   ;BIT5 UNUSED
+                                                  113:   ;BIT6 UNUSED
+                                                  114:   ;BIT7 UNUSED
+                                                  115:   
+                                                  116:   RST CODE 0X00	;RESET VECTOR
+0000  118A     BCF PCLATH, 0x3                    117:       PAGESEL INITIALIZE
+0001  2805     GOTO 0x5                           118:       GOTO INITIALIZE
+                                                  119:   INT CODE 0X04	;INTERRUPT VECTOR
+                                                  120:       ;MOVWF TEMP4
+                                                  121:       ;BCF INTCON, T0IF
+                                                  122:       ;MOVLW B'00010000'
+                                                  123:       ;XORWF PORTD	;TOGGLE TEST OUTPUT
+                                                  124:       ;MOVF TEMP4, W
+                                                  125:       ;RETFIE
+0004  2A8F     GOTO 0x28F                         126:       GOTO TAPE_INT
+                                                  127:   
+                                                  128:   START CODE 0X05   ;START OF PROGRAM
+                                                  129:   
+                                                  130:   INITIALIZE
+0005  1283     BCF STATUS, 0x5                    131:       BANKSEL PORTA
+0006  1303     BCF STATUS, 0x6
+0007  0185     CLRF PORTA                         132:       CLRF PORTA
+0008  0186     CLRF PORTB                         133:       CLRF PORTB
+0009  0187     CLRF PORTC                         134:       CLRF PORTC
+000A  0188     CLRF PORTD                         135:       CLRF PORTD
+000B  1608     BSF PORTD, 0x4                     136:       BSF PORTD,4
+000C  0985     COMF PORTA, F                      137:       COMF PORTA, F
+000D  0986     COMF PORTB, F                      138:       COMF PORTB, F
+000E  0987     COMF PORTC, F                      139:       COMF PORTC, F
+000F  1683     BSF STATUS, 0x5                    140:       BANKSEL TRISA  ;SWITCH TO BANK 1
+0010  1303     BCF STATUS, 0x6
+0011  3002     MOVLW 0x2                          141:       MOVLW B'00000010'
+0012  0085     MOVWF PORTA                        142:       MOVWF TRISA	;CONFIGURE PORTA
+0013  307B     MOVLW 0x7B                         143:       MOVLW B'01111011'
+0014  0086     MOVWF PORTB                        144:       MOVWF TRISB ;CONFIGURE PORTB
+0015  30D7     MOVLW 0xD7                         145:       MOVLW B'11010111'
+0016  0087     MOVWF PORTC                        146:       MOVWF TRISC ;CONFIGURE PORTC
+0017  302F     MOVLW 0x2F                         147:       MOVLW B'00101111'
+0018  0088     MOVWF PORTD                        148:       MOVWF TRISD	;CONFIGURE PORTD
+0019  3000     MOVLW 0x0                          149:       MOVLW B'00000000'	    ;SMP=0, CKE=0, DA=0, P=0, S=0, RW=0, UA=0, BF=0
+001A  0094     MOVWF SSPCON                       150:       MOVWF SSPSTAT ;CONFIGURE SPI
+001B  300F     MOVLW 0xF                          151:       MOVLW B'00001111'	    ;PCFG=1111
+001C  009F     MOVWF ADCON0                       152:       MOVWF ADCON1 ;DISABLE ANALOG INPUTS
+001D  3026     MOVLW 0x26                         153:       MOVLW B'00100110'	;CSRC=0, TX9=0, TXEN=1, SYNC=0, UNIMPLEMENTED=0, BRGH=1, TRMT=1, TX9D=0
+001E  0098     MOVWF RCSTA                        154:       MOVWF TXSTA ;CONFIGURE UART
+001F  3019     MOVLW 0x19                         155:       MOVLW D'25'
+0020  0099     MOVWF TXREG                        156:       MOVWF SPBRG ;CONFIGURE BAUD RATE
+0021  30D8     MOVLW 0xD8                         157:       MOVLW B'11011000'	;RBPU = 1, INTEDG = 1, T0CS = 0, T0SE = 1, PSA = 1, PS2 = 0, PS1 = 0, PS0 = 0
+0022  0081     MOVWF TMR0                         158:       MOVWF OPTION_REG	;CONFIGURE TIMER
+0023  1283     BCF STATUS, 0x5                    159:       BANKSEL SSPCON
+0024  1303     BCF STATUS, 0x6
+0025  3030     MOVLW 0x30                         160:       MOVLW B'00110000'	;WCOL=0, SSPOV=0, SSPEN=1, CKP=1, SSPM=0000
+0026  0094     MOVWF SSPCON                       161:       MOVWF SSPCON ;CONFIGURE SPI
+0027  3090     MOVLW 0x90                         162:       MOVLW B'10010000'	;SPEN=1, RX9=0,SREN=0, CREN=1, ADDEN=0, FERR=0, OERR=0, RX9D=0
+0028  0098     MOVWF RCSTA                        163:       MOVWF RCSTA ;CONFIGURE UART
+0029  3020     MOVLW 0x20                         164:       MOVLW B'00100000'
+002A  008B     MOVWF INTCON                       165:       MOVWF INTCON    ;ENABLE TIMER 0 INTERRUPT
+002B  01D4     CLRF 0x54                          166:       CLRF FLAG_REG
+002C  01CD     CLRF 0x4D                          167:       CLRF S_REG_HIGH
+002D  01CE     CLRF 0x4E                          168:       CLRF S_REG_LOW
+002E  3064     MOVLW 0x64                         169:       MOVLW D'100'
+002F  00D1     MOVWF 0x51                         170:       MOVWF DELAY_COUNTER
+0030  2300     CALL 0x300                         171:       CALL DELAY_MILLIS   ;100 MS DELAY AT STARTUP
+0031  2110     CALL 0x110                         172:       CALL RAM_CONFIG
+0032  01A6     CLRF 0x26                          173:       CLRF RAM_ADDRESS_H
+0033  01A7     CLRF 0x27                          174:       CLRF RAM_ADDRESS_L
+0034  3055     MOVLW 0x55                         175:       MOVLW H'55'
+0035  00A0     MOVWF 0x20                         176:       MOVWF DREG
+0036  20EC     CALL 0xEC                          177:       CALL RAM_WRITE
+0037  2133     CALL 0x133                         178:       CALL FUNCTIONSET_LCD    ;INITIALIZE DISPLAY
+0038  213D     CALL 0x13D                         179:       CALL DISPLAYON  ;POWER ON THE DISPLAY
+0039  2145     CALL 0x145                         180:       CALL CLEARDISPLAY	;CLEAR THE DISPLAY
+003A  214D     CALL 0x14D                         181:       CALL SETHOME_LCD	;SET CURSOR TO THE START OF LINE 1
+003B  283C     GOTO 0x3C                          182:       GOTO MAIN	;DO THE THING
+                                                  183:   
+                                                  184:   MAIN
+003C  20B8     CALL 0xB8                          185:       CALL UART_READ
+003D  20BD     CALL 0xBD                          186:       CALL UART_SEND
+003E  0820     MOVF 0x20, W                       187:       MOVF DREG, W
+003F  00A1     MOVWF 0x21                         188:       MOVWF TEMP1	;SAVE DATA
+0040  3AF1     XORLW 0xF1                         189:       XORLW H'F1'	;IS F1?
+0041  1903     BTFSC STATUS, 0x2                  190:       BTFSC STATUS, Z ;CHECK ZERO FLAG
+0042  286C     GOTO 0x6C                          191:       GOTO LISTEN	    ;LISTEN TO TAPE AND PUT DATA IN MEMORY, THEN SEND DATA TO UART
+0043  0821     MOVF 0x21, W                       192:       MOVF TEMP1, W
+0044  3AF2     XORLW 0xF2                         193:       XORLW H'F2'	;IS F2?
+0045  1903     BTFSC STATUS, 0x2                  194:       BTFSC STATUS, Z ;CHECK ZERO FLAG
+0046  2882     GOTO 0x82                          195:       GOTO SEND_TAPE  ;GENERATE TAPE AUDIO FROM DATA IN MEMORY
+0047  0821     MOVF 0x21, W                       196:       MOVF TEMP1, W
+0048  3AF3     XORLW 0xF3                         197:       XORLW H'F3'	;IS F3?
+0049  1903     BTFSC STATUS, 0x2                  198:       BTFSC STATUS, Z ;CHECK ZERO FLAG
+004A  2884     GOTO 0x84                          199:       GOTO CMD_SETHOME
+004B  0821     MOVF 0x21, W                       200:       MOVF TEMP1, W
+004C  3AF4     XORLW 0xF4                         201:       XORLW H'F4'	;IS F4?
+004D  1903     BTFSC STATUS, 0x2                  202:       BTFSC STATUS, Z
+004E  2886     GOTO 0x86                          203:       GOTO CMD_LINE2
+004F  0821     MOVF 0x21, W                       204:       MOVF TEMP1, W
+0050  3AF5     XORLW 0xF5                         205:       XORLW H'F5'
+0051  1903     BTFSC STATUS, 0x2                  206:       BTFSC STATUS, Z
+0052  2888     GOTO 0x88                          207:       GOTO CMD_LCD_CLEAR1
+0053  0821     MOVF 0x21, W                       208:       MOVF TEMP1, W
+0054  3AF6     XORLW 0xF6                         209:       XORLW H'F6'
+0055  1903     BTFSC STATUS, 0x2                  210:       BTFSC STATUS, Z
+0056  288A     GOTO 0x8A                          211:       GOTO CMD_LCD_CLEAR2
+0057  0821     MOVF 0x21, W                       212:       MOVF TEMP1, W
+0058  3AF7     XORLW 0xF7                         213:       XORLW H'F7'
+0059  1903     BTFSC STATUS, 0x2                  214:       BTFSC STATUS, Z
+005A  288C     GOTO 0x8C                          215:       GOTO CMD_CLEARDISPLAY
+005B  0821     MOVF 0x21, W                       216:       MOVF TEMP1, W
+005C  3AF8     XORLW 0xF8                         217:       XORLW H'F8'
+005D  1903     BTFSC STATUS, 0x2                  218:       BTFSC STATUS, Z
+005E  288E     GOTO 0x8E                          219:       GOTO CMD_PRINT_NAME
+005F  0821     MOVF 0x21, W                       220:       MOVF TEMP1, W
+0060  3AF9     XORLW 0xF9                         221:       XORLW H'F9'
+0061  1903     BTFSC STATUS, 0x2                  222:       BTFSC STATUS, Z
+0062  2890     GOTO 0x90                          223:       GOTO CMD_MEM_DUMP
+0063  0821     MOVF 0x21, W                       224:       MOVF TEMP1, W
+0064  3AFA     XORLW 0xFA                         225:       XORLW H'FA'
+0065  1903     BTFSC STATUS, 0x2                  226:       BTFSC STATUS, Z
+0066  2892     GOTO 0x92                          227:       GOTO CMD_PRINT_HOME
+0067  0821     MOVF 0x21, W                       228:       MOVF TEMP1, W
+0068  3AFB     XORLW 0xFB                         229:       XORLW H'FB'	;IS COMMAND 0xFB?
+0069  1903     BTFSC STATUS, 0x2                  230:       BTFSC STATUS, Z
+006A  2895     GOTO 0x95                          231:       GOTO CMD_MEM_CLEAR
+006B  283C     GOTO 0x3C                          232:       GOTO MAIN
+                                                  233:   LISTEN
+006C  21B8     CALL 0x1B8                         234:       CALL TAPE_IN
+006D  30FF     MOVLW 0xFF                         235:       MOVLW H'FF'
+006E  00A6     MOVWF 0x26                         236:       MOVWF RAM_ADDRESS_H
+006F  00A7     MOVWF 0x27                         237:       MOVWF RAM_ADDRESS_L
+0070  03B9     DECF 0x39, F                       238:       DECF TAPE_SIZE_LOW, F
+0071  0F39     INCFSZ 0x39, W                     239:       INCFSZ TAPE_SIZE_LOW, W
+0072  2874     GOTO 0x74                          240:       GOTO LISTEN2
+0073  03B8     DECF 0x38, F                       241:       DECF TAPE_SIZE_HIGH, F
+                                                  242:   LISTEN2
+0074  20C2     CALL 0xC2                          243:       CALL RAM_READ_AUTO
+0075  20BD     CALL 0xBD                          244:       CALL UART_SEND
+0076  0826     MOVF 0x26, W                       245:       MOVF RAM_ADDRESS_H, W
+0077  0638     XORWF 0x38, W                      246:       XORWF TAPE_SIZE_HIGH, W
+0078  1D03     BTFSS STATUS, 0x2                  247:       BTFSS STATUS, Z
+0079  2874     GOTO 0x74                          248:       GOTO LISTEN2
+007A  0827     MOVF 0x27, W                       249:       MOVF RAM_ADDRESS_L, W
+007B  0639     XORWF 0x39, W                      250:       XORWF TAPE_SIZE_LOW, W
+007C  1D03     BTFSS STATUS, 0x2                  251:       BTFSS STATUS, Z
+007D  2874     GOTO 0x74                          252:       GOTO LISTEN2
+007E  0FB9     INCFSZ 0x39, F                     253:       INCFSZ TAPE_SIZE_LOW, F    ;INCREMENT LOW ADDRESS
+007F  03B8     DECF 0x38, F                       254:       DECF TAPE_SIZE_HIGH, F
+0080  0AB8     INCF 0x38, F                       255:       INCF TAPE_SIZE_HIGH, F	;IF LOW ADDRESS IS ZERO INCREMENT THE HIGH ADDRESS TOO
+0081  283C     GOTO 0x3C                          256:       GOTO MAIN
+                                                  257:   SEND_TAPE
+0082  2251     CALL 0x251                         258:       CALL TAPE_OUT
+0083  283C     GOTO 0x3C                          259:       GOTO MAIN
+                                                  260:   CMD_SETHOME
+0084  214D     CALL 0x14D                         261:       CALL SETHOME_LCD
+0085  283C     GOTO 0x3C                          262:       GOTO MAIN
+                                                  263:   CMD_LINE2
+0086  2155     CALL 0x155                         264:       CALL LINE2_LCD
+0087  283C     GOTO 0x3C                          265:       GOTO MAIN
+                                                  266:   CMD_LCD_CLEAR1
+0088  2162     CALL 0x162                         267:       CALL LCD_CLEAR1
+0089  283C     GOTO 0x3C                          268:       GOTO MAIN
+                                                  269:   CMD_LCD_CLEAR2
+008A  2170     CALL 0x170                         270:       CALL LCD_CLEAR2
+008B  283C     GOTO 0x3C                          271:       GOTO MAIN
+                                                  272:   CMD_CLEARDISPLAY
+008C  2145     CALL 0x145                         273:       CALL CLEARDISPLAY
+008D  283C     GOTO 0x3C                          274:       GOTO MAIN
+                                                  275:   CMD_PRINT_NAME
+008E  2189     CALL 0x189                         276:       CALL PRINT_NAME
+008F  283C     GOTO 0x3C                          277:       GOTO MAIN
+                                                  278:   CMD_MEM_DUMP
+0090  20A9     CALL 0xA9                          279:       CALL MEM_DUMP
+0091  283C     GOTO 0x3C                          280:       GOTO MAIN
+                                                  281:   CMD_PRINT_HOME
+0092  01D3     CLRF 0x53                          282:       CLRF STRING_ID
+0093  2199     CALL 0x199                         283:       CALL PRINT_STRING_LCD
+0094  283C     GOTO 0x3C                          284:       GOTO MAIN
+                                                  285:   CMD_MEM_CLEAR
+0095  2097     CALL 0x97                          286:       CALL MEM_CLEAR
+0096  283C     GOTO 0x3C                          287:       GOTO MAIN
+                                                  288:   
+                                                  289:   MEM_CLEAR
+0097  01A7     CLRF 0x27                          290:       CLRF RAM_ADDRESS_L
+0098  01A6     CLRF 0x26                          291:       CLRF RAM_ADDRESS_H
+0099  09A7     COMF 0x27, F                       292:       COMF RAM_ADDRESS_L, F
+009A  09A6     COMF 0x26, F                       293:       COMF RAM_ADDRESS_H, F
+009B  01A0     CLRF 0x20                          294:       CLRF DREG
+009C  09A0     COMF 0x20, F                       295:       COMF DREG, F
+                                                  296:   MEM_CLEAR_LOOP
+009D  1608     BSF PORTD, 0x4                     297:       BSF PORTD, 4
+009E  20E9     CALL 0xE9                          298:       CALL RAM_WRITE_AUTO
+009F  1208     BCF PORTD, 0x4                     299:       BCF PORTD, 4    ;PORTD 4 IS A DEBUG OUTPUT TO MEASURE THE DURATION OF RAM_WRITE
+00A0  0827     MOVF 0x27, W                       300:       MOVF RAM_ADDRESS_L, W
+00A1  3AFF     XORLW 0xFF                         301:       XORLW H'FF'
+00A2  1D03     BTFSS STATUS, 0x2                  302:       BTFSS STATUS, Z
+00A3  289D     GOTO 0x9D                          303:       GOTO MEM_CLEAR_LOOP
+00A4  0826     MOVF 0x26, W                       304:       MOVF RAM_ADDRESS_H, W
+00A5  3AFF     XORLW 0xFF                         305:       XORLW H'FF'
+00A6  1D03     BTFSS STATUS, 0x2                  306:       BTFSS STATUS, Z
+00A7  289D     GOTO 0x9D                          307:       GOTO MEM_CLEAR_LOOP
+00A8  0008     RETURN                             308:       RETURN
+                                                  309:   
+                                                  310:   MEM_DUMP
+00A9  01A7     CLRF 0x27                          311:       CLRF RAM_ADDRESS_L
+00AA  01A6     CLRF 0x26                          312:       CLRF RAM_ADDRESS_H
+00AB  09A7     COMF 0x27, F                       313:       COMF RAM_ADDRESS_L, F
+00AC  09A6     COMF 0x26, F                       314:       COMF RAM_ADDRESS_H, F
+                                                  315:   MEM_DUMP_LOOP
+00AD  20C2     CALL 0xC2                          316:       CALL RAM_READ_AUTO
+00AE  20BD     CALL 0xBD                          317:       CALL UART_SEND
+00AF  0827     MOVF 0x27, W                       318:       MOVF RAM_ADDRESS_L, W
+00B0  3AFF     XORLW 0xFF                         319:       XORLW H'FF'
+00B1  1D03     BTFSS STATUS, 0x2                  320:       BTFSS STATUS, Z
+00B2  28AD     GOTO 0xAD                          321:       GOTO MEM_DUMP_LOOP
+00B3  0826     MOVF 0x26, W                       322:       MOVF RAM_ADDRESS_H, W
+00B4  3AFF     XORLW 0xFF                         323:       XORLW H'FF'
+00B5  1D03     BTFSS STATUS, 0x2                  324:       BTFSS STATUS, Z
+00B6  28AD     GOTO 0xAD                          325:       GOTO MEM_DUMP_LOOP
+00B7  0008     RETURN                             326:       RETURN
+                                                  327:   
+                                                  328:   UART_READ
+00B8  1E8C     BTFSS PIR1, 0x5                    329:       BTFSS PIR1,RCIF    ;CHECK IF UART RECEIVE BUFFER IS FULL
+00B9  28B8     GOTO 0xB8                          330:       GOTO UART_READ  ;IF NOT WAIT UNTIL ITS FULL
+00BA  081A     MOVF RCREG, W                      331:       MOVF RCREG, W   ;COPY DATA TO W
+00BB  00A0     MOVWF 0x20                         332:       MOVWF DREG	    ;COPY DATA TO DREG
+00BC  0008     RETURN                             333:       RETURN
+                                                  334:   
+                                                  335:   UART_SEND
+00BD  1E0C     BTFSS PIR1, 0x4                    336:       BTFSS PIR1,TXIF    ;CHECK IF UART TRANSMIT BUFFER IS EMPTY
+00BE  28BD     GOTO 0xBD                          337:       GOTO UART_SEND  ;IF NOT WAIT UNTIL IT IS
+00BF  0820     MOVF 0x20, W                       338:       MOVF DREG, W    ;COPY DATA TO W
+00C0  0099     MOVWF TXREG                        339:       MOVWF TXREG	    ;COPY DATA TO TXREG
+00C1  0008     RETURN                             340:       RETURN
+                                                  341:   
+                                                  342:   RAM_READ_AUTO
+00C2  0FA7     INCFSZ 0x27, F                     343:       INCFSZ RAM_ADDRESS_L, F    ;INCREMENT LOW ADDRESS
+00C3  03A6     DECF 0x26, F                       344:       DECF RAM_ADDRESS_H, F
+00C4  0AA6     INCF 0x26, F                       345:       INCF RAM_ADDRESS_H, F	;IF LOW ADDRESS IS ZERO INCREMENT THE HIGH ADDRESS TOO
+                                                  346:   RAM_READ
+00C5  1386     BCF PORTB, 0x7                     347:       BCF PORTB, 7    ;CHIP ENABLE
+00C6  3003     MOVLW 0x3                          348:       MOVLW H'03'	;PUT WRITE COMMAND IN W
+00C7  0093     MOVWF SSPBUF                       349:       MOVWF SSPBUF    ;SEND COMMAND
+00C8  0826     MOVF 0x26, W                       350:       MOVF RAM_ADDRESS_H, W   ;COPY ADDRESS TO W
+00C9  1683     BSF STATUS, 0x5                    351:       BANKSEL SSPSTAT
+00CA  1303     BCF STATUS, 0x6
+                                                  352:   RAM_WAIT_AH
+00CB  1C14     BTFSS SSPCON, 0x0                  353:       BTFSS SSPSTAT, BF	;IS THE TRANSMISSION READY
+00CC  28CB     GOTO 0xCB                          354:       GOTO RAM_WAIT_AH	;IF NOT WAIT UNTIL IT IS
+00CD  1283     BCF STATUS, 0x5                    355:       BANKSEL SSPBUF
+00CE  1303     BCF STATUS, 0x6
+00CF  0093     MOVWF SSPBUF                       356:       MOVWF SSPBUF    ;SEND ADDRESS HIGH BYTE
+00D0  0827     MOVF 0x27, W                       357:       MOVF RAM_ADDRESS_L, W   ;COPY ADDRESS TO W
+00D1  1683     BSF STATUS, 0x5                    358:       BANKSEL SSPSTAT
+00D2  1303     BCF STATUS, 0x6
+                                                  359:   RAM_WAIT_AL
+00D3  1C14     BTFSS SSPCON, 0x0                  360:       BTFSS SSPSTAT, BF
+00D4  28D3     GOTO 0xD3                          361:       GOTO RAM_WAIT_AL
+00D5  1283     BCF STATUS, 0x5                    362:       BANKSEL SSPBUF
+00D6  1303     BCF STATUS, 0x6
+00D7  0093     MOVWF SSPBUF                       363:       MOVWF SSPBUF    ;SEND ADDRESS LOW BYTE
+00D8  1683     BSF STATUS, 0x5                    364:       BANKSEL SSPSTAT
+00D9  1303     BCF STATUS, 0x6
+                                                  365:   RAM_WAIT_D
+00DA  1C14     BTFSS SSPCON, 0x0                  366:       BTFSS SSPSTAT, BF
+00DB  28DA     GOTO 0xDA                          367:       GOTO RAM_WAIT_D
+00DC  1283     BCF STATUS, 0x5                    368:       BANKSEL SSPBUF
+00DD  1303     BCF STATUS, 0x6
+00DE  0193     CLRF SSPBUF                        369:       CLRF SSPBUF
+00DF  1683     BSF STATUS, 0x5                    370:       BANKSEL SSPSTAT
+00E0  1303     BCF STATUS, 0x6
+                                                  371:   RAM_WAIT_R
+00E1  1C14     BTFSS SSPCON, 0x0                  372:       BTFSS SSPSTAT, BF
+00E2  28E1     GOTO 0xE1                          373:       GOTO RAM_WAIT_R
+00E3  1283     BCF STATUS, 0x5                    374:       BANKSEL SSPBUF
+00E4  1303     BCF STATUS, 0x6
+00E5  0813     MOVF SSPBUF, W                     375:       MOVF SSPBUF, W  ;COPY DATA TO W
+00E6  00A0     MOVWF 0x20                         376:       MOVWF DREG	;PUT DATA IN DREG
+00E7  1786     BSF PORTB, 0x7                     377:       BSF PORTB, 7
+00E8  0008     RETURN                             378:       RETURN
+                                                  379:   
+                                                  380:   RAM_WRITE_AUTO
+00E9  0FA7     INCFSZ 0x27, F                     381:       INCFSZ RAM_ADDRESS_L, F    ;INCREMENT LOW ADDRESS
+00EA  03A6     DECF 0x26, F                       382:       DECF RAM_ADDRESS_H, F
+00EB  0AA6     INCF 0x26, F                       383:       INCF RAM_ADDRESS_H, F	;IF LOW ADDRESS IS ZERO INCREMENT THE HIGH ADDRESS TOO
+                                                  384:   RAM_WRITE
+00EC  1386     BCF PORTB, 0x7                     385:       BCF PORTB, 7    ;CHIP ENABLE
+00ED  3002     MOVLW 0x2                          386:       MOVLW H'02'	;PUT WRITE COMMAND IN W
+00EE  0093     MOVWF SSPBUF                       387:       MOVWF SSPBUF    ;SEND COMMAND
+00EF  0826     MOVF 0x26, W                       388:       MOVF RAM_ADDRESS_H, W   ;COPY ADDRESS TO W
+00F0  1683     BSF STATUS, 0x5                    389:       BANKSEL SSPSTAT
+00F1  1303     BCF STATUS, 0x6
+                                                  390:   RAM_WRITE_AH
+00F2  1C14     BTFSS SSPCON, 0x0                  391:       BTFSS SSPSTAT, BF	;IS THE TRANSMISSION READY
+00F3  28F2     GOTO 0xF2                          392:       GOTO RAM_WRITE_AH	;IF NOT WAIT UNTIL IT IS
+00F4  1283     BCF STATUS, 0x5                    393:       BANKSEL SSPBUF
+00F5  1303     BCF STATUS, 0x6
+00F6  0093     MOVWF SSPBUF                       394:       MOVWF SSPBUF    ;SEND ADDRESS HIGH BYTE
+00F7  0827     MOVF 0x27, W                       395:       MOVF RAM_ADDRESS_L, W   ;COPY ADDRESS TO W
+00F8  1683     BSF STATUS, 0x5                    396:       BANKSEL SSPSTAT
+00F9  1303     BCF STATUS, 0x6
+                                                  397:   RAM_WRITE_AL
+00FA  1C14     BTFSS SSPCON, 0x0                  398:       BTFSS SSPSTAT, BF
+00FB  28FA     GOTO 0xFA                          399:       GOTO RAM_WRITE_AL
+00FC  1283     BCF STATUS, 0x5                    400:       BANKSEL SSPBUF
+00FD  1303     BCF STATUS, 0x6
+00FE  0093     MOVWF SSPBUF                       401:       MOVWF SSPBUF    ;SEND ADDRESS LOW BYTE
+00FF  0820     MOVF 0x20, W                       402:       MOVF DREG, W    ;COPY DATA TO W
+0100  1683     BSF STATUS, 0x5                    403:       BANKSEL SSPSTAT
+0101  1303     BCF STATUS, 0x6
+                                                  404:   RAM_WRITE_D
+0102  1C14     BTFSS SSPCON, 0x0                  405:       BTFSS SSPSTAT, BF
+0103  2902     GOTO 0x102                         406:       GOTO RAM_WRITE_D
+0104  1283     BCF STATUS, 0x5                    407:       BANKSEL SSPBUF
+0105  1303     BCF STATUS, 0x6
+0106  0093     MOVWF SSPBUF                       408:       MOVWF SSPBUF    ;SEND DATA
+0107  1683     BSF STATUS, 0x5                    409:       BANKSEL SSPSTAT
+0108  1303     BCF STATUS, 0x6
+                                                  410:   RAM_WRITE_R
+0109  1C14     BTFSS SSPCON, 0x0                  411:       BTFSS SSPSTAT, BF
+010A  2909     GOTO 0x109                         412:       GOTO RAM_WRITE_R
+010B  1283     BCF STATUS, 0x5                    413:       BANKSEL SSPBUF
+010C  1303     BCF STATUS, 0x6
+010D  0813     MOVF SSPBUF, W                     414:       MOVF SSPBUF, W  ;COPY DUMMY DATA TO W
+010E  1786     BSF PORTB, 0x7                     415:       BSF PORTB, 7
+010F  0008     RETURN                             416:       RETURN
+                                                  417:   
+                                                  418:   RAM_CONFIG
+0110  1386     BCF PORTB, 0x7                     419:       BCF PORTB, 7    ;CHIP ENABLE
+0111  3001     MOVLW 0x1                          420:       MOVLW H'01'	;PUT WRITE COMMAND IN W
+0112  0093     MOVWF SSPBUF                       421:       MOVWF SSPBUF    ;SEND COMMAND
+0113  3000     MOVLW 0x0                          422:       MOVLW H'00'	;CONFIGURE FOR BYTE MODE
+0114  1683     BSF STATUS, 0x5                    423:       BANKSEL SSPSTAT
+0115  1303     BCF STATUS, 0x6
+                                                  424:   RAM_CONFIG_C
+0116  1C14     BTFSS SSPCON, 0x0                  425:       BTFSS SSPSTAT, BF	;IS THE TRANSMISSION READY
+0117  2916     GOTO 0x116                         426:       GOTO RAM_CONFIG_C	;IF NOT WAIT UNTIL IT IS
+0118  1283     BCF STATUS, 0x5                    427:       BANKSEL SSPBUF
+0119  1303     BCF STATUS, 0x6
+011A  0093     MOVWF SSPBUF                       428:       MOVWF SSPBUF    ;SEND CONFIG DATA
+011B  1683     BSF STATUS, 0x5                    429:       BANKSEL SSPSTAT
+011C  1303     BCF STATUS, 0x6
+                                                  430:   RAM_CONFIG_D
+011D  1C14     BTFSS SSPCON, 0x0                  431:       BTFSS SSPSTAT, BF
+011E  291D     GOTO 0x11D                         432:       GOTO RAM_CONFIG_D
+011F  1283     BCF STATUS, 0x5                    433:       BANKSEL SSPBUF
+0120  1303     BCF STATUS, 0x6
+0121  0813     MOVF SSPBUF, W                     434:       MOVF SSPBUF, W  ;COPY DUMMY DATA TO W
+0122  1786     BSF PORTB, 0x7                     435:       BSF PORTB, 7
+0123  0008     RETURN                             436:       RETURN
+                                                  437:   
+                                                  438:   LCD_SEND    ;SENDS DATA OR COMMAND TO LCD SHIFT REGISTER
+0124  00A3     MOVWF 0x23                         439:       MOVWF TEMP3	;COPY DATA TO TEMP VARIABLE
+0125  3008     MOVLW 0x8                          440:       MOVLW H'08'
+0126  00AC     MOVWF 0x2C                         441:       MOVWF GEN_COUNT3	;COUNT 8 BITS
+                                                  442:   LCD_SEND_LOOP
+0127  1BA3     BTFSC 0x23, 0x7                    443:       BTFSC TEMP3,7
+0128  1788     BSF PORTD, 0x7                     444:       BSF PORTD,7
+0129  1FA3     BTFSS 0x23, 0x7                    445:       BTFSS TEMP3,7
+012A  1388     BCF PORTD, 0x7                     446:       BCF PORTD,7
+012B  0DA3     RLF 0x23, F                        447:       RLF TEMP3,F
+012C  1708     BSF PORTD, 0x6                     448:       BSF PORTD,6
+012D  0000     NOP                                449:       NOP
+012E  0000     NOP                                450:       NOP
+012F  1308     BCF PORTD, 0x6                     451:       BCF PORTD,6
+0130  0BAC     DECFSZ 0x2C, F                     452:       DECFSZ GEN_COUNT3,F
+0131  2927     GOTO 0x127                         453:       GOTO LCD_SEND_LOOP
+0132  0008     RETURN                             454:       RETURN
+                                                  455:   
+                                                  456:   FUNCTIONSET_LCD
+0133  1105     BCF PORTA, 0x2                     457:   	BCF PORTA,2	;MAKE SURE THAT E STARTS LOW
+0134  1308     BCF PORTD, 0x6                     458:           BCF PORTD,6     ;MAKE SURE DISPLAY CLOCK STARTS LOW
+0135  1185     BCF PORTA, 0x3                     459:           BCF PORTA,3	;RS LINE TO 0 (PORT A BIT 3)
+0136  3038     MOVLW 0x38                         460:           MOVLW b'00111000'	;FUNCTION SET COMMAND
+0137  2124     CALL 0x124                         461:           CALL LCD_SEND
+0138  217E     CALL 0x17E                         462:           CALL PULSE_E    ;PULSE E LINE HIGH (PORT A BIT 2)
+0139  300A     MOVLW 0xA                          463:           MOVLW D'10'
+013A  00D1     MOVWF 0x51                         464:           MOVWF DELAY_COUNTER
+013B  2300     CALL 0x300                         465:           CALL DELAY_MILLIS
+013C  0008     RETURN                             466:   	RETURN
+                                                  467:   
+                                                  468:   DISPLAYON
+013D  1185     BCF PORTA, 0x3                     469:           BCF PORTA,3   ;RS LINE TO 0 (PORT A BIT 3)
+013E  300F     MOVLW 0xF                          470:           MOVLW 0FH  ;DISPLAY ON/OFF AND CURSOR COMMAND
+013F  2124     CALL 0x124                         471:           CALL LCD_SEND
+0140  217E     CALL 0x17E                         472:           CALL PULSE_E
+0141  300A     MOVLW 0xA                          473:           MOVLW D'10'
+0142  00D1     MOVWF 0x51                         474:           MOVWF DELAY_COUNTER
+0143  2300     CALL 0x300                         475:           CALL DELAY_MILLIS
+0144  0008     RETURN                             476:   	RETURN
+                                                  477:   
+                                                  478:   CLEARDISPLAY
+0145  1185     BCF PORTA, 0x3                     479:           BCF PORTA,3	;RS LINE LOW
+0146  3001     MOVLW 0x1                          480:           MOVLW 01H	;CLEAR DISPLAY COMMAND
+0147  2124     CALL 0x124                         481:           CALL LCD_SEND	;WRITE TO DATA LINES
+0148  217E     CALL 0x17E                         482:           CALL PULSE_E
+0149  300A     MOVLW 0xA                          483:           MOVLW D'10'
+014A  00D1     MOVWF 0x51                         484:           MOVWF DELAY_COUNTER
+014B  2300     CALL 0x300                         485:           CALL DELAY_MILLIS
+014C  0008     RETURN                             486:           RETURN
+                                                  487:   
+                                                  488:   SETHOME_LCD
+014D  1185     BCF PORTA, 0x3                     489:           BCF PORTA,3 ;RS LINE LOW
+014E  3003     MOVLW 0x3                          490:           MOVLW 03H   ;DISPLAY AND CURSOR HOME COMMAND
+014F  2124     CALL 0x124                         491:           CALL LCD_SEND ;WRITE TO DATA LINES
+0150  217E     CALL 0x17E                         492:           CALL PULSE_E
+0151  3005     MOVLW 0x5                          493:           MOVLW D'5'
+0152  00D1     MOVWF 0x51                         494:           MOVWF DELAY_COUNTER
+0153  2300     CALL 0x300                         495:           CALL DELAY_MILLIS
+0154  0008     RETURN                             496:           RETURN
+                                                  497:   
+                                                  498:   LINE2_LCD
+0155  214D     CALL 0x14D                         499:   	CALL SETHOME_LCD
+0156  3028     MOVLW 0x28                         500:           MOVLW 28H   ;SET COUNTER TO 40
+0157  00AB     MOVWF 0x2B                         501:           MOVWF GEN_COUNT2
+0158  3010     MOVLW 0x10                         502:           MOVLW b'00010000'   ;CURSOR LEFT COMMAND
+0159  2124     CALL 0x124                         503:           CALL LCD_SEND ;WRITE COMMAND TO DATA LINES
+                                                  504:   CLLOOP40
+015A  1185     BCF PORTA, 0x3                     505:   	BCF PORTA,3	;RS LINE LOW (COMMAND MODE)
+015B  217E     CALL 0x17E                         506:   	CALL PULSE_E
+015C  3002     MOVLW 0x2                          507:           MOVLW D'2'
+015D  00D1     MOVWF 0x51                         508:           MOVWF DELAY_COUNTER
+015E  2300     CALL 0x300                         509:           CALL DELAY_MILLIS
+015F  0BAB     DECFSZ 0x2B, F                     510:           DECFSZ GEN_COUNT2, F
+0160  295A     GOTO 0x15A                         511:           GOTO CLLOOP40
+0161  0008     RETURN                             512:           RETURN
+                                                  513:   
+                                                  514:   LCD_CLEAR1
+0162  214D     CALL 0x14D                         515:   	CALL SETHOME_LCD
+0163  3020     MOVLW 0x20                         516:   	MOVLW H'20' ;SPACE CHAR
+0164  1585     BSF PORTA, 0x3                     517:   	BSF PORTA,3 ;RS LINE HIGH FOR DATA
+0165  2124     CALL 0x124                         518:   	CALL LCD_SEND	;PUT CHAR ON THE DATA LINES
+0166  3014     MOVLW 0x14                         519:   	MOVLW D'20' ;COUNT 20 SPACE CHARS
+0167  00AB     MOVWF 0x2B                         520:   	MOVWF GEN_COUNT2
+                                                  521:   LCD_CLEAR12
+0168  217E     CALL 0x17E                         522:   	CALL PULSE_E
+0169  3002     MOVLW 0x2                          523:           MOVLW D'2'
+016A  00D1     MOVWF 0x51                         524:           MOVWF DELAY_COUNTER
+016B  2300     CALL 0x300                         525:           CALL DELAY_MILLIS
+016C  0BAB     DECFSZ 0x2B, F                     526:   	DECFSZ GEN_COUNT2, F
+016D  2968     GOTO 0x168                         527:   	GOTO LCD_CLEAR12
+016E  214D     CALL 0x14D                         528:   	CALL SETHOME_LCD
+016F  0008     RETURN                             529:   	RETURN
+                                                  530:   
+                                                  531:   LCD_CLEAR2
+0170  2155     CALL 0x155                         532:   	CALL LINE2_LCD
+0171  3020     MOVLW 0x20                         533:   	MOVLW H'20' ;SPACE CHAR
+0172  1585     BSF PORTA, 0x3                     534:   	BSF PORTA,3 ;RS LINE HIGH FOR DATA
+0173  2124     CALL 0x124                         535:   	CALL LCD_SEND	;PUT CHAR ON THE DATA LINES
+0174  3014     MOVLW 0x14                         536:   	MOVLW D'20' ;COUNT 20 SPACE CHARS
+0175  00AB     MOVWF 0x2B                         537:   	MOVWF GEN_COUNT2
+                                                  538:   LCD_CLEAR22
+0176  217E     CALL 0x17E                         539:   	CALL PULSE_E
+0177  3002     MOVLW 0x2                          540:           MOVLW D'2'
+0178  00D1     MOVWF 0x51                         541:           MOVWF DELAY_COUNTER
+0179  2300     CALL 0x300                         542:           CALL DELAY_MILLIS
+017A  0BAB     DECFSZ 0x2B, F                     543:   	DECFSZ GEN_COUNT2, F
+017B  2976     GOTO 0x176                         544:   	GOTO LCD_CLEAR22
+017C  2155     CALL 0x155                         545:   	CALL LINE2_LCD
+017D  0008     RETURN                             546:   	RETURN
+                                                  547:   
+                                                  548:   PULSE_E
+017E  1505     BSF PORTA, 0x2                     549:   	BSF PORTA,2   ;SET E LINE HIGH
+017F  0000     NOP                                550:           NOP
+0180  0000     NOP                                551:           NOP
+0181  0000     NOP                                552:           NOP
+0182  0000     NOP                                553:           NOP
+0183  0000     NOP                                554:           NOP ;MODIFIED FOR 4MHZ CLOCK
+0184  0000     NOP                                555:           NOP
+0185  0000     NOP                                556:           NOP
+0186  0000     NOP                                557:           NOP
+0187  1105     BCF PORTA, 0x2                     558:           BCF PORTA,2   ;SET E LINE LOW
+0188  0008     RETURN                             559:           RETURN
+                                                  560:   
+                                                  561:   PRINT_NAME
+0189  1383     BCF STATUS, 0x7                    562:           BCF STATUS, IRP ;SET BANK 0 AND 1
+018A  30B0     MOVLW 0xB0                         563:   	MOVLW TAPE_NAME
+018B  0084     MOVWF FSR                          564:   	MOVWF FSR
+018C  3008     MOVLW 0x8                          565:   	MOVLW D'8'  ;COUNT 8 CHARS
+018D  00AB     MOVWF 0x2B                         566:   	MOVWF GEN_COUNT2
+018E  1585     BSF PORTA, 0x3                     567:   	BSF PORTA,3 ;RS LINE HIGH FOR DATA
+                                                  568:   PN_LOOP
+018F  0800     MOVF INDF, W                       569:   	MOVF INDF, W
+0190  2124     CALL 0x124                         570:   	CALL LCD_SEND
+0191  217E     CALL 0x17E                         571:   	CALL PULSE_E
+0192  3002     MOVLW 0x2                          572:           MOVLW D'2'
+0193  00D1     MOVWF 0x51                         573:           MOVWF DELAY_COUNTER
+0194  2300     CALL 0x300                         574:           CALL DELAY_MILLIS
+0195  0A84     INCF FSR, F                        575:   	INCF FSR, F
+0196  0BAB     DECFSZ 0x2B, F                     576:   	DECFSZ GEN_COUNT2, F
+0197  298F     GOTO 0x18F                         577:   	GOTO PN_LOOP
+0198  0008     RETURN                             578:   	RETURN
+                                                  579:   
+                                                  580:   PRINT_STRING_LCD
+0199  01D2     CLRF 0x52                          581:       CLRF STRING_INDEX ;START WITH ZERO OFFSET
+019A  1585     BSF PORTA, 0x3                     582:       BSF PORTA,3 ;RS LINE HIGH FOR DATA
+                                                  583:   PSL2
+019B  3008     MOVLW 0x8                          584:       MOVLW HIGH HOME_STRING  ;HOME STRING IS ON A DIFFERENT PAGE
+019C  008A     MOVWF PCLATH                       585:       MOVWF PCLATH
+019D  2000     CALL 0x0                           586:       CALL STRING_TABLE
+019E  00A1     MOVWF 0x21                         587:       MOVWF TEMP1 ;PUT THE RETURN VALUE IN TEMP TO SET CONDITION CODES
+019F  3000     MOVLW 0x0                          588:       MOVLW HIGH MAIN
+01A0  008A     MOVWF PCLATH                       589:       MOVWF PCLATH    ;SET PCLATH BACK TO PAGE 0
+01A1  0821     MOVF 0x21, W                       590:       MOVF TEMP1, W
+01A2  1903     BTFSC STATUS, 0x2                  591:       BTFSC STATUS,Z  ;IF ZERO
+01A3  0008     RETURN                             592:       RETURN
+01A4  2124     CALL 0x124                         593:       CALL LCD_SEND   ;PUT THE CHAR
+01A5  217E     CALL 0x17E                         594:       CALL PULSE_E
+01A6  3002     MOVLW 0x2                          595:       MOVLW D'2'
+01A7  00D1     MOVWF 0x51                         596:       MOVWF DELAY_COUNTER
+01A8  2300     CALL 0x300                         597:       CALL DELAY_MILLIS
+01A9  0AD2     INCF 0x52, F                       598:       INCF STRING_INDEX, F ;INC OFFSET
+01AA  299B     GOTO 0x19B                         599:       GOTO PSL2 ;DO IT AGAIN
+                                                  600:   
+                                                  601:   PRINT_STRING_SERIAL
+01AB  01D2     CLRF 0x52                          602:       CLRF STRING_INDEX ;START WITH ZERO OFFSET
+                                                  603:   PSS2
+01AC  3008     MOVLW 0x8                          604:       MOVLW HIGH HOME_STRING  ;HOME STRING IS ON A DIFFERENT PAGE
+01AD  008A     MOVWF PCLATH                       605:       MOVWF PCLATH
+01AE  2000     CALL 0x0                           606:       CALL STRING_TABLE
+01AF  00A0     MOVWF 0x20                         607:       MOVWF DREG
+01B0  3000     MOVLW 0x0                          608:       MOVLW HIGH MAIN
+01B1  008A     MOVWF PCLATH                       609:       MOVWF PCLATH    ;SET PCLATH BACK TO PAGE 0
+01B2  08A0     MOVF 0x20, F                       610:       MOVF DREG, F
+01B3  1903     BTFSC STATUS, 0x2                  611:       BTFSC STATUS,Z  ;IF ZERO
+01B4  0008     RETURN                             612:       RETURN
+01B5  20BD     CALL 0xBD                          613:       CALL UART_SEND   ;PUT THE CHAR
+01B6  0AD2     INCF 0x52, F                       614:       INCF STRING_INDEX, F ;INC OFFSET
+01B7  29AC     GOTO 0x1AC                         615:       GOTO PSS2 ;DO IT AGAIN
+                                                  616:   
+                                                  617:   TAPE_IN
+01B8  30FF     MOVLW 0xFF                         618:       MOVLW H'FF'
+01B9  00A6     MOVWF 0x26                         619:       MOVWF RAM_ADDRESS_H
+01BA  00A7     MOVWF 0x27                         620:       MOVWF RAM_ADDRESS_L
+01BB  14D4     BSF 0x54, 0x1                      621:       BSF FLAG_REG,1 ;DISSABLE RESET IF TRANSMISSION FAILS
+01BC  21D5     CALL 0x1D5                         622:       CALL GET_LEADER
+01BD  10D4     BCF 0x54, 0x1                      623:       BCF FLAG_REG,1 ;ENABLE RESET IF TRANSMISSION FAILS
+01BE  21EA     CALL 0x1EA                         624:       CALL SAVE_FIRST_BLOCK
+01BF  0FA7     INCFSZ 0x27, F                     625:       INCFSZ RAM_ADDRESS_L, F    ;INCREMENT LOW ADDRESS
+01C0  03A6     DECF 0x26, F                       626:       DECF RAM_ADDRESS_H, F
+01C1  0AA6     INCF 0x26, F                       627:       INCF RAM_ADDRESS_H, F	;IF LOW ADDRESS IS ZERO INCREMENT THE HIGH ADDRESS TOO
+01C2  0826     MOVF 0x26, W                       628:       MOVF RAM_ADDRESS_H, W
+01C3  00B8     MOVWF 0x38                         629:       MOVWF TAPE_SIZE_HIGH
+01C4  0827     MOVF 0x27, W                       630:       MOVF RAM_ADDRESS_L, W
+01C5  00B9     MOVWF 0x39                         631:       MOVWF TAPE_SIZE_LOW
+01C6  01A6     CLRF 0x26                          632:       CLRF RAM_ADDRESS_H
+01C7  3003     MOVLW 0x3                          633:       MOVLW H'03'
+01C8  00A7     MOVWF 0x27                         634:       MOVWF RAM_ADDRESS_L
+01C9  1383     BCF STATUS, 0x7                    635:       BCF STATUS, IRP ;SET BANKS 0 AND 1
+01CA  30B0     MOVLW 0xB0                         636:       MOVLW TAPE_NAME
+01CB  0084     MOVWF FSR                          637:       MOVWF FSR
+01CC  3008     MOVLW 0x8                          638:       MOVLW D'08'
+01CD  00AA     MOVWF 0x2A                         639:       MOVWF GEN_COUNT
+                                                  640:   NAME_COPY
+01CE  20C2     CALL 0xC2                          641:       CALL RAM_READ_AUTO
+01CF  0820     MOVF 0x20, W                       642:       MOVF DREG, W
+01D0  0080     MOVWF INDF                         643:       MOVWF INDF
+01D1  0A84     INCF FSR, F                        644:       INCF FSR, F
+01D2  0BAA     DECFSZ 0x2A, F                     645:       DECFSZ GEN_COUNT, F
+01D3  29CE     GOTO 0x1CE                         646:       GOTO NAME_COPY
+01D4  0008     RETURN                             647:       RETURN
+                                                  648:   
+                                                  649:   GET_LEADER
+01D5  3080     MOVLW 0x80                         650:       MOVLW D'128'    ;LENGTH OF LEADER
+01D6  00AB     MOVWF 0x2B                         651:       MOVWF GEN_COUNT2
+                                                  652:   LEADER_LOOP
+01D7  2222     CALL 0x222                         653:       CALL BUILD_BYTE
+01D8  0820     MOVF 0x20, W                       654:       MOVF DREG,W
+01D9  3A55     XORLW 0x55                         655:       XORLW H'55'
+01DA  1D03     BTFSS STATUS, 0x2                  656:       BTFSS STATUS, Z
+01DB  29DF     GOTO 0x1DF                         657:       GOTO GL_FIX
+01DC  0BAB     DECFSZ 0x2B, F                     658:       DECFSZ GEN_COUNT2, F
+01DD  29D7     GOTO 0x1D7                         659:       GOTO LEADER_LOOP
+01DE  0008     RETURN                             660:       RETURN
+                                                  661:   GL_FIX
+01DF  0BAB     DECFSZ 0x2B, F                     662:       DECFSZ GEN_COUNT2, F
+01E0  29E2     GOTO 0x1E2                         663:       GOTO GL_FIX2
+01E1  2A47     GOTO 0x247                         664:       GOTO BUILD_PANIC
+                                                  665:   GL_FIX2
+01E2  221C     CALL 0x21C                         666:       CALL BUILD_ALIGN
+01E3  0820     MOVF 0x20, W                       667:       MOVF DREG,W
+01E4  3A55     XORLW 0x55                         668:       XORLW H'55'
+01E5  1D03     BTFSS STATUS, 0x2                  669:       BTFSS STATUS,Z
+01E6  2A47     GOTO 0x247                         670:       GOTO BUILD_PANIC
+01E7  0BAB     DECFSZ 0x2B, F                     671:       DECFSZ GEN_COUNT2, F
+01E8  29D7     GOTO 0x1D7                         672:       GOTO LEADER_LOOP
+01E9  2A47     GOTO 0x247                         673:       GOTO BUILD_PANIC
+                                                  674:   
+                                                  675:   SAVE_FIRST_BLOCK
+01EA  2222     CALL 0x222                         676:       CALL BUILD_BYTE
+01EB  1C20     BTFSS 0x20, 0x0                    677:       BTFSS DREG,0    ;CHECK IF BIT 0 IS SET (IF IT IS CLEARED THERE HAS BEEN AN ALIGNMENT ERROR)
+01EC  2A47     GOTO 0x247                         678:       GOTO BUILD_PANIC
+01ED  20E9     CALL 0xE9                          679:       CALL RAM_WRITE_AUTO	;SAVE LEADER BYTE
+01EE  2222     CALL 0x222                         680:       CALL BUILD_BYTE
+01EF  20E9     CALL 0xE9                          681:       CALL RAM_WRITE_AUTO	;SAVE SYNC BYTE
+01F0  2222     CALL 0x222                         682:       CALL BUILD_BYTE
+01F1  20E9     CALL 0xE9                          683:       CALL RAM_WRITE_AUTO	;SAVE BLOCK TYPE BYTE
+01F2  2222     CALL 0x222                         684:       CALL BUILD_BYTE
+01F3  20E9     CALL 0xE9                          685:       CALL RAM_WRITE_AUTO	;SAVE BLOCK LENGTH
+01F4  0820     MOVF 0x20, W                       686:       MOVF DREG, W
+01F5  00AB     MOVWF 0x2B                         687:       MOVWF GEN_COUNT2
+                                                  688:   FIRST_BLOCK_LOOP
+01F6  2222     CALL 0x222                         689:       CALL BUILD_BYTE
+01F7  20E9     CALL 0xE9                          690:       CALL RAM_WRITE_AUTO
+01F8  0BAB     DECFSZ 0x2B, F                     691:       DECFSZ GEN_COUNT2, F
+01F9  29F6     GOTO 0x1F6                         692:       GOTO FIRST_BLOCK_LOOP
+01FA  2222     CALL 0x222                         693:       CALL BUILD_BYTE
+01FB  20E9     CALL 0xE9                          694:       CALL RAM_WRITE_AUTO	;SAVE CHECKSUM
+01FC  2222     CALL 0x222                         695:       CALL BUILD_BYTE
+01FD  20E9     CALL 0xE9                          696:       CALL RAM_WRITE_AUTO	;SAVE LEADER BYTE
+01FE  21D5     CALL 0x1D5                         697:       CALL GET_LEADER ;GETS THE SECOND LEADER
+                                                  698:   SAVE_BLOCKS
+01FF  2222     CALL 0x222                         699:       CALL BUILD_BYTE
+0200  20E9     CALL 0xE9                          700:       CALL RAM_WRITE_AUTO	;SAVE LEADER BYTE
+0201  2222     CALL 0x222                         701:       CALL BUILD_BYTE
+0202  20E9     CALL 0xE9                          702:       CALL RAM_WRITE_AUTO	;SAVE SYNC BYTE
+0203  2222     CALL 0x222                         703:       CALL BUILD_BYTE
+0204  0F20     INCFSZ 0x20, W                     704:       INCFSZ DREG, W  ;CHECK IF BLOCK IS END OF FILE
+0205  2A0E     GOTO 0x20E                         705:       GOTO NOT_EOF_BLOCK
+0206  20E9     CALL 0xE9                          706:       CALL RAM_WRITE_AUTO	;SAVE BLOCK TYPE
+0207  2222     CALL 0x222                         707:       CALL BUILD_BYTE
+0208  20E9     CALL 0xE9                          708:       CALL RAM_WRITE_AUTO	;SAVE BLOCK LENGTH
+0209  2222     CALL 0x222                         709:       CALL BUILD_BYTE
+020A  20E9     CALL 0xE9                          710:       CALL RAM_WRITE_AUTO	;SAVE CHECKSUM
+020B  2222     CALL 0x222                         711:       CALL BUILD_BYTE
+020C  20E9     CALL 0xE9                          712:       CALL RAM_WRITE_AUTO	;SAVE LEADER BYTE
+020D  0008     RETURN                             713:       RETURN
+                                                  714:   NOT_EOF_BLOCK
+020E  20E9     CALL 0xE9                          715:       CALL RAM_WRITE_AUTO	;SAVE BLOCK TYPE
+020F  2222     CALL 0x222                         716:       CALL BUILD_BYTE
+0210  20E9     CALL 0xE9                          717:       CALL RAM_WRITE_AUTO	;SAVE LENGTH BYTE
+0211  0820     MOVF 0x20, W                       718:       MOVF DREG, W
+0212  00AB     MOVWF 0x2B                         719:       MOVWF GEN_COUNT2 ;COPY LENGTH TO GEN_COUNT2
+                                                  720:   BLOCK_DATA_LOOP
+0213  2222     CALL 0x222                         721:       CALL BUILD_BYTE
+0214  20E9     CALL 0xE9                          722:       CALL RAM_WRITE_AUTO
+0215  0BAB     DECFSZ 0x2B, F                     723:       DECFSZ GEN_COUNT2, F
+0216  2A13     GOTO 0x213                         724:       GOTO BLOCK_DATA_LOOP
+0217  2222     CALL 0x222                         725:       CALL BUILD_BYTE
+0218  20E9     CALL 0xE9                          726:       CALL RAM_WRITE_AUTO	;SAVE CHECKSUM
+0219  2222     CALL 0x222                         727:       CALL BUILD_BYTE
+021A  20E9     CALL 0xE9                          728:       CALL RAM_WRITE_AUTO	;SAVE LEADER BYTE
+021B  29FF     GOTO 0x1FF                         729:       GOTO SAVE_BLOCKS
+                                                  730:   
+                                                  731:   BUILD_ALIGN ;SKIPS INITIAL WAIT IN AN ATTEMPT TO FIX ALIGNMENT. BUILD_BYTE IS THE NORMAL ENTRY POINT
+021C  3008     MOVLW 0x8                          732:       MOVLW H'08'
+021D  00AA     MOVWF 0x2A                         733:       MOVWF GEN_COUNT ;INITIALIZE COUNTER TO 8
+021E  0806     MOVF PORTB, W                      734:       MOVF PORTB, W
+021F  3A02     XORLW 0x2                          735:       XORLW H'02' ;INVERT TAPE BIT
+0220  00A1     MOVWF 0x21                         736:       MOVWF TEMP1	    ;COPY PORTB TO TEMP1
+0221  2A2E     GOTO 0x22E                         737:       GOTO WAIT_STOP
+                                                  738:   BUILD_BYTE
+0222  3008     MOVLW 0x8                          739:       MOVLW H'08'
+0223  00AA     MOVWF 0x2A                         740:       MOVWF GEN_COUNT ;INITIALIZE COUNTER TO 8
+                                                  741:   BUILD_LOOP
+0224  0806     MOVF PORTB, W                      742:       MOVF PORTB, W
+0225  00A1     MOVWF 0x21                         743:       MOVWF TEMP1	    ;COPY PORTB TO TEMP1
+0226  01A5     CLRF 0x25                          744:       CLRF PULSE_LENGTH
+0227  0CA0     RRF 0x20, F                        745:       RRF DREG, F
+0228  13A0     BCF 0x20, 0x7                      746:       BCF DREG, 7
+                                                  747:   WAIT_START
+0229  0806     MOVF PORTB, W                      748:       MOVF PORTB, W
+022A  0621     XORWF 0x21, W                      749:       XORWF TEMP1, W  ;COMPARE PORTB WITH PREVIOUS STATE
+022B  00A2     MOVWF 0x22                         750:       MOVWF TEMP2	    ;STORE RESULT IN TEMP2
+022C  1CA2     BTFSS 0x22, 0x1                    751:       BTFSS TEMP2, 1
+022D  2A29     GOTO 0x229                         752:       GOTO WAIT_START ;IF STATE HAS NOT CHANGED KEEP WAITING
+                                                  753:   WAIT_STOP
+022E  224B     CALL 0x24B                         754:       CALL TAPE_DELAY
+022F  0AA5     INCF 0x25, F                       755:       INCF PULSE_LENGTH, F	;#1
+0230  0825     MOVF 0x25, W                       756:       MOVF PULSE_LENGTH, W    ;#2
+0231  3C16     SUBLW 0x16                         757:       SUBLW D'22'	    ;#3
+0232  1803     BTFSC STATUS, 0x0                  758:       BTFSC STATUS, C ;CHECK IF LENGTH IS GREATER THAN 22 #4
+0233  2A37     GOTO 0x237                         759:       GOTO BUILD_NO_ERROR	;IF NOT CONTINUE NORMALLY #6
+                                                  760:   BUILD_ERROR
+0234  1CD4     BTFSS 0x54, 0x1                    761:       BTFSS FLAG_REG, 1 ;IF ERROR IS IN FIRST BYTE TRY TO RECOVER
+0235  2A47     GOTO 0x247                         762:       GOTO BUILD_PANIC   ;IF NOT RESET TO AVOID INFINITE LOOP
+                                                  763:       ;MOVF GEN_COUNT, W
+                                                  764:       ;SUBLW H'08'
+                                                  765:       ;BTFSS STATUS, Z ;CHECK IF ERROR IS IN FIRST BIT
+                                                  766:       ;GOTO BUILD_PANIC   ; IF NOT RESET TO AVOID INFINITE LOOP
+0236  2A22     GOTO 0x222                         767:       GOTO BUILD_BYTE ;IF IT IS IN FIRST BIT OF FIRST BYTE RESTART SUBROUTINE
+                                                  768:   BUILD_NO_ERROR
+0237  0806     MOVF PORTB, W                      769:       MOVF PORTB, W   ;#7
+0238  0621     XORWF 0x21, W                      770:       XORWF TEMP1, W  ;#8
+0239  00A2     MOVWF 0x22                         771:       MOVWF TEMP2	    ;#9
+023A  18A2     BTFSC 0x22, 0x1                    772:       BTFSC TEMP2, 1  ;#10
+023B  2A2E     GOTO 0x22E                         773:       GOTO WAIT_STOP  ;WAIT UNTIL TAPE INPUT RETURNS TO ORIGINAL STATE #12
+023C  0825     MOVF 0x25, W                       774:       MOVF PULSE_LENGTH, W
+023D  3C08     SUBLW 0x8                          775:       SUBLW D'08'
+023E  1803     BTFSC STATUS, 0x0                  776:       BTFSC STATUS, C ;CHECK IF LENGTH IS LESS THAN 8
+023F  2A34     GOTO 0x234                         777:       GOTO BUILD_ERROR	;IF IT IS GO TO LOCAL ERROR HANDLER
+0240  300F     MOVLW 0xF                          778:       MOVLW D'15'
+0241  02A5     SUBWF 0x25, F                      779:       SUBWF PULSE_LENGTH, F   ;SUBTRACT THRESHOLD FROM PULSE LENGTH
+0242  1BA5     BTFSC 0x25, 0x7                    780:       BTFSC PULSE_LENGTH, 7   ;CHECK IF PULSE LENGHT IS NEGATIVE
+0243  17A0     BSF 0x20, 0x7                      781:       BSF DREG, 7		    ;IF IT IS SET BIT IN DREG
+0244  0BAA     DECFSZ 0x2A, F                     782:       DECFSZ GEN_COUNT, F
+0245  2A24     GOTO 0x224                         783:       GOTO BUILD_LOOP
+0246  3400     RETLW 0x0                          784:       RETLW H'00'	;RETURN ZERO TO INDICATE SUCCESS
+                                                  785:   
+                                                  786:   BUILD_PANIC ;ENABLES THE WATCHDOG TO CAUSE A RESET
+0247  1283     BCF STATUS, 0x5                    787:       BANKSEL WDTCON
+0248  1703     BSF STATUS, 0x6
+0249  1405     BSF PORTA, 0x0                     788:       BSF WDTCON, SWDTEN  ;ENABLE WATCHDOG
+                                                  789:   BP_HALT
+024A  2A4A     GOTO 0x24A                         790:       GOTO BP_HALT    ;WAIT FOR THE WATCHDOG TO DO THE THING
+                                                  791:   
+                                                  792:   TAPE_DELAY
+024B  0000     NOP                                793:       NOP
+024C  0000     NOP                                794:       NOP
+024D  0000     NOP                                795:       NOP
+024E  0000     NOP                                796:       NOP
+024F  0000     NOP                                797:       NOP	;5 CYCLE DELAY
+0250  0008     RETURN                             798:       RETURN
+                                                  799:   
+                                                  800:   TAPE_OUT
+0251  01A1     CLRF 0x21                          801:       CLRF TEMP1
+0252  01BA     CLRF 0x3A                          802:       CLRF BIT_COUNT
+0253  30FF     MOVLW 0xFF                         803:       MOVLW H'FF'
+0254  00A6     MOVWF 0x26                         804:       MOVWF RAM_ADDRESS_H
+0255  00A7     MOVWF 0x27                         805:       MOVWF RAM_ADDRESS_L	;RAM READ FUNCTION WILL AUTO INCREMENT ADDRESS, SO IT SHOULD OVERFLOW WHEN IT IS FIRST CALLED
+0256  3055     MOVLW 0x55                         806:       MOVLW H'55'
+0257  00A0     MOVWF 0x20                         807:       MOVWF DREG	;TAPE LEADER VALUE
+0258  307F     MOVLW 0x7F                         808:       MOVLW D'127'
+0259  00AA     MOVWF 0x2A                         809:       MOVWF GEN_COUNT ;128 LEADER BYTES
+025A  0181     CLRF TMR0                          810:       CLRF TMR0
+025B  0000     NOP                                811:       NOP
+025C  110B     BCF INTCON, 0x2                    812:       BCF INTCON, T0IF
+025D  178B     BSF INTCON, 0x7                    813:       BSF INTCON, GIE	;ENABLE INTERRUPT
+                                                  814:   LEADER_OUT
+025E  1D3A     BTFSS 0x3A, 0x2                    815:       BTFSS BIT_COUNT, 2
+025F  2A5E     GOTO 0x25E                         816:       GOTO LEADER_OUT	;WAIT UNTIL BIT COUNT IS NOT ZERO
+                                                  817:   LEADER_WAIT
+0260  193A     BTFSC 0x3A, 0x2                    818:       BTFSC BIT_COUNT, 2
+0261  2A60     GOTO 0x260                         819:       GOTO LEADER_WAIT	;WAIT UNTIL BIT_COUNT IS ZERO
+0262  0BAA     DECFSZ 0x2A, F                     820:       DECFSZ GEN_COUNT, F
+0263  2A5E     GOTO 0x25E                         821:       GOTO LEADER_OUT	;LOOP UNTIL 128 LEADER BYTES HAVE BEEN SENT
+0264  3016     MOVLW 0x16                         822:       MOVLW D'22'
+0265  00AA     MOVWF 0x2A                         823:       MOVWF GEN_COUNT	;ONE PAST THE END OF THE NAME FILE
+                                                  824:   TAPE_NAMEBLOCK
+0266  20C2     CALL 0xC2                          825:       CALL RAM_READ_AUTO	;GET FIRST BYTE
+                                                  826:   TAPE_W1
+0267  1D3A     BTFSS 0x3A, 0x2                    827:       BTFSS BIT_COUNT, 2
+0268  2A67     GOTO 0x267                         828:       GOTO TAPE_W1    ;WAIT UNTIL BIT COUNT IS NOT ZERO
+                                                  829:   TAPE_W2
+0269  193A     BTFSC 0x3A, 0x2                    830:       BTFSC BIT_COUNT, 2
+026A  2A69     GOTO 0x269                         831:       GOTO TAPE_W2
+026B  0BAA     DECFSZ 0x2A, F                     832:       DECFSZ GEN_COUNT, F
+026C  2A66     GOTO 0x266                         833:       GOTO TAPE_NAMEBLOCK
+026D  138B     BCF INTCON, 0x7                    834:       BCF INTCON, GIE ;STOP INTERRUPT
+026E  22C4     CALL 0x2C4                         835:       CALL TAPE_PAUSE ;1/2 SECOND SILENCE
+026F  307F     MOVLW 0x7F                         836:       MOVLW D'127'
+0270  00AA     MOVWF 0x2A                         837:       MOVWF GEN_COUNT ;128 LEADER BYTES
+0271  0181     CLRF TMR0                          838:       CLRF TMR0
+0272  01A1     CLRF 0x21                          839:       CLRF TEMP1
+0273  0000     NOP                                840:       NOP
+0274  110B     BCF INTCON, 0x2                    841:       BCF INTCON, T0IF
+0275  178B     BSF INTCON, 0x7                    842:       BSF INTCON, GIE	;ENABLE INTERRUPT
+                                                  843:   LEADER_OUT2
+0276  1D3A     BTFSS 0x3A, 0x2                    844:       BTFSS BIT_COUNT, 2
+0277  2A76     GOTO 0x276                         845:       GOTO LEADER_OUT2	;WAIT UNTIL BIT COUNT IS NOT ZERO
+                                                  846:   LEADER_WAIT2
+0278  193A     BTFSC 0x3A, 0x2                    847:       BTFSC BIT_COUNT, 2
+0279  2A78     GOTO 0x278                         848:       GOTO LEADER_WAIT2	;WAIT UNTIL BIT_COUNT IS ZERO
+027A  0BAA     DECFSZ 0x2A, F                     849:       DECFSZ GEN_COUNT, F
+027B  2A76     GOTO 0x276                         850:       GOTO LEADER_OUT2	;LOOP UNTIL 128 LEADER BYTES HAVE BEEN SENT
+                                                  851:   TAPE_NE
+027C  20C2     CALL 0xC2                          852:       CALL RAM_READ_AUTO
+                                                  853:   TAPE_W3
+027D  1D3A     BTFSS 0x3A, 0x2                    854:       BTFSS BIT_COUNT, 2
+027E  2A7D     GOTO 0x27D                         855:       GOTO TAPE_W3    ;WAIT UNTIL BIT_COUNT IS NOT ZERO
+                                                  856:   TAPE_W4
+027F  193A     BTFSC 0x3A, 0x2                    857:       BTFSC BIT_COUNT, 2
+0280  2A7F     GOTO 0x27F                         858:       GOTO TAPE_W4
+0281  0838     MOVF 0x38, W                       859:       MOVF TAPE_SIZE_HIGH, W
+0282  0626     XORWF 0x26, W                      860:       XORWF RAM_ADDRESS_H, W
+0283  00A3     MOVWF 0x23                         861:       MOVWF TEMP3	;STORE RESULT IN TEMP3
+0284  0AA3     INCF 0x23, F                       862:       INCF TEMP3, F   ;INCREMENT RESULT
+0285  0BA3     DECFSZ 0x23, F                     863:       DECFSZ TEMP3, F
+0286  2A7C     GOTO 0x27C                         864:       GOTO TAPE_NE
+0287  0839     MOVF 0x39, W                       865:       MOVF TAPE_SIZE_LOW, W
+0288  0627     XORWF 0x27, W                      866:       XORWF RAM_ADDRESS_L, W
+0289  00A3     MOVWF 0x23                         867:       MOVWF TEMP3	;STORE RESULT IN TEMP3
+028A  0AA3     INCF 0x23, F                       868:       INCF TEMP3, F
+028B  0BA3     DECFSZ 0x23, F                     869:       DECFSZ TEMP3, F
+028C  2A7C     GOTO 0x27C                         870:       GOTO TAPE_NE
+028D  138B     BCF INTCON, 0x7                    871:       BCF INTCON, GIE
+028E  0008     RETURN                             872:       RETURN
+                                                  873:   
+                                                  874:   TAPE_INT
+028F  00A4     MOVWF 0x24                         875:       MOVWF TEMP4	;SAVE W REG
+0290  110B     BCF INTCON, 0x2                    876:       BCF INTCON, T0IF
+0291  303B     MOVLW 0x3B                         877:       MOVLW D'59'	;USED TO BE 58, CHANGED IT BECAUSE I ADDED THE SAVE W INSTRUCTION
+0292  0081     MOVWF TMR0                         878:       MOVWF TMR0	;PRELOAD TIMER
+0293  1821     BTFSC 0x21, 0x0                    879:       BTFSC TEMP1, 0  ;IDENTIFY PHASE
+0294  2AA4     GOTO 0x2A4                         880:       GOTO PHASE1
+0295  18A1     BTFSC 0x21, 0x1                    881:       BTFSC TEMP1, 1
+0296  2AAB     GOTO 0x2AB                         882:       GOTO PHASE2
+0297  1921     BTFSC 0x21, 0x2                    883:       BTFSC TEMP1, 2
+0298  2AB3     GOTO 0x2B3                         884:       GOTO PHASE3
+0299  19A1     BTFSC 0x21, 0x3                    885:       BTFSC TEMP1, 3
+029A  2AB7     GOTO 0x2B7                         886:       GOTO PHASE4
+029B  3004     MOVLW 0x4                          887:       MOVLW B'00000100'	;DEFAULT PHASE - LOAD NEW DATA AND INITIALIZE VARIABLES
+029C  0686     XORWF PORTB, F                     888:       XORWF PORTB, F  ;TOGGLE TAPE OUT
+029D  0820     MOVF 0x20, W                       889:       MOVF DREG, W
+029E  00A2     MOVWF 0x22                         890:       MOVWF TEMP2	    ;COPY NEW DATA TO BUFFER
+029F  01BA     CLRF 0x3A                          891:       CLRF BIT_COUNT
+02A0  3001     MOVLW 0x1                          892:       MOVLW H'01'
+02A1  00A1     MOVWF 0x21                         893:       MOVWF TEMP1	;SET PHASE TO 1
+02A2  0824     MOVF 0x24, W                       894:       MOVF TEMP4, W   ;RESTORE W
+02A3  0009     RETFIE                             895:       RETFIE
+                                                  896:   PHASE1	;TOGGLE IF BIT IS 1
+02A4  3004     MOVLW 0x4                          897:   	MOVLW B'00000100'	;WILL USE THIS TO TOGGLE OUTPUT
+02A5  1822     BTFSC 0x22, 0x0                    898:   	BTFSC TEMP2, 0	;CHECK IF BIT IS 1 OR 0
+02A6  0686     XORWF PORTB, F                     899:   	XORWF PORTB, F	;IF BIT IS 1 TOGGLE OUTPUT
+02A7  3002     MOVLW 0x2                          900:   	MOVLW H'02'
+02A8  00A1     MOVWF 0x21                         901:   	MOVWF TEMP1	;SET PHASE TO 2
+02A9  0824     MOVF 0x24, W                       902:   	MOVF TEMP4, W   ;RESTORE W
+02AA  0009     RETFIE                             903:   	RETFIE
+                                                  904:   PHASE2	;ALWAYS TOGGLE
+02AB  3004     MOVLW 0x4                          905:   	MOVLW B'00000100'
+02AC  0686     XORWF PORTB, F                     906:   	XORWF PORTB, F	;TOGGLE OUTPUT
+02AD  1822     BTFSC 0x22, 0x0                    907:   	BTFSC TEMP2, 0	;CHECK IF BIT IS 1 OR 0
+02AE  2AB9     GOTO 0x2B9                         908:   	GOTO PHASE2_NEXT	;IF BIT IS SET THEN LOAD NEXT BIT AND RESET PHASE
+02AF  3004     MOVLW 0x4                          909:   	MOVLW H'04'
+02B0  00A1     MOVWF 0x21                         910:   	MOVWF TEMP1	;SET PHASE TO 3
+02B1  0824     MOVF 0x24, W                       911:   	MOVF TEMP4, W	;RESTORE W
+02B2  0009     RETFIE                             912:   	RETFIE
+                                                  913:   PHASE3	;NEVER TOGGLE
+02B3  3008     MOVLW 0x8                          914:   	MOVLW H'08'
+02B4  00A1     MOVWF 0x21                         915:   	MOVWF TEMP1	;SET PHASE TO 4
+02B5  0824     MOVF 0x24, W                       916:   	MOVF TEMP4, W
+02B6  0009     RETFIE                             917:   	RETFIE
+                                                  918:   PHASE4	;ALWAYS TOGGLE
+02B7  3004     MOVLW 0x4                          919:   	MOVLW B'00000100'
+02B8  0686     XORWF PORTB, F                     920:   	XORWF PORTB, F	;TOGGLE OUTPUT
+                                                  921:   PHASE2_NEXT
+02B9  3001     MOVLW 0x1                          922:       MOVLW H'01'
+02BA  00A1     MOVWF 0x21                         923:       MOVWF TEMP1	;SET PHASE TO 1
+02BB  0CA2     RRF 0x22, F                        924:       RRF TEMP2, F	;SHIFT TO NEXT BIT
+02BC  0ABA     INCF 0x3A, F                       925:       INCF BIT_COUNT, F	;NEXT BIT COUNT
+02BD  1DBA     BTFSS 0x3A, 0x3                    926:       BTFSS BIT_COUNT, 3	;CHECK IF BIT COUNT HAS REACHED 8
+02BE  2AC2     GOTO 0x2C2                         927:       GOTO PHASE_DONE	;IF NOT, RETURN
+02BF  01BA     CLRF 0x3A                          928:       CLRF BIT_COUNT	;CLEAR BIT COUNT
+02C0  0820     MOVF 0x20, W                       929:       MOVF DREG, W
+02C1  00A2     MOVWF 0x22                         930:       MOVWF TEMP2	;COPY NEW DATA TO BUFFER
+                                                  931:   PHASE_DONE
+02C2  0824     MOVF 0x24, W                       932:       MOVF TEMP4, W
+02C3  0009     RETFIE                             933:       RETFIE
+                                                  934:   
+                                                  935:   TAPE_PAUSE
+02C4  3020     MOVLW 0x20                         936:       MOVLW D'32'
+02C5  00AA     MOVWF 0x2A                         937:       MOVWF GEN_COUNT
+                                                  938:   TP1
+02C6  3036     MOVLW 0x36                         939:       MOVLW D'54'
+02C7  00AB     MOVWF 0x2B                         940:       MOVWF GEN_COUNT2
+                                                  941:   TP2
+02C8  305F     MOVLW 0x5F                         942:       MOVLW D'95'
+02C9  00A9     MOVWF 0x29                         943:       MOVWF LDEL_COUNT
+                                                  944:   TP3
+02CA  0BA9     DECFSZ 0x29, F                     945:       DECFSZ LDEL_COUNT, F
+02CB  2ACA     GOTO 0x2CA                         946:       GOTO TP3
+02CC  0BAB     DECFSZ 0x2B, F                     947:       DECFSZ GEN_COUNT2, F
+02CD  2AC8     GOTO 0x2C8                         948:       GOTO TP2
+02CE  0BAA     DECFSZ 0x2A, F                     949:       DECFSZ GEN_COUNT, F
+02CF  2AC6     GOTO 0x2C6                         950:       GOTO TP1
+02D0  0008     RETURN                             951:       RETURN
+                                                  952:   
+                                                  953:   SPI_TRANSFER
+02D1  0820     MOVF 0x20, W                       954:       MOVF DREG,W
+02D2  0093     MOVWF SSPBUF                       955:       MOVWF SSPBUF    ;SEND DATA
+02D3  1683     BSF STATUS, 0x5                    956:       BANKSEL SSPSTAT
+02D4  1303     BCF STATUS, 0x6
+                                                  957:   SPI_WAIT
+02D5  1C14     BTFSS SSPCON, 0x0                  958:       BTFSS SSPSTAT, BF	;IS THE TRANSMISSION READY
+02D6  2AD5     GOTO 0x2D5                         959:       GOTO SPI_WAIT	;IF NOT WAIT UNTIL IT IS
+02D7  1283     BCF STATUS, 0x5                    960:       BANKSEL SSPBUF
+02D8  1303     BCF STATUS, 0x6
+02D9  0813     MOVF SSPBUF, W                     961:       MOVF SSPBUF, W  ;COPY DATA TO W
+02DA  00A0     MOVWF 0x20                         962:       MOVWF DREG	;PUT DATA IN DREG
+02DB  0008     RETURN                             963:       RETURN
+                                                  964:   
+                                                  965:   BYTE_TO_HEX
+02DC  158A     BSF PCLATH, 0x3                    966:       PAGESEL HOME_STRING
+02DD  0820     MOVF 0x20, W                       967:       MOVF DREG,W
+02DE  390F     ANDLW 0xF                          968:       ANDLW H'0F'
+02DF  2045     CALL 0x45                          969:       CALL HEX_STRING
+02E0  00BC     MOVWF 0x3C                         970:       MOVWF HEX_CHAR_LOW
+02E1  0E20     SWAPF 0x20, W                      971:       SWAPF DREG,W
+02E2  390F     ANDLW 0xF                          972:       ANDLW H'0F'
+02E3  2045     CALL 0x45                          973:       CALL HEX_STRING
+02E4  00BB     MOVWF 0x3B                         974:       MOVWF HEX_CHAR_HIGH
+02E5  118A     BCF PCLATH, 0x3                    975:       PAGESEL INITIALIZE
+02E6  0008     RETURN                             976:       RETURN
+                                                  977:   
+                                                  978:   BUILD_WORD  ;GENERATES PSEUDO-RANDOM TEST DATA
+02E7  3010     MOVLW 0x10                         979:       MOVLW D'16'
+02E8  00AD     MOVWF 0x2D                         980:       MOVWF GEN_COUNT4
+                                                  981:   BUILD_WORD_LOOP
+                                                  982:       ;GET WORD HERE
+02E9  01A3     CLRF 0x23                          983:       CLRF TEMP3  ;THIS WILL CONTAIN BIT 7 OF S_REG_LOW
+02EA  1BCE     BTFSC 0x4E, 0x7                    984:       BTFSC S_REG_LOW,7
+02EB  1423     BSF 0x23, 0x0                      985:       BSF TEMP3,0
+02EC  084E     MOVF 0x4E, W                       986:       MOVF S_REG_LOW,W
+02ED  3901     ANDLW 0x1                          987:       ANDLW H'01'     ;GET BIT 0
+02EE  06A3     XORWF 0x23, F                      988:       XORWF TEMP3,F   ;TEMP3 NOW CONTAINS BIT0 AND BIT7 XORED TOGETHER
+02EF  0CA3     RRF 0x23, F                        989:       RRF TEMP3,F
+02F0  0CCD     RRF 0x4D, F                        990:       RRF S_REG_HIGH,F
+02F1  0CCE     RRF 0x4E, F                        991:       RRF S_REG_LOW, F
+02F2  0BAD     DECFSZ 0x2D, F                     992:       DECFSZ GEN_COUNT4,F
+02F3  2AE9     GOTO 0x2E9                         993:       GOTO BUILD_WORD_LOOP
+02F4  0008     RETURN                             994:       RETURN
+                                                  995:   
+                                                  996:   GET_TEST_BYTE   ;SPLITS PSEUDO-RANDOM TEST DATA INTO SINGLE BYTES
+02F5  1C54     BTFSS 0x54, 0x0                    997:       BTFSS FLAG_REG,0
+02F6  2AFB     GOTO 0x2FB                         998:       GOTO GTB_UPDATE
+02F7  084E     MOVF 0x4E, W                       999:       MOVF S_REG_LOW,W
+02F8  00A0     MOVWF 0x20                         1000:      MOVWF DREG
+02F9  1054     BCF 0x54, 0x0                      1001:      BCF FLAG_REG,0
+02FA  0008     RETURN                             1002:      RETURN
+                                                  1003:  GTB_UPDATE
+02FB  22E7     CALL 0x2E7                         1004:      CALL BUILD_WORD
+02FC  1454     BSF 0x54, 0x0                      1005:      BSF FLAG_REG,0
+02FD  084D     MOVF 0x4D, W                       1006:      MOVF S_REG_HIGH,W
+02FE  00A0     MOVWF 0x20                         1007:      MOVWF DREG
+02FF  0008     RETURN                             1008:      RETURN
+                                                  1009:  
+                                                  1010:  DELAY_MILLIS    ;DESIGNED FOR 4MHZ CLOCK
+0300  3014     MOVLW 0x14                         1011:      MOVLW D'20'
+0301  00A9     MOVWF 0x29                         1012:      MOVWF LDEL_COUNT
+                                                  1013:  DM_OUTER
+0302  3010     MOVLW 0x10                         1014:      MOVLW D'16'
+0303  00A8     MOVWF 0x28                         1015:      MOVWF SDEL_COUNT
+                                                  1016:  DM_INNER
+0304  0BA8     DECFSZ 0x28, F                     1017:      DECFSZ SDEL_COUNT,F
+0305  2B04     GOTO 0x304                         1018:      GOTO DM_INNER
+0306  0BA9     DECFSZ 0x29, F                     1019:      DECFSZ LDEL_COUNT,F
+0307  2B02     GOTO 0x302                         1020:      GOTO DM_OUTER
+0308  0BD1     DECFSZ 0x51, F                     1021:      DECFSZ DELAY_COUNTER,F
+0309  2B00     GOTO 0x300                         1022:      GOTO DELAY_MILLIS
+030A  0008     RETURN                             1023:      RETURN
+                                                  1024:  
+                                                  1025:  PRINT_TEST_DATA
+030B  01AA     CLRF 0x2A                          1026:      CLRF GEN_COUNT
+                                                  1027:  PTD_OUTER
+030C  01AB     CLRF 0x2B                          1028:      CLRF GEN_COUNT2
+                                                  1029:  PTD_INNER
+030D  082B     MOVF 0x2B, W                       1030:      MOVF GEN_COUNT2,W
+030E  390F     ANDLW 0xF                          1031:      ANDLW H'0F'
+030F  1D03     BTFSS STATUS, 0x2                  1032:      BTFSS STATUS,Z  ;EVERY 16 WORDS PRINT A NEWLINE
+0310  2B14     GOTO 0x314                         1033:      GOTO PTD_NO_NEWLINE
+0311  300A     MOVLW 0xA                          1034:      MOVLW H'0A' ;NEWLINE CHAR
+0312  00A0     MOVWF 0x20                         1035:      MOVWF DREG
+0313  20BD     CALL 0xBD                          1036:      CALL UART_SEND
+                                                  1037:  PTD_NO_NEWLINE
+0314  22F5     CALL 0x2F5                         1038:      CALL GET_TEST_BYTE  ;GET MSB
+0315  22DC     CALL 0x2DC                         1039:      CALL BYTE_TO_HEX
+0316  083B     MOVF 0x3B, W                       1040:      MOVF HEX_CHAR_HIGH,W
+0317  00A0     MOVWF 0x20                         1041:      MOVWF DREG
+0318  20BD     CALL 0xBD                          1042:      CALL UART_SEND  ;HIGH NIBBLE HIGH BYTE
+0319  083C     MOVF 0x3C, W                       1043:      MOVF HEX_CHAR_LOW,W
+031A  00A0     MOVWF 0x20                         1044:      MOVWF DREG
+031B  20BD     CALL 0xBD                          1045:      CALL UART_SEND  ;LOW NIBBLE HIGH BYTE
+031C  22F5     CALL 0x2F5                         1046:      CALL GET_TEST_BYTE  ;GET LSB
+031D  22DC     CALL 0x2DC                         1047:      CALL BYTE_TO_HEX
+031E  083B     MOVF 0x3B, W                       1048:      MOVF HEX_CHAR_HIGH,W
+031F  00A0     MOVWF 0x20                         1049:      MOVWF DREG
+0320  20BD     CALL 0xBD                          1050:      CALL UART_SEND  ;HIGH NIBBLE LOW BYTE
+0321  083C     MOVF 0x3C, W                       1051:      MOVF HEX_CHAR_LOW,W
+0322  00A0     MOVWF 0x20                         1052:      MOVWF DREG
+0323  20BD     CALL 0xBD                          1053:      CALL UART_SEND  ;LOW NIBBLE LOW BYTE
+0324  0BAB     DECFSZ 0x2B, F                     1054:      DECFSZ GEN_COUNT2,F
+0325  2B0D     GOTO 0x30D                         1055:      GOTO PTD_INNER
+0326  0BAA     DECFSZ 0x2A, F                     1056:      DECFSZ GEN_COUNT,F
+0327  2B0C     GOTO 0x30C                         1057:      GOTO PTD_OUTER
+0328  0008     RETURN                             1058:      RETURN
+                                                  1059:  
+                                                  1060:  CHECK_FREE_SPACE
+0329  11D4     BCF 0x54, 0x3                      1061:      BCF FLAG_REG, 3
+032A  1254     BCF 0x54, 0x4                      1062:      BCF FLAG_REG, 4
+032B  08C8     MOVF 0x48, F                       1063:      MOVF USB_FREE_SPACE3, F
+032C  1D03     BTFSS STATUS, 0x2                  1064:      BTFSS STATUS, Z
+032D  2B31     GOTO 0x331                         1065:      GOTO CFS2
+032E  15D4     BSF 0x54, 0x3                      1066:      BSF FLAG_REG, 3
+032F  1654     BSF 0x54, 0x4                      1067:      BSF FLAG_REG, 4
+0330  0008     RETURN                             1068:      RETURN
+                                                  1069:  CFS2
+0331  0847     MOVF 0x47, W                       1070:      MOVF USB_FREE_SPACE2, W
+0332  3C02     SUBLW 0x2                          1071:      SUBLW H'02'
+0333  1C03     BTFSS STATUS, 0x0                  1072:      BTFSS STATUS, C
+0334  2B38     GOTO 0x338                         1073:      GOTO CFS3
+0335  15D4     BSF 0x54, 0x3                      1074:      BSF FLAG_REG, 3
+0336  1654     BSF 0x54, 0x4                      1075:      BSF FLAG_REG, 4
+0337  0008     RETURN                             1076:      RETURN
+                                                  1077:  CFS3
+0338  0846     MOVF 0x46, W                       1078:      MOVF USB_FREE_SPACE1, W
+0339  0638     XORWF 0x38, W                      1079:      XORWF TAPE_SIZE_HIGH, W
+033A  1903     BTFSC STATUS, 0x2                  1080:      BTFSC STATUS, Z
+033B  2B41     GOTO 0x341                         1081:      GOTO CFS4
+033C  0838     MOVF 0x38, W                       1082:      MOVF TAPE_SIZE_HIGH, W
+033D  0246     SUBWF 0x46, W                      1083:      SUBWF USB_FREE_SPACE1, W
+033E  1803     BTFSC STATUS, 0x0                  1084:      BTFSC STATUS, C
+033F  15D4     BSF 0x54, 0x3                      1085:      BSF FLAG_REG, 3
+0340  0008     RETURN                             1086:      RETURN
+                                                  1087:  CFS4
+0341  08B9     MOVF 0x39, F                       1088:      MOVF TAPE_SIZE_LOW, F
+0342  1903     BTFSC STATUS, 0x2                  1089:      BTFSC STATUS, Z
+0343  15D4     BSF 0x54, 0x3                      1090:      BSF FLAG_REG, 3
+0344  0008     RETURN                             1091:      RETURN
+                                                  1092:  
+                                                  1093:  USB_RESET_ALL
+0345  1305     BCF PORTA, 0x6                     1094:      BCF PORTA,6 ;CH376 CE LINE LOW
+0346  3005     MOVLW 0x5                          1095:      MOVLW H'05' ;RESET ALL COMMAND
+0347  00A0     MOVWF 0x20                         1096:      MOVWF DREG
+0348  22D1     CALL 0x2D1                         1097:      CALL SPI_TRANSFER
+0349  1705     BSF PORTA, 0x6                     1098:      BSF PORTA,6 ;CH376S CE LINE HIGH
+034A  0008     RETURN                             1099:      RETURN
+                                                  1100:  
+                                                  1101:  USB_SET_FILE_NAME
+034B  1383     BCF STATUS, 0x7                    1102:      BCF STATUS, IRP
+034C  30B0     MOVLW 0xB0                         1103:      MOVLW TAPE_NAME ;NAME ADDRESS
+034D  0084     MOVWF FSR                          1104:      MOVWF FSR
+034E  3008     MOVLW 0x8                          1105:      MOVLW H'08' ;NAME LENGTH
+034F  00AD     MOVWF 0x2D                         1106:      MOVWF GEN_COUNT4
+0350  1305     BCF PORTA, 0x6                     1107:      BCF PORTA,6
+0351  302F     MOVLW 0x2F                         1108:      MOVLW H'2F' ;SET FILE NAME COMMAND
+0352  00A0     MOVWF 0x20                         1109:      MOVWF DREG
+0353  22D1     CALL 0x2D1                         1110:      CALL SPI_TRANSFER
+0354  302F     MOVLW 0x2F                         1111:      MOVLW H'2F' ;'\' CHAR NEEDED AT START OF NAME
+0355  00A0     MOVWF 0x20                         1112:      MOVWF DREG
+0356  22D1     CALL 0x2D1                         1113:      CALL SPI_TRANSFER
+                                                  1114:  USFN_LOOP
+0357  0800     MOVF INDF, W                       1115:      MOVF INDF,W
+0358  00A0     MOVWF 0x20                         1116:      MOVWF DREG
+0359  22D1     CALL 0x2D1                         1117:      CALL SPI_TRANSFER
+035A  0A84     INCF FSR, F                        1118:      INCF FSR, F
+035B  0BAD     DECFSZ 0x2D, F                     1119:      DECFSZ GEN_COUNT4,F
+035C  2B57     GOTO 0x357                         1120:      GOTO USFN_LOOP
+035D  01A0     CLRF 0x20                          1121:      CLRF DREG   ;NULL CHAR AT END OF NAME
+035E  22D1     CALL 0x2D1                         1122:      CALL SPI_TRANSFER
+035F  1705     BSF PORTA, 0x6                     1123:      BSF PORTA,6 ;CE LINE HIGH
+0360  0008     RETURN                             1124:      RETURN
+                                                  1125:  
+                                                  1126:  USB_FILE_OPEN
+0361  1305     BCF PORTA, 0x6                     1127:      BCF PORTA,6
+0362  3032     MOVLW 0x32                         1128:      MOVLW H'32' ;FILE OPEN COMMAND
+0363  00A0     MOVWF 0x20                         1129:      MOVWF DREG
+0364  22D1     CALL 0x2D1                         1130:      CALL SPI_TRANSFER
+0365  1705     BSF PORTA, 0x6                     1131:      BSF PORTA, 6
+0366  0008     RETURN                             1132:      RETURN
+                                                  1133:  
+                                                  1134:  USB_FILE_CLOSE
+0367  1305     BCF PORTA, 0x6                     1135:      BCF PORTA,6
+0368  3036     MOVLW 0x36                         1136:      MOVLW H'36' ;FILE CLOSE COMMAND
+0369  00A0     MOVWF 0x20                         1137:      MOVWF DREG
+036A  22D1     CALL 0x2D1                         1138:      CALL SPI_TRANSFER
+036B  3001     MOVLW 0x1                          1139:      MOVLW H'01' ;UPDATE FILE LENGTH
+036C  00A0     MOVWF 0x20                         1140:      MOVWF DREG
+036D  22D1     CALL 0x2D1                         1141:      CALL SPI_TRANSFER
+036E  1705     BSF PORTA, 0x6                     1142:      BSF PORTA,6
+036F  0008     RETURN                             1143:      RETURN
+                                                  1144:  
+                                                  1145:  USB_BYTE_READ
+0370  1305     BCF PORTA, 0x6                     1146:      BCF PORTA,6
+0371  303A     MOVLW 0x3A                         1147:      MOVLW H'3A' ;BYTE READ COMMAND
+0372  00A0     MOVWF 0x20                         1148:      MOVWF DREG
+0373  22D1     CALL 0x2D1                         1149:      CALL SPI_TRANSFER
+0374  0840     MOVF 0x40, W                       1150:      MOVF USB_FILE_SIZE_LOW,W
+0375  00A0     MOVWF 0x20                         1151:      MOVWF DREG
+0376  22D1     CALL 0x2D1                         1152:      CALL SPI_TRANSFER
+0377  083F     MOVF 0x3F, W                       1153:      MOVF USB_FILE_SIZE_HIGH,W
+0378  00A0     MOVWF 0x20                         1154:      MOVWF DREG
+0379  22D1     CALL 0x2D1                         1155:      CALL SPI_TRANSFER
+037A  1705     BSF PORTA, 0x6                     1156:      BSF PORTA,6
+037B  0008     RETURN                             1157:      RETURN
+                                                  1158:  
+                                                  1159:  USB_BYTE_READ_GO
+037C  1305     BCF PORTA, 0x6                     1160:      BCF PORTA,6
+037D  303B     MOVLW 0x3B                         1161:      MOVLW H'3B' ;BYTE READ GO COMMAND
+037E  00A0     MOVWF 0x20                         1162:      MOVWF DREG
+037F  22D1     CALL 0x2D1                         1163:      CALL SPI_TRANSFER
+0380  1705     BSF PORTA, 0x6                     1164:      BSF PORTA,6
+0381  0008     RETURN                             1165:      RETURN
+                                                  1166:  
+                                                  1167:  USB_READ_DATA0
+0382  1305     BCF PORTA, 0x6                     1168:      BCF PORTA,6
+0383  3027     MOVLW 0x27                         1169:      MOVLW H'27' ;READ DATA0 COMMAND
+0384  00A0     MOVWF 0x20                         1170:      MOVWF DREG
+0385  22D1     CALL 0x2D1                         1171:      CALL SPI_TRANSFER
+0386  01A0     CLRF 0x20                          1172:      CLRF DREG
+0387  22D1     CALL 0x2D1                         1173:      CALL SPI_TRANSFER   ;GET NUMBER OF BYTES TO READ
+0388  0820     MOVF 0x20, W                       1174:      MOVF DREG,W
+0389  07C2     ADDWF 0x42, F                      1175:      ADDWF USB_BYTES_READ_LOW, F
+038A  1803     BTFSC STATUS, 0x0                  1176:      BTFSC STATUS, C
+038B  0AC1     INCF 0x41, F                       1177:      INCF USB_BYTES_READ_HIGH, F
+038C  00AD     MOVWF 0x2D                         1178:      MOVWF GEN_COUNT4
+                                                  1179:  URD_LOOP
+038D  01A0     CLRF 0x20                          1180:      CLRF DREG
+038E  22D1     CALL 0x2D1                         1181:      CALL SPI_TRANSFER
+038F  20E9     CALL 0xE9                          1182:      CALL RAM_WRITE_AUTO
+0390  0BAD     DECFSZ 0x2D, F                     1183:      DECFSZ GEN_COUNT4,F
+0391  2B8D     GOTO 0x38D                         1184:      GOTO URD_LOOP
+0392  1705     BSF PORTA, 0x6                     1185:      BSF PORTA,6
+0393  0008     RETURN                             1186:      RETURN
+                                                  1187:  
+                                                  1188:  USB_GET_FILE_SIZE
+0394  1305     BCF PORTA, 0x6                     1189:      BCF PORTA,6
+0395  300C     MOVLW 0xC                          1190:      MOVLW H'0C' ;GET FILE SIZE COMMAND
+0396  00A0     MOVWF 0x20                         1191:      MOVWF DREG
+0397  22D1     CALL 0x2D1                         1192:      CALL SPI_TRANSFER
+0398  3068     MOVLW 0x68                         1193:      MOVLW H'68' ;COMMAND DATA
+0399  00A0     MOVWF 0x20                         1194:      MOVWF DREG
+039A  22D1     CALL 0x2D1                         1195:      CALL SPI_TRANSFER
+039B  01A0     CLRF 0x20                          1196:      CLRF DREG
+039C  22D1     CALL 0x2D1                         1197:      CALL SPI_TRANSFER
+039D  0820     MOVF 0x20, W                       1198:      MOVF DREG,W
+039E  00C0     MOVWF 0x40                         1199:      MOVWF USB_FILE_SIZE_LOW
+039F  01A0     CLRF 0x20                          1200:      CLRF DREG
+03A0  22D1     CALL 0x2D1                         1201:      CALL SPI_TRANSFER
+03A1  0820     MOVF 0x20, W                       1202:      MOVF DREG,W
+03A2  00BF     MOVWF 0x3F                         1203:      MOVWF USB_FILE_SIZE_HIGH
+03A3  01A0     CLRF 0x20                          1204:      CLRF DREG
+03A4  22D1     CALL 0x2D1                         1205:      CALL SPI_TRANSFER
+03A5  01A0     CLRF 0x20                          1206:      CLRF DREG
+03A6  22D1     CALL 0x2D1                         1207:      CALL SPI_TRANSFER   ;DISCARD UPPER BYTES OF FILE SIZE
+03A7  1705     BSF PORTA, 0x6                     1208:      BSF PORTA,6
+03A8  0008     RETURN                             1209:      RETURN
+                                                  1210:  
+                                                  1211:  USB_CHECK_EXISTS
+03A9  1305     BCF PORTA, 0x6                     1212:      BCF PORTA,6
+03AA  0820     MOVF 0x20, W                       1213:      MOVF DREG,W
+03AB  00A4     MOVWF 0x24                         1214:      MOVWF TEMP4
+03AC  3006     MOVLW 0x6                          1215:      MOVLW H'06'
+03AD  00A0     MOVWF 0x20                         1216:      MOVWF DREG
+03AE  22D1     CALL 0x2D1                         1217:      CALL SPI_TRANSFER   ;SEND CHECK_EXISTS COMMAND
+03AF  0824     MOVF 0x24, W                       1218:      MOVF TEMP4,W
+03B0  00A0     MOVWF 0x20                         1219:      MOVWF DREG
+03B1  22D1     CALL 0x2D1                         1220:      CALL SPI_TRANSFER   ;SEND TEST DATA
+03B2  01A0     CLRF 0x20                          1221:      CLRF DREG
+03B3  22D1     CALL 0x2D1                         1222:      CALL SPI_TRANSFER   ;GET RESULT
+03B4  1705     BSF PORTA, 0x6                     1223:      BSF PORTA,6
+03B5  0008     RETURN                             1224:      RETURN
+                                                  1225:  
+                                                  1226:  USB_FILE_CREATE
+03B6  1305     BCF PORTA, 0x6                     1227:      BCF PORTA, 6
+03B7  3034     MOVLW 0x34                         1228:      MOVLW H'34'
+03B8  00A0     MOVWF 0x20                         1229:      MOVWF DREG
+03B9  22D1     CALL 0x2D1                         1230:      CALL SPI_TRANSFER
+03BA  1705     BSF PORTA, 0x6                     1231:      BSF PORTA, 6
+03BB  0008     RETURN                             1232:      RETURN
+                                                  1233:  
+                                                  1234:  USB_BYTE_WRITE
+03BC  1305     BCF PORTA, 0x6                     1235:      BCF PORTA, 6
+03BD  303C     MOVLW 0x3C                         1236:      MOVLW H'3C'
+03BE  00A0     MOVWF 0x20                         1237:      MOVWF DREG
+03BF  22D1     CALL 0x2D1                         1238:      CALL SPI_TRANSFER
+03C0  0840     MOVF 0x40, W                       1239:      MOVF USB_FILE_SIZE_LOW, W
+03C1  00A0     MOVWF 0x20                         1240:      MOVWF DREG
+03C2  22D1     CALL 0x2D1                         1241:      CALL SPI_TRANSFER
+03C3  083F     MOVF 0x3F, W                       1242:      MOVF USB_FILE_SIZE_HIGH, W
+03C4  00A0     MOVWF 0x20                         1243:      MOVWF DREG
+03C5  22D1     CALL 0x2D1                         1244:      CALL SPI_TRANSFER
+03C6  1705     BSF PORTA, 0x6                     1245:      BSF PORTA, 6
+03C7  0008     RETURN                             1246:      RETURN
+                                                  1247:  
+                                                  1248:  USB_BYTE_WR_GO
+03C8  1305     BCF PORTA, 0x6                     1249:      BCF PORTA, 6
+03C9  303D     MOVLW 0x3D                         1250:      MOVLW H'3D'
+03CA  00A0     MOVWF 0x20                         1251:      MOVWF DREG
+03CB  22D1     CALL 0x2D1                         1252:      CALL SPI_TRANSFER
+03CC  1705     BSF PORTA, 0x6                     1253:      BSF PORTA, 6
+03CD  0008     RETURN                             1254:      RETURN
+                                                  1255:  
+                                                  1256:  USB_GET_STATUS
+03CE  1305     BCF PORTA, 0x6                     1257:      BCF PORTA, 6
+03CF  3022     MOVLW 0x22                         1258:      MOVLW H'22'
+03D0  00A0     MOVWF 0x20                         1259:      MOVWF DREG
+03D1  22D1     CALL 0x2D1                         1260:      CALL SPI_TRANSFER
+03D2  01A0     CLRF 0x20                          1261:      CLRF DREG
+03D3  22D1     CALL 0x2D1                         1262:      CALL SPI_TRANSFER
+03D4  1705     BSF PORTA, 0x6                     1263:      BSF PORTA, 6
+03D5  0008     RETURN                             1264:      RETURN
+                                                  1265:  
+                                                  1266:  USB_DISK_MOUNT
+03D6  1305     BCF PORTA, 0x6                     1267:      BCF PORTA, 6
+03D7  3031     MOVLW 0x31                         1268:      MOVLW H'31'
+03D8  00A0     MOVWF 0x20                         1269:      MOVWF DREG
+03D9  22D1     CALL 0x2D1                         1270:      CALL SPI_TRANSFER
+03DA  1705     BSF PORTA, 0x6                     1271:      BSF PORTA, 6
+03DB  0008     RETURN                             1272:      RETURN
+                                                  1273:  
+                                                  1274:  USB_DISK_CONNECT
+03DC  1305     BCF PORTA, 0x6                     1275:      BCF PORTA, 6
+03DD  3030     MOVLW 0x30                         1276:      MOVLW H'30'
+03DE  00A0     MOVWF 0x20                         1277:      MOVWF DREG
+03DF  22D1     CALL 0x2D1                         1278:      CALL SPI_TRANSFER
+03E0  1705     BSF PORTA, 0x6                     1279:      BSF PORTA, 6
+03E1  0008     RETURN                             1280:      RETURN
+                                                  1281:  
+                                                  1282:  USB_SET_MODE_5
+03E2  1305     BCF PORTA, 0x6                     1283:      BCF PORTA, 6
+03E3  3015     MOVLW 0x15                         1284:      MOVLW H'15'
+03E4  00A0     MOVWF 0x20                         1285:      MOVWF DREG
+03E5  22D1     CALL 0x2D1                         1286:      CALL SPI_TRANSFER
+03E6  3005     MOVLW 0x5                          1287:      MOVLW H'05'
+03E7  00A0     MOVWF 0x20                         1288:      MOVWF DREG
+03E8  22D1     CALL 0x2D1                         1289:      CALL SPI_TRANSFER
+03E9  1705     BSF PORTA, 0x6                     1290:      BSF PORTA, 6
+03EA  0008     RETURN                             1291:      RETURN
+                                                  1292:  
+                                                  1293:  USB_SET_MODE_6
+03EB  1305     BCF PORTA, 0x6                     1294:      BCF PORTA, 6
+03EC  3015     MOVLW 0x15                         1295:      MOVLW H'15'
+03ED  00A0     MOVWF 0x20                         1296:      MOVWF DREG
+03EE  22D1     CALL 0x2D1                         1297:      CALL SPI_TRANSFER
+03EF  3006     MOVLW 0x6                          1298:      MOVLW H'06'
+03F0  00A0     MOVWF 0x20                         1299:      MOVWF DREG
+03F1  22D1     CALL 0x2D1                         1300:      CALL SPI_TRANSFER
+03F2  1705     BSF PORTA, 0x6                     1301:      BSF PORTA, 6
+03F3  0008     RETURN                             1302:      RETURN
+                                                  1303:  
+                                                  1304:  USB_SET_MODE_7
+03F4  1305     BCF PORTA, 0x6                     1305:      BCF PORTA, 6
+03F5  3015     MOVLW 0x15                         1306:      MOVLW H'15'
+03F6  00A0     MOVWF 0x20                         1307:      MOVWF DREG
+03F7  22D1     CALL 0x2D1                         1308:      CALL SPI_TRANSFER
+03F8  3007     MOVLW 0x7                          1309:      MOVLW H'07'
+03F9  00A0     MOVWF 0x20                         1310:      MOVWF DREG
+03FA  22D1     CALL 0x2D1                         1311:      CALL SPI_TRANSFER
+03FB  1705     BSF PORTA, 0x6                     1312:      BSF PORTA, 6
+03FC  0008     RETURN                             1313:      RETURN
+                                                  1314:  
+                                                  1315:  USB_GET_VERSION
+03FD  1305     BCF PORTA, 0x6                     1316:      BCF PORTA, 6
+03FE  3001     MOVLW 0x1                          1317:      MOVLW H'01'
+03FF  00A0     MOVWF 0x20                         1318:      MOVWF DREG
+0400  22D1     CALL 0x2D1                         1319:      CALL SPI_TRANSFER
+0401  01A0     CLRF 0x20                          1320:      CLRF DREG
+0402  22D1     CALL 0x2D1                         1321:      CALL SPI_TRANSFER
+0403  1705     BSF PORTA, 0x6                     1322:      BSF PORTA, 6
+0404  0008     RETURN                             1323:      RETURN
+                                                  1324:  
+                                                  1325:  USB_WAIT_STATUS
+0405  0AD0     INCF 0x50, F                       1326:      INCF TIMEOUT_HIGH, F
+0406  0ACF     INCF 0x4F, F                       1327:      INCF TIMEOUT_LOW, F
+                                                  1328:  UWS_LOOP
+0407  3001     MOVLW 0x1                          1329:      MOVLW H'01'
+0408  00D1     MOVWF 0x51                         1330:      MOVWF DELAY_COUNTER
+0409  2300     CALL 0x300                         1331:      CALL DELAY_MILLIS   ;DELAY 1 MILLISECOND
+040A  23CE     CALL 0x3CE                         1332:      CALL USB_GET_STATUS
+040B  084C     MOVF 0x4C, W                       1333:      MOVF USB_TARGET_STATUS, W
+040C  06A0     XORWF 0x20, F                      1334:      XORWF DREG, F
+040D  1903     BTFSC STATUS, 0x2                  1335:      BTFSC STATUS, Z
+040E  0008     RETURN                             1336:      RETURN
+040F  0BCF     DECFSZ 0x4F, F                     1337:      DECFSZ TIMEOUT_LOW, F
+0410  2C07     GOTO 0x407                         1338:      GOTO UWS_LOOP
+0411  0BD0     DECFSZ 0x50, F                     1339:      DECFSZ TIMEOUT_HIGH, F
+0412  2C07     GOTO 0x407                         1340:      GOTO UWS_LOOP
+0413  1554     BSF 0x54, 0x2                      1341:      BSF FLAG_REG, 2    ;SET FLAG TO INDICATE A TIMEOUT
+0414  0008     RETURN                             1342:      RETURN
+                                                  1343:  
+                                                  1344:  USB_DISK_CAPACITY
+0415  1305     BCF PORTA, 0x6                     1345:      BCF PORTA, 6
+0416  303E     MOVLW 0x3E                         1346:      MOVLW H'3E'
+0417  00A0     MOVWF 0x20                         1347:      MOVWF DREG
+0418  22D1     CALL 0x2D1                         1348:      CALL SPI_TRANSFER   ;SEND DISK CAPACITY COMMAND
+0419  1705     BSF PORTA, 0x6                     1349:      BSF PORTA, 6
+041A  3014     MOVLW 0x14                         1350:      MOVLW H'14'
+041B  00CC     MOVWF 0x4C                         1351:      MOVWF USB_TARGET_STATUS ;SET TARGET STATUS TO 14 (DEVICE READY)
+041C  01D0     CLRF 0x50                          1352:      CLRF TIMEOUT_HIGH
+041D  3010     MOVLW 0x10                         1353:      MOVLW H'10'
+041E  00CF     MOVWF 0x4F                         1354:      MOVWF TIMEOUT_LOW   ;SET TIMEOUT TO 16 MILLISECONDS
+041F  2405     CALL 0x405                         1355:      CALL USB_WAIT_STATUS
+0420  1305     BCF PORTA, 0x6                     1356:      BCF PORTA, 6
+0421  3027     MOVLW 0x27                         1357:      MOVLW H'27'
+0422  00A0     MOVWF 0x20                         1358:      MOVWF DREG
+0423  22D1     CALL 0x2D1                         1359:      CALL SPI_TRANSFER   ;SEND READ DATA0 COMMAND
+0424  01A0     CLRF 0x20                          1360:      CLRF DREG
+0425  22D1     CALL 0x2D1                         1361:      CALL SPI_TRANSFER   ;GET NUMBER OF BYTES TO READ (ALWAYS 4)
+0426  01A0     CLRF 0x20                          1362:      CLRF DREG
+0427  22D1     CALL 0x2D1                         1363:      CALL SPI_TRANSFER   ;GET LSB OF DISK SIZE
+                                                  1364:  ;THE DISK SIZE IS GIVEN IN SECTORS, SO TO GET THE NUMBER OF BYTES WE MULTIPLY BY 512 WHICH IS THE SAME AS SHIFTING BY 9
+                                                  1365:  ;THIS MEANS THE LSB IS ALWAYS ZERO AND THERE IS NO NEED TO HAVE A REGISTER FOR IT.
+                                                  1366:  ;INSTEAD WE PUT THE LSB IN USB_DRIVE_SIZE1 WHICH CORRESPONDS TO SHIFTING BY 8.
+0428  0820     MOVF 0x20, W                       1367:      MOVF DREG, W
+0429  00C3     MOVWF 0x43                         1368:      MOVWF USB_DRIVE_SIZE1
+042A  01A0     CLRF 0x20                          1369:      CLRF DREG
+042B  22D1     CALL 0x2D1                         1370:      CALL SPI_TRANSFER
+042C  0820     MOVF 0x20, W                       1371:      MOVF DREG, W
+042D  00C4     MOVWF 0x44                         1372:      MOVWF USB_DRIVE_SIZE2
+042E  01A0     CLRF 0x20                          1373:      CLRF DREG
+042F  22D1     CALL 0x2D1                         1374:      CALL SPI_TRANSFER
+0430  0820     MOVF 0x20, W                       1375:      MOVF DREG, W
+0431  00C5     MOVWF 0x45                         1376:      MOVWF USB_DRIVE_SIZE3
+0432  01A0     CLRF 0x20                          1377:      CLRF DREG
+0433  22D1     CALL 0x2D1                         1378:      CALL SPI_TRANSFER
+0434  1705     BSF PORTA, 0x6                     1379:      BSF PORTA, 6
+0435  1003     BCF STATUS, 0x0                    1380:      BCF STATUS, C   ;CLEAR CARRY FLAG
+0436  0DC3     RLF 0x43, F                        1381:      RLF USB_DRIVE_SIZE1, F
+0437  0DC4     RLF 0x44, F                        1382:      RLF USB_DRIVE_SIZE2, F
+0438  0DC5     RLF 0x45, F                        1383:      RLF USB_DRIVE_SIZE3, F
+0439  0008     RETURN                             1384:      RETURN
+                                                  1385:  
+                                                  1386:  USB_DISK_QUERY
+043A  1305     BCF PORTA, 0x6                     1387:      BCF PORTA, 6
+043B  303E     MOVLW 0x3E                         1388:      MOVLW H'3E'
+043C  00A0     MOVWF 0x20                         1389:      MOVWF DREG
+043D  22D1     CALL 0x2D1                         1390:      CALL SPI_TRANSFER   ;SEND DISK CAPACITY COMMAND
+043E  1705     BSF PORTA, 0x6                     1391:      BSF PORTA, 6
+043F  3014     MOVLW 0x14                         1392:      MOVLW H'14'
+0440  00CC     MOVWF 0x4C                         1393:      MOVWF USB_TARGET_STATUS ;SET TARGET STATUS TO 14 (DEVICE READY)
+0441  01D0     CLRF 0x50                          1394:      CLRF TIMEOUT_HIGH
+0442  3010     MOVLW 0x10                         1395:      MOVLW H'10'
+0443  00CF     MOVWF 0x4F                         1396:      MOVWF TIMEOUT_LOW   ;SET TIMEOUT TO 16 MILLISECONDS
+0444  2405     CALL 0x405                         1397:      CALL USB_WAIT_STATUS
+0445  1305     BCF PORTA, 0x6                     1398:      BCF PORTA, 6
+0446  3027     MOVLW 0x27                         1399:      MOVLW H'27'
+0447  00A0     MOVWF 0x20                         1400:      MOVWF DREG
+0448  22D1     CALL 0x2D1                         1401:      CALL SPI_TRANSFER   ;SEND READ DATA0 COMMAND
+0449  01A0     CLRF 0x20                          1402:      CLRF DREG
+044A  22D1     CALL 0x2D1                         1403:      CALL SPI_TRANSFER   ;GET NUMBER OF BYTES TO READ (ALWAYS 8)
+044B  01A0     CLRF 0x20                          1404:      CLRF DREG
+044C  22D1     CALL 0x2D1                         1405:      CALL SPI_TRANSFER   ;GET LSB OF LOGICAL BYTES
+044D  0820     MOVF 0x20, W                       1406:      MOVF DREG, W
+044E  00C9     MOVWF 0x49                         1407:      MOVWF USB_LOGICAL_BYTES1
+044F  01A0     CLRF 0x20                          1408:      CLRF DREG
+0450  22D1     CALL 0x2D1                         1409:      CALL SPI_TRANSFER
+0451  0820     MOVF 0x20, W                       1410:      MOVF DREG, W
+0452  00CA     MOVWF 0x4A                         1411:      MOVWF USB_LOGICAL_BYTES2
+0453  01A0     CLRF 0x20                          1412:      CLRF DREG
+0454  22D1     CALL 0x2D1                         1413:      CALL SPI_TRANSFER
+0455  0820     MOVF 0x20, W                       1414:      MOVF DREG, W
+0456  00CB     MOVWF 0x4B                         1415:      MOVWF USB_LOGICAL_BYTES3
+0457  01A0     CLRF 0x20                          1416:      CLRF DREG
+0458  22D1     CALL 0x2D1                         1417:      CALL SPI_TRANSFER   ;DISCARD MSB OF LOGICAL BYTES
+0459  01A0     CLRF 0x20                          1418:      CLRF DREG
+045A  22D1     CALL 0x2D1                         1419:      CALL SPI_TRANSFER   ;GET LSB OF FREE SPACE
+045B  0820     MOVF 0x20, W                       1420:      MOVF DREG, W
+045C  00C6     MOVWF 0x46                         1421:      MOVWF USB_FREE_SPACE1
+045D  01A0     CLRF 0x20                          1422:      CLRF DREG
+045E  22D1     CALL 0x2D1                         1423:      CALL SPI_TRANSFER
+045F  0820     MOVF 0x20, W                       1424:      MOVF DREG, W
+0460  00C7     MOVWF 0x47                         1425:      MOVWF USB_FREE_SPACE2
+0461  01A0     CLRF 0x20                          1426:      CLRF DREG
+0462  22D1     CALL 0x2D1                         1427:      CALL SPI_TRANSFER
+0463  0820     MOVF 0x20, W                       1428:      MOVF DREG, W
+0464  00C8     MOVWF 0x48                         1429:      MOVWF USB_FREE_SPACE3
+0465  01A0     CLRF 0x20                          1430:      CLRF DREG
+0466  22D1     CALL 0x2D1                         1431:      CALL SPI_TRANSFER   ;DISCARD MSB OF FREE SPACE
+0467  1705     BSF PORTA, 0x6                     1432:      BSF PORTA, 6
+0468  1003     BCF STATUS, 0x0                    1433:      BCF STATUS, C
+0469  0DC9     RLF 0x49, F                        1434:      RLF USB_LOGICAL_BYTES1, F
+046A  0DCA     RLF 0x4A, F                        1435:      RLF USB_LOGICAL_BYTES2, F
+046B  0DCB     RLF 0x4B, F                        1436:      RLF USB_LOGICAL_BYTES3, F
+046C  1003     BCF STATUS, 0x0                    1437:      BCF STATUS, C
+046D  0DC6     RLF 0x46, F                        1438:      RLF USB_FREE_SPACE1, F
+046E  0DC7     RLF 0x47, F                        1439:      RLF USB_FREE_SPACE2, F
+046F  0DC8     RLF 0x48, F                        1440:      RLF USB_FREE_SPACE3, F
+0470  0008     RETURN                             1441:      RETURN
+                                                  1442:  
+                                                  1443:  USB_WRITE_TEST_DATA
+0471  01CE     CLRF 0x4E                          1444:      CLRF S_REG_LOW
+0472  01CD     CLRF 0x4D                          1445:      CLRF S_REG_HIGH
+0473  1054     BCF 0x54, 0x0                      1446:      BCF FLAG_REG, 0 ;INITIALIZE PSUEDO-RANDOM DATA GENERATOR
+0474  23B6     CALL 0x3B6                         1447:      CALL USB_FILE_CREATE
+0475  30B8     MOVLW 0xB8                         1448:      MOVLW H'B8'
+0476  00CF     MOVWF 0x4F                         1449:      MOVWF TIMEOUT_LOW
+0477  300B     MOVLW 0xB                          1450:      MOVLW H'0B'
+0478  00D0     MOVWF 0x50                         1451:      MOVWF TIMEOUT_HIGH  ;SET TIMEOUT TO 3 SECONDS
+0479  3014     MOVLW 0x14                         1452:      MOVLW H'14'
+047A  00CC     MOVWF 0x4C                         1453:      MOVWF USB_TARGET_STATUS ;SET TARGET STATUS TO 0x14
+047B  2405     CALL 0x405                         1454:      CALL USB_WAIT_STATUS
+047C  3004     MOVLW 0x4                          1455:      MOVLW H'04'
+047D  00AF     MOVWF 0x2F                         1456:      MOVWF GEN_COUNT6
+                                                  1457:  UWTD_L4
+047E  01BD     CLRF 0x3D                          1458:      CLRF USB_BYTES_SENT_HIGH
+047F  01BE     CLRF 0x3E                          1459:      CLRF USB_BYTES_SENT_LOW
+0480  3080     MOVLW 0x80                         1460:      MOVLW H'80'
+0481  00BF     MOVWF 0x3F                         1461:      MOVWF USB_FILE_SIZE_HIGH
+0482  01C0     CLRF 0x40                          1462:      CLRF USB_FILE_SIZE_LOW
+0483  23BC     CALL 0x3BC                         1463:      CALL USB_BYTE_WRITE
+0484  300B     MOVLW 0xB                          1464:      MOVLW H'0B'
+0485  00D0     MOVWF 0x50                         1465:      MOVWF TIMEOUT_HIGH
+0486  30B8     MOVLW 0xB8                         1466:      MOVLW H'B8'
+0487  00CF     MOVWF 0x4F                         1467:      MOVWF TIMEOUT_LOW
+0488  301E     MOVLW 0x1E                         1468:      MOVLW H'1E'
+0489  00CC     MOVWF 0x4C                         1469:      MOVWF USB_TARGET_STATUS
+048A  2405     CALL 0x405                         1470:      CALL USB_WAIT_STATUS
+                                                  1471:  UWTD_ND_LOOP
+048B  1305     BCF PORTA, 0x6                     1472:      BCF PORTA, 6
+048C  302D     MOVLW 0x2D                         1473:      MOVLW H'2D'
+048D  00A0     MOVWF 0x20                         1474:      MOVWF DREG
+048E  22D1     CALL 0x2D1                         1475:      CALL SPI_TRANSFER   ;SEND WR_REQ_DATA
+048F  01A0     CLRF 0x20                          1476:      CLRF DREG
+0490  22D1     CALL 0x2D1                         1477:      CALL SPI_TRANSFER   ;GET NUMBER OF BYTES TO SEND
+0491  0820     MOVF 0x20, W                       1478:      MOVF DREG, W
+0492  00AE     MOVWF 0x2E                         1479:      MOVWF GEN_COUNT5
+                                                  1480:  UWTD_WR_LOOP
+0493  22F5     CALL 0x2F5                         1481:      CALL GET_TEST_BYTE
+0494  22D1     CALL 0x2D1                         1482:      CALL SPI_TRANSFER
+0495  0FBE     INCFSZ 0x3E, F                     1483:      INCFSZ USB_BYTES_SENT_LOW, F
+0496  03BD     DECF 0x3D, F                       1484:      DECF USB_BYTES_SENT_HIGH, F
+0497  0ABD     INCF 0x3D, F                       1485:      INCF USB_BYTES_SENT_HIGH, F
+0498  083D     MOVF 0x3D, W                       1486:      MOVF USB_BYTES_SENT_HIGH, W
+0499  063F     XORWF 0x3F, W                      1487:      XORWF USB_FILE_SIZE_HIGH, W
+049A  1D03     BTFSS STATUS, 0x2                  1488:      BTFSS STATUS, Z
+049B  2CA0     GOTO 0x4A0                         1489:      GOTO UWTD_NB
+049C  083E     MOVF 0x3E, W                       1490:      MOVF USB_BYTES_SENT_LOW, W
+049D  0640     XORWF 0x40, W                      1491:      XORWF USB_FILE_SIZE_LOW, W
+049E  1903     BTFSC STATUS, 0x2                  1492:      BTFSC STATUS, Z
+049F  2CA2     GOTO 0x4A2                         1493:      GOTO UWTD_BREAK
+                                                  1494:  UWTD_NB
+04A0  0BAE     DECFSZ 0x2E, F                     1495:      DECFSZ GEN_COUNT5, F
+04A1  2C93     GOTO 0x493                         1496:      GOTO UWTD_WR_LOOP
+                                                  1497:  UWTD_BREAK
+04A2  1705     BSF PORTA, 0x6                     1498:      BSF PORTA, 6
+04A3  300B     MOVLW 0xB                          1499:      MOVLW H'0B'
+04A4  00D0     MOVWF 0x50                         1500:      MOVWF TIMEOUT_HIGH
+04A5  30B8     MOVLW 0xB8                         1501:      MOVLW H'B8'
+04A6  00CF     MOVWF 0x4F                         1502:      MOVWF TIMEOUT_LOW
+04A7  301E     MOVLW 0x1E                         1503:      MOVLW H'1E'
+04A8  00CC     MOVWF 0x4C                         1504:      MOVWF USB_TARGET_STATUS
+04A9  2405     CALL 0x405                         1505:      CALL USB_WAIT_STATUS
+04AA  083D     MOVF 0x3D, W                       1506:      MOVF USB_BYTES_SENT_HIGH, W
+04AB  063F     XORWF 0x3F, W                      1507:      XORWF USB_FILE_SIZE_HIGH, W
+04AC  1D03     BTFSS STATUS, 0x2                  1508:      BTFSS STATUS, Z
+04AD  2CB2     GOTO 0x4B2                         1509:      GOTO UWTD_NE
+04AE  083E     MOVF 0x3E, W                       1510:      MOVF USB_BYTES_SENT_LOW, W
+04AF  0640     XORWF 0x40, W                      1511:      XORWF USB_FILE_SIZE_LOW, W
+04B0  1903     BTFSC STATUS, 0x2                  1512:      BTFSC STATUS, Z
+04B1  2CBB     GOTO 0x4BB                         1513:      GOTO UWTD_EQUAL
+                                                  1514:  UWTD_NE
+04B2  23C8     CALL 0x3C8                         1515:      CALL USB_BYTE_WR_GO
+04B3  300B     MOVLW 0xB                          1516:      MOVLW H'0B'
+04B4  00D0     MOVWF 0x50                         1517:      MOVWF TIMEOUT_HIGH
+04B5  30B8     MOVLW 0xB8                         1518:      MOVLW H'B8'
+04B6  00CF     MOVWF 0x4F                         1519:      MOVWF TIMEOUT_LOW
+04B7  301E     MOVLW 0x1E                         1520:      MOVLW H'1E'
+04B8  00CC     MOVWF 0x4C                         1521:      MOVWF USB_TARGET_STATUS
+04B9  2405     CALL 0x405                         1522:      CALL USB_WAIT_STATUS
+04BA  2C8B     GOTO 0x48B                         1523:      GOTO UWTD_ND_LOOP
+                                                  1524:  UWTD_EQUAL
+04BB  23C8     CALL 0x3C8                         1525:      CALL USB_BYTE_WR_GO
+04BC  300B     MOVLW 0xB                          1526:      MOVLW H'0B'
+04BD  00D0     MOVWF 0x50                         1527:      MOVWF TIMEOUT_HIGH
+04BE  30B8     MOVLW 0xB8                         1528:      MOVLW H'B8'
+04BF  00CF     MOVWF 0x4F                         1529:      MOVWF TIMEOUT_LOW
+04C0  3014     MOVLW 0x14                         1530:      MOVLW H'14'
+04C1  00CC     MOVWF 0x4C                         1531:      MOVWF USB_TARGET_STATUS
+04C2  2405     CALL 0x405                         1532:      CALL USB_WAIT_STATUS
+04C3  0BAF     DECFSZ 0x2F, F                     1533:      DECFSZ GEN_COUNT6, F
+04C4  2C7E     GOTO 0x47E                         1534:      GOTO UWTD_L4
+04C5  2367     CALL 0x367                         1535:      CALL USB_FILE_CLOSE
+04C6  300B     MOVLW 0xB                          1536:      MOVLW H'0B'
+04C7  00D0     MOVWF 0x50                         1537:      MOVWF TIMEOUT_HIGH
+04C8  30B8     MOVLW 0xB8                         1538:      MOVLW H'B8'
+04C9  00CF     MOVWF 0x4F                         1539:      MOVWF TIMEOUT_LOW
+04CA  3014     MOVLW 0x14                         1540:      MOVLW H'14'
+04CB  00CC     MOVWF 0x4C                         1541:      MOVWF USB_TARGET_STATUS
+04CC  2405     CALL 0x405                         1542:      CALL USB_WAIT_STATUS
+04CD  0008     RETURN                             1543:      RETURN
+                                                  1544:  
+                                                  1545:  USB_FILE_WRITE
+04CE  234B     CALL 0x34B                         1546:      CALL USB_SET_FILE_NAME
+04CF  3010     MOVLW 0x10                         1547:      MOVLW H'10'
+04D0  00CF     MOVWF 0x4F                         1548:      MOVWF TIMEOUT_LOW
+04D1  01D0     CLRF 0x50                          1549:      CLRF TIMEOUT_HIGH
+04D2  3014     MOVLW 0x14                         1550:      MOVLW H'14'
+04D3  00CC     MOVWF 0x4C                         1551:      MOVWF USB_TARGET_STATUS
+04D4  2405     CALL 0x405                         1552:      CALL USB_WAIT_STATUS
+04D5  23B6     CALL 0x3B6                         1553:      CALL USB_FILE_CREATE
+04D6  30B8     MOVLW 0xB8                         1554:      MOVLW H'B8'
+04D7  00CF     MOVWF 0x4F                         1555:      MOVWF TIMEOUT_LOW
+04D8  300B     MOVLW 0xB                          1556:      MOVLW H'0B'
+04D9  00D0     MOVWF 0x50                         1557:      MOVWF TIMEOUT_HIGH  ;SET TIMEOUT TO 3 SECONDS
+04DA  3014     MOVLW 0x14                         1558:      MOVLW H'14'
+04DB  00CC     MOVWF 0x4C                         1559:      MOVWF USB_TARGET_STATUS ;SET TARGET STATUS TO 0x14
+04DC  2405     CALL 0x405                         1560:      CALL USB_WAIT_STATUS
+04DD  01BD     CLRF 0x3D                          1561:      CLRF USB_BYTES_SENT_HIGH
+04DE  01BE     CLRF 0x3E                          1562:      CLRF USB_BYTES_SENT_LOW
+04DF  0838     MOVF 0x38, W                       1563:      MOVF TAPE_SIZE_HIGH, W
+04E0  00BF     MOVWF 0x3F                         1564:      MOVWF USB_FILE_SIZE_HIGH
+04E1  0839     MOVF 0x39, W                       1565:      MOVF TAPE_SIZE_LOW, W
+04E2  00C0     MOVWF 0x40                         1566:      MOVWF USB_FILE_SIZE_LOW
+04E3  23BC     CALL 0x3BC                         1567:      CALL USB_BYTE_WRITE
+04E4  300B     MOVLW 0xB                          1568:      MOVLW H'0B'
+04E5  00D0     MOVWF 0x50                         1569:      MOVWF TIMEOUT_HIGH
+04E6  30B8     MOVLW 0xB8                         1570:      MOVLW H'B8'
+04E7  00CF     MOVWF 0x4F                         1571:      MOVWF TIMEOUT_LOW
+04E8  301E     MOVLW 0x1E                         1572:      MOVLW H'1E'
+04E9  00CC     MOVWF 0x4C                         1573:      MOVWF USB_TARGET_STATUS
+04EA  2405     CALL 0x405                         1574:      CALL USB_WAIT_STATUS
+                                                  1575:  UFW_ND_LOOP
+04EB  257F     CALL 0x57F                         1576:      CALL BUFF_INIT
+04EC  083E     MOVF 0x3E, W                       1577:      MOVF USB_BYTES_SENT_LOW, W
+04ED  00A7     MOVWF 0x27                         1578:      MOVWF RAM_ADDRESS_L
+04EE  083D     MOVF 0x3D, W                       1579:      MOVF USB_BYTES_SENT_HIGH, W
+04EF  00A6     MOVWF 0x26                         1580:      MOVWF RAM_ADDRESS_H
+04F0  03A7     DECF 0x27, F                       1581:      DECF RAM_ADDRESS_L, F
+04F1  1C03     BTFSS STATUS, 0x0                  1582:      BTFSS STATUS, C
+04F2  03A6     DECF 0x26, F                       1583:      DECF RAM_ADDRESS_H, F
+04F3  2583     CALL 0x583                         1584:      CALL BUFF_FILL
+04F4  1305     BCF PORTA, 0x6                     1585:      BCF PORTA, 6
+04F5  302D     MOVLW 0x2D                         1586:      MOVLW H'2D'
+04F6  00A0     MOVWF 0x20                         1587:      MOVWF DREG
+04F7  22D1     CALL 0x2D1                         1588:      CALL SPI_TRANSFER   ;SEND WR_REQ_DATA
+04F8  01A0     CLRF 0x20                          1589:      CLRF DREG
+04F9  22D1     CALL 0x2D1                         1590:      CALL SPI_TRANSFER   ;GET NUMBER OF BYTES TO SEND
+04FA  0820     MOVF 0x20, W                       1591:      MOVF DREG, W
+04FB  00AE     MOVWF 0x2E                         1592:      MOVWF GEN_COUNT5
+                                                  1593:  UFW_WR_LOOP
+04FC  258C     CALL 0x58C                         1594:      CALL BUFF_READ_AUTO
+04FD  22D1     CALL 0x2D1                         1595:      CALL SPI_TRANSFER
+04FE  0FBE     INCFSZ 0x3E, F                     1596:      INCFSZ USB_BYTES_SENT_LOW, F
+04FF  03BD     DECF 0x3D, F                       1597:      DECF USB_BYTES_SENT_HIGH, F
+0500  0ABD     INCF 0x3D, F                       1598:      INCF USB_BYTES_SENT_HIGH, F
+0501  083D     MOVF 0x3D, W                       1599:      MOVF USB_BYTES_SENT_HIGH, W
+0502  063F     XORWF 0x3F, W                      1600:      XORWF USB_FILE_SIZE_HIGH, W
+0503  1D03     BTFSS STATUS, 0x2                  1601:      BTFSS STATUS, Z
+0504  2D09     GOTO 0x509                         1602:      GOTO UFW_NB
+0505  083E     MOVF 0x3E, W                       1603:      MOVF USB_BYTES_SENT_LOW, W
+0506  0640     XORWF 0x40, W                      1604:      XORWF USB_FILE_SIZE_LOW, W
+0507  1903     BTFSC STATUS, 0x2                  1605:      BTFSC STATUS, Z
+0508  2D0B     GOTO 0x50B                         1606:      GOTO UFW_BREAK
+                                                  1607:  UFW_NB
+0509  0BAE     DECFSZ 0x2E, F                     1608:      DECFSZ GEN_COUNT5, F
+050A  2CFC     GOTO 0x4FC                         1609:      GOTO UFW_WR_LOOP
+                                                  1610:  UFW_BREAK
+050B  1705     BSF PORTA, 0x6                     1611:      BSF PORTA, 6
+050C  300B     MOVLW 0xB                          1612:      MOVLW H'0B'
+050D  00D0     MOVWF 0x50                         1613:      MOVWF TIMEOUT_HIGH
+050E  30B8     MOVLW 0xB8                         1614:      MOVLW H'B8'
+050F  00CF     MOVWF 0x4F                         1615:      MOVWF TIMEOUT_LOW
+0510  301E     MOVLW 0x1E                         1616:      MOVLW H'1E'
+0511  00CC     MOVWF 0x4C                         1617:      MOVWF USB_TARGET_STATUS
+0512  2405     CALL 0x405                         1618:      CALL USB_WAIT_STATUS
+0513  083D     MOVF 0x3D, W                       1619:      MOVF USB_BYTES_SENT_HIGH, W
+0514  063F     XORWF 0x3F, W                      1620:      XORWF USB_FILE_SIZE_HIGH, W
+0515  1D03     BTFSS STATUS, 0x2                  1621:      BTFSS STATUS, Z
+0516  2D1B     GOTO 0x51B                         1622:      GOTO UFW_NE
+0517  083E     MOVF 0x3E, W                       1623:      MOVF USB_BYTES_SENT_LOW, W
+0518  0640     XORWF 0x40, W                      1624:      XORWF USB_FILE_SIZE_LOW, W
+0519  1903     BTFSC STATUS, 0x2                  1625:      BTFSC STATUS, Z
+051A  2D24     GOTO 0x524                         1626:      GOTO UFW_EQUAL
+                                                  1627:  UFW_NE
+051B  23C8     CALL 0x3C8                         1628:      CALL USB_BYTE_WR_GO
+051C  300B     MOVLW 0xB                          1629:      MOVLW H'0B'
+051D  00D0     MOVWF 0x50                         1630:      MOVWF TIMEOUT_HIGH
+051E  30B8     MOVLW 0xB8                         1631:      MOVLW H'B8'
+051F  00CF     MOVWF 0x4F                         1632:      MOVWF TIMEOUT_LOW
+0520  301E     MOVLW 0x1E                         1633:      MOVLW H'1E'
+0521  00CC     MOVWF 0x4C                         1634:      MOVWF USB_TARGET_STATUS
+0522  2405     CALL 0x405                         1635:      CALL USB_WAIT_STATUS
+0523  2CEB     GOTO 0x4EB                         1636:      GOTO UFW_ND_LOOP
+                                                  1637:  UFW_EQUAL
+0524  23C8     CALL 0x3C8                         1638:      CALL USB_BYTE_WR_GO
+0525  300B     MOVLW 0xB                          1639:      MOVLW H'0B'
+0526  00D0     MOVWF 0x50                         1640:      MOVWF TIMEOUT_HIGH
+0527  30B8     MOVLW 0xB8                         1641:      MOVLW H'B8'
+0528  00CF     MOVWF 0x4F                         1642:      MOVWF TIMEOUT_LOW
+0529  3014     MOVLW 0x14                         1643:      MOVLW H'14'
+052A  00CC     MOVWF 0x4C                         1644:      MOVWF USB_TARGET_STATUS
+052B  2405     CALL 0x405                         1645:      CALL USB_WAIT_STATUS
+052C  2367     CALL 0x367                         1646:      CALL USB_FILE_CLOSE
+052D  300B     MOVLW 0xB                          1647:      MOVLW H'0B'
+052E  00D0     MOVWF 0x50                         1648:      MOVWF TIMEOUT_HIGH
+052F  30B8     MOVLW 0xB8                         1649:      MOVLW H'B8'
+0530  00CF     MOVWF 0x4F                         1650:      MOVWF TIMEOUT_LOW
+0531  3014     MOVLW 0x14                         1651:      MOVLW H'14'
+0532  00CC     MOVWF 0x4C                         1652:      MOVWF USB_TARGET_STATUS
+0533  2405     CALL 0x405                         1653:      CALL USB_WAIT_STATUS
+0534  0008     RETURN                             1654:      RETURN
+                                                  1655:  
+                                                  1656:  USB_FILE_READ
+0535  30FF     MOVLW 0xFF                         1657:      MOVLW H'FF'
+0536  00A6     MOVWF 0x26                         1658:      MOVWF RAM_ADDRESS_H
+0537  00A7     MOVWF 0x27                         1659:      MOVWF RAM_ADDRESS_L ;RAM ADDRESS WILL OVERFLOW BEFORE FIRST WRITE
+0538  2370     CALL 0x370                         1660:      CALL USB_BYTE_READ
+0539  01D0     CLRF 0x50                          1661:      CLRF TIMEOUT_HIGH
+053A  3080     MOVLW 0x80                         1662:      MOVLW H'80'
+053B  00CF     MOVWF 0x4F                         1663:      MOVWF TIMEOUT_LOW
+053C  301D     MOVLW 0x1D                         1664:      MOVLW H'1D'
+053D  00CC     MOVWF 0x4C                         1665:      MOVWF USB_TARGET_STATUS
+053E  2405     CALL 0x405                         1666:      CALL USB_WAIT_STATUS
+053F  1D54     BTFSS 0x54, 0x2                    1667:      BTFSS FLAG_REG, 2   ;CHECK TIMEOUT FLAG
+0540  2D67     GOTO 0x567                         1668:      GOTO TIMEOUT_ERROR
+                                                  1669:  UFR_LOOP
+0541  2382     CALL 0x382                         1670:      CALL USB_READ_DATA0
+0542  3001     MOVLW 0x1                          1671:      MOVLW H'01'
+0543  00D1     MOVWF 0x51                         1672:      MOVWF DELAY_COUNTER
+0544  2300     CALL 0x300                         1673:      CALL DELAY_MILLIS
+0545  0840     MOVF 0x40, W                       1674:      MOVF USB_FILE_SIZE_LOW, W
+0546  0642     XORWF 0x42, W                      1675:      XORWF USB_BYTES_READ_LOW, W
+0547  1D03     BTFSS STATUS, 0x2                  1676:      BTFSS STATUS, Z
+0548  2D4D     GOTO 0x54D                         1677:      GOTO UFR_GO
+0549  083F     MOVF 0x3F, W                       1678:      MOVF USB_FILE_SIZE_HIGH, W
+054A  0641     XORWF 0x41, W                      1679:      XORWF USB_BYTES_READ_HIGH, W
+054B  1903     BTFSC STATUS, 0x2                  1680:      BTFSC STATUS, Z
+054C  2D55     GOTO 0x555                         1681:      GOTO UFR_DONE
+                                                  1682:  UFR_GO
+054D  237C     CALL 0x37C                         1683:      CALL USB_BYTE_READ_GO
+054E  01D0     CLRF 0x50                          1684:      CLRF TIMEOUT_HIGH
+054F  30FF     MOVLW 0xFF                         1685:      MOVLW H'FF'
+0550  00CF     MOVWF 0x4F                         1686:      MOVWF TIMEOUT_LOW
+0551  301D     MOVLW 0x1D                         1687:      MOVLW H'1D'
+0552  00CC     MOVWF 0x4C                         1688:      MOVWF USB_TARGET_STATUS
+0553  2405     CALL 0x405                         1689:      CALL USB_WAIT_STATUS
+0554  2D41     GOTO 0x541                         1690:      GOTO UFR_LOOP
+                                                  1691:  UFR_DONE
+0555  0840     MOVF 0x40, W                       1692:      MOVF USB_FILE_SIZE_LOW, W
+0556  00B9     MOVWF 0x39                         1693:      MOVWF TAPE_SIZE_LOW
+0557  083F     MOVF 0x3F, W                       1694:      MOVF USB_FILE_SIZE_HIGH, W
+0558  00B8     MOVWF 0x38                         1695:      MOVWF TAPE_SIZE_HIGH
+0559  1305     BCF PORTA, 0x6                     1696:      BCF PORTA, 6
+055A  3036     MOVLW 0x36                         1697:      MOVLW H'36'
+055B  00A0     MOVWF 0x20                         1698:      MOVWF DREG
+055C  22D1     CALL 0x2D1                         1699:      CALL SPI_TRANSFER   ;SEND FILE CLOSE COMMAND
+055D  01A0     CLRF 0x20                          1700:      CLRF DREG
+055E  22D1     CALL 0x2D1                         1701:      CALL SPI_TRANSFER   ;FILE CLOSE PARAMETER IS 0 (DO NOT UPDATE FILE SIZE)
+055F  1705     BSF PORTA, 0x6                     1702:      BSF PORTA, 6
+0560  01D0     CLRF 0x50                          1703:      CLRF TIMEOUT_HIGH
+0561  3080     MOVLW 0x80                         1704:      MOVLW H'80'
+0562  00CF     MOVWF 0x4F                         1705:      MOVWF TIMEOUT_LOW
+0563  3014     MOVLW 0x14                         1706:      MOVLW H'14'
+0564  00CC     MOVWF 0x4C                         1707:      MOVWF USB_TARGET_STATUS
+0565  2405     CALL 0x405                         1708:      CALL USB_WAIT_STATUS
+0566  0008     RETURN                             1709:      RETURN
+                                                  1710:  
+                                                  1711:  TIMEOUT_ERROR
+0567  0820     MOVF 0x20, W                       1712:      MOVF DREG, W
+0568  00A2     MOVWF 0x22                         1713:      MOVWF TEMP2
+0569  01AB     CLRF 0x2B                          1714:      CLRF GEN_COUNT2
+056A  3004     MOVLW 0x4                          1715:      MOVLW H'04'
+056B  00D3     MOVWF 0x53                         1716:      MOVWF STRING_ID
+056C  21AB     CALL 0x1AB                         1717:      CALL PRINT_STRING_SERIAL
+056D  3020     MOVLW 0x20                         1718:      MOVLW H'20' ;SPACE CHAR
+056E  00A0     MOVWF 0x20                         1719:      MOVWF DREG
+056F  20BD     CALL 0xBD                          1720:      CALL UART_SEND
+0570  084C     MOVF 0x4C, W                       1721:      MOVF USB_TARGET_STATUS, W
+0571  00A0     MOVWF 0x20                         1722:      MOVWF DREG
+0572  22DC     CALL 0x2DC                         1723:      CALL BYTE_TO_HEX
+0573  083B     MOVF 0x3B, W                       1724:      MOVF HEX_CHAR_HIGH, W
+0574  00A0     MOVWF 0x20                         1725:      MOVWF DREG
+0575  20BD     CALL 0xBD                          1726:      CALL UART_SEND
+0576  083C     MOVF 0x3C, W                       1727:      MOVF HEX_CHAR_LOW, W
+0577  00A0     MOVWF 0x20                         1728:      MOVWF DREG
+0578  20BD     CALL 0xBD                          1729:      CALL UART_SEND
+0579  300A     MOVLW 0xA                          1730:      MOVLW H'0A' ;NEW LINE CHAR
+057A  00A0     MOVWF 0x20                         1731:      MOVWF DREG
+057B  20BD     CALL 0xBD                          1732:      CALL UART_SEND
+057C  0822     MOVF 0x22, W                       1733:      MOVF TEMP2, W
+057D  00A0     MOVWF 0x20                         1734:      MOVWF DREG
+057E  0008     RETURN                             1735:      RETURN
+                                                  1736:  
+                                                  1737:  BUFF_INIT
+057F  1383     BCF STATUS, 0x7                    1738:      BCF STATUS, IRP    ;SWITCH TO BANKS 0 AND 1
+0580  30A0     MOVLW 0xA0                         1739:      MOVLW H'A0' ;SWITCH TO BANK 1
+0581  0084     MOVWF FSR                          1740:      MOVWF FSR
+0582  0008     RETURN                             1741:      RETURN
+                                                  1742:  
+                                                  1743:  BUFF_FILL
+0583  01AF     CLRF 0x2F                          1744:      CLRF GEN_COUNT6
+                                                  1745:  BUFF_FILL_LOOP
+0584  20C2     CALL 0xC2                          1746:      CALL RAM_READ_AUTO
+0585  2589     CALL 0x589                         1747:      CALL BUFF_WRITE_AUTO
+0586  0BAF     DECFSZ 0x2F, F                     1748:      DECFSZ GEN_COUNT6, F
+0587  2D84     GOTO 0x584                         1749:      GOTO BUFF_FILL_LOOP
+0588  0008     RETURN                             1750:      RETURN
+                                                  1751:  
+                                                  1752:  BUFF_WRITE_AUTO
+0589  0820     MOVF 0x20, W                       1753:      MOVF DREG, W
+058A  0080     MOVWF INDF                         1754:      MOVWF INDF
+058B  2D8E     GOTO 0x58E                         1755:      GOTO BUFR_INC
+                                                  1756:  BUFF_READ_AUTO
+058C  0800     MOVF INDF, W                       1757:      MOVF INDF, W
+058D  00A0     MOVWF 0x20                         1758:      MOVWF DREG
+                                                  1759:  BUFR_INC
+058E  0A84     INCF FSR, F                        1760:      INCF FSR, F
+058F  0804     MOVF FSR, W                        1761:      MOVF FSR, W
+0590  397F     ANDLW 0x7F                         1762:      ANDLW H'7F'
+0591  3A70     XORLW 0x70                         1763:      XORLW H'70'
+0592  1D03     BTFSS STATUS, 0x2                  1764:      BTFSS STATUS, Z
+0593  0008     RETURN                             1765:      RETURN
+0594  1B84     BTFSC FSR, 0x7                     1766:      BTFSC FSR, 7
+0595  2D9C     GOTO 0x59C                         1767:      GOTO BUFR_ODD
+                                                  1768:  BUFR_EVEN
+0596  1B83     BTFSC STATUS, 0x7                  1769:      BTFSC STATUS, IRP
+0597  2D99     GOTO 0x599                         1770:      GOTO BUFR_B2
+                                                  1771:  BUFR_B0
+0598  2A47     GOTO 0x247                         1772:      GOTO BUILD_PANIC ;THIS FUNCTION SHOULD NEVER READ BANK 0!
+                                                  1773:  BUFR_B2
+0599  3090     MOVLW 0x90                         1774:      MOVLW H'90' ;IRP ALREADY SET, SWITCH TO ODD BANKS
+059A  0084     MOVWF FSR                          1775:      MOVWF FSR
+059B  0008     RETURN                             1776:      RETURN
+                                                  1777:  BUFR_ODD
+059C  1B83     BTFSC STATUS, 0x7                  1778:      BTFSC STATUS, IRP
+059D  2DA2     GOTO 0x5A2                         1779:      GOTO BUFR_B3
+                                                  1780:  BUFR_B1
+059E  1783     BSF STATUS, 0x7                    1781:      BSF STATUS, IRP ;SWITCH TO BANKS 2 AND 3
+059F  3010     MOVLW 0x10                         1782:      MOVLW H'10' ;SWITCH TO EVEN BANKS
+05A0  0084     MOVWF FSR                          1783:      MOVWF FSR
+05A1  0008     RETURN                             1784:      RETURN
+                                                  1785:  BUFR_B3
+05A2  1383     BCF STATUS, 0x7                    1786:      BCF STATUS, IRP ;SWITCH TO BANKS 0 AND 1
+05A3  30A0     MOVLW 0xA0                         1787:      MOVLW H'A0' ;SWITCH TO BANK 1
+05A4  0084     MOVWF FSR                          1788:      MOVWF FSR
+05A5  0008     RETURN                             1789:      RETURN
+                                                  1790:  
+                                                  1791:  STRINGS CODE H'0800' ;STRINGS AND TABLES
+                                                  1792:  STRING_TABLE
+0800  0853     MOVF 0x53, W                       1793:      MOVF STRING_ID, W
+0801  0782     ADDWF PCL, F                       1794:      ADDWF PCL, F
+0802  2809     GOTO 0x9                           1795:      GOTO HOME_STRING    ;ID0
+0803  2817     GOTO 0x17                          1796:      GOTO LOAD_STRING    ;ID1
+0804  281E     GOTO 0x1E                          1797:      GOTO SAVE_STRING    ;ID2
+0805  2825     GOTO 0x25                          1798:      GOTO SEND_STRING    ;ID3
+0806  282C     GOTO 0x2C                          1799:      GOTO TIMEOUT_STRING ;ID4
+0807  2837     GOTO 0x37                          1800:      GOTO NEXT_STRING    ;ID5
+0808  283E     GOTO 0x3E                          1801:      GOTO BACK_STRING    ;ID6
+                                                  1802:  
+                                                  1803:  HOME_STRING
+0809  0852     MOVF 0x52, W                       1804:      MOVF STRING_INDEX, W
+080A  0782     ADDWF PCL, F                       1805:      ADDWF PCL,F
+080B  3454     RETLW 0x54                         1806:      RETLW 'T'
+080C  3441     RETLW 0x41                         1807:      RETLW 'A'
+080D  3450     RETLW 0x50                         1808:      RETLW 'P'
+080E  3445     RETLW 0x45                         1809:      RETLW 'E'
+080F  3420     RETLW 0x20                         1810:      RETLW ' '
+0810  3452     RETLW 0x52                         1811:      RETLW 'R'
+0811  3445     RETLW 0x45                         1812:      RETLW 'E'
+0812  3441     RETLW 0x41                         1813:      RETLW 'A'
+0813  3444     RETLW 0x44                         1814:      RETLW 'D'
+0814  3459     RETLW 0x59                         1815:      RETLW 'Y'
+0815  342E     RETLW 0x2E                         1816:      RETLW '.'
+0816  3400     RETLW 0x0                          1817:      RETLW H'00'
+                                                  1818:  
+                                                  1819:  LOAD_STRING
+0817  0852     MOVF 0x52, W                       1820:      MOVF STRING_INDEX, W
+0818  0782     ADDWF PCL, F                       1821:      ADDWF PCL,F
+0819  344C     RETLW 0x4C                         1822:      RETLW 'L'
+081A  344F     RETLW 0x4F                         1823:      RETLW 'O'
+081B  3441     RETLW 0x41                         1824:      RETLW 'A'
+081C  3444     RETLW 0x44                         1825:      RETLW 'D'
+081D  3400     RETLW 0x0                          1826:      RETLW H'00'
+                                                  1827:  
+                                                  1828:  SAVE_STRING
+081E  0852     MOVF 0x52, W                       1829:      MOVF STRING_INDEX, W
+081F  0782     ADDWF PCL, F                       1830:      ADDWF PCL,F
+0820  3453     RETLW 0x53                         1831:      RETLW 'S'
+0821  3441     RETLW 0x41                         1832:      RETLW 'A'
+0822  3456     RETLW 0x56                         1833:      RETLW 'V'
+0823  3445     RETLW 0x45                         1834:      RETLW 'E'
+0824  3400     RETLW 0x0                          1835:      RETLW H'00'
+                                                  1836:  
+                                                  1837:  SEND_STRING
+0825  0852     MOVF 0x52, W                       1838:      MOVF STRING_INDEX, W
+0826  0782     ADDWF PCL, F                       1839:      ADDWF PCL, F
+0827  3453     RETLW 0x53                         1840:      RETLW 'S'
+0828  3445     RETLW 0x45                         1841:      RETLW 'E'
+0829  344E     RETLW 0x4E                         1842:      RETLW 'N'
+082A  3444     RETLW 0x44                         1843:      RETLW 'D'
+082B  3400     RETLW 0x0                          1844:      RETLW H'00'
+                                                  1845:  
+                                                  1846:  TIMEOUT_STRING
+082C  0852     MOVF 0x52, W                       1847:      MOVF STRING_INDEX, W
+082D  0782     ADDWF PCL, F                       1848:      ADDWF PCL, F
+082E  3454     RETLW 0x54                         1849:      RETLW 'T'
+082F  3449     RETLW 0x49                         1850:      RETLW 'I'
+0830  344D     RETLW 0x4D                         1851:      RETLW 'M'
+0831  3445     RETLW 0x45                         1852:      RETLW 'E'
+0832  344F     RETLW 0x4F                         1853:      RETLW 'O'
+0833  3455     RETLW 0x55                         1854:      RETLW 'U'
+0834  3454     RETLW 0x54                         1855:      RETLW 'T'
+0835  343A     RETLW 0x3A                         1856:      RETLW ':'
+0836  3400     RETLW 0x0                          1857:      RETLW H'00'
+                                                  1858:  
+                                                  1859:  NEXT_STRING
+0837  0852     MOVF 0x52, W                       1860:      MOVF STRING_INDEX, W
+0838  0782     ADDWF PCL, F                       1861:      ADDWF PCL,F
+0839  344E     RETLW 0x4E                         1862:      RETLW 'N'
+083A  3445     RETLW 0x45                         1863:      RETLW 'E'
+083B  3458     RETLW 0x58                         1864:      RETLW 'X'
+083C  3454     RETLW 0x54                         1865:      RETLW 'T'
+083D  3400     RETLW 0x0                          1866:      RETLW H'00'
+                                                  1867:  
+                                                  1868:  BACK_STRING
+083E  0852     MOVF 0x52, W                       1869:      MOVF STRING_INDEX, W
+083F  0782     ADDWF PCL, F                       1870:      ADDWF PCL,F
+0840  3442     RETLW 0x42                         1871:      RETLW 'B'
+0841  3441     RETLW 0x41                         1872:      RETLW 'A'
+0842  3443     RETLW 0x43                         1873:      RETLW 'C'
+0843  344B     RETLW 0x4B                         1874:      RETLW 'K'
+0844  3400     RETLW 0x0                          1875:      RETLW H'00'
+                                                  1876:  
+                                                  1877:  HEX_STRING
+0845  0782     ADDWF PCL, F                       1878:      ADDWF PCL,F
+0846  3430     RETLW 0x30                         1879:      RETLW '0'
+0847  3431     RETLW 0x31                         1880:      RETLW '1'
+0848  3432     RETLW 0x32                         1881:      RETLW '2'
+0849  3433     RETLW 0x33                         1882:      RETLW '3'
+084A  3434     RETLW 0x34                         1883:      RETLW '4'
+084B  3435     RETLW 0x35                         1884:      RETLW '5'
+084C  3436     RETLW 0x36                         1885:      RETLW '6'
+084D  3437     RETLW 0x37                         1886:      RETLW '7'
+084E  3438     RETLW 0x38                         1887:      RETLW '8'
+084F  3439     RETLW 0x39                         1888:      RETLW '9'
+0850  3441     RETLW 0x41                         1889:      RETLW 'A'
+0851  3442     RETLW 0x42                         1890:      RETLW 'B'
+0852  3443     RETLW 0x43                         1891:      RETLW 'C'
+0853  3444     RETLW 0x44                         1892:      RETLW 'D'
+0854  3445     RETLW 0x45                         1893:      RETLW 'E'
+0855  3446     RETLW 0x46                         1894:      RETLW 'F'
+                                                  1895:  
+                                                  1896:  STRINGS2 CODE H'0900'
+                                                  1897:  
+                                                  1898:  SEND_232
+0900  1007     BCF PORTC, 0x0                     1899:      BCF PORTC,0 ;SEND STARTING BIT
+0901  0000     NOP                                1900:      NOP
+0902  214C     CALL 0x14C                         1901:      CALL FULLDELAY_232
+0903  1820     BTFSC 0x20, 0x0                    1902:      BTFSC DREG,0 ;TEST FIRST BIT
+0904  1407     BSF PORTC, 0x0                     1903:      BSF PORTC,0 ;IF SET IN REGISTER SET TX LINE
+0905  1C20     BTFSS 0x20, 0x0                    1904:      BTFSS DREG,0 ;TEST FIRST BIT
+0906  1007     BCF PORTC, 0x0                     1905:      BCF PORTC,0 ;IF CLEAR IN REGISTER CLEAR TX LINE
+0907  215C     CALL 0x15C                         1906:      CALL TXDELAY_232
+0908  18A0     BTFSC 0x20, 0x1                    1907:      BTFSC DREG,1
+0909  1407     BSF PORTC, 0x0                     1908:      BSF PORTC,0
+090A  1CA0     BTFSS 0x20, 0x1                    1909:      BTFSS DREG,1
+090B  1007     BCF PORTC, 0x0                     1910:      BCF PORTC,0
+090C  215C     CALL 0x15C                         1911:      CALL TXDELAY_232
+090D  1920     BTFSC 0x20, 0x2                    1912:      BTFSC DREG,2
+090E  1407     BSF PORTC, 0x0                     1913:      BSF PORTC,0
+090F  1D20     BTFSS 0x20, 0x2                    1914:      BTFSS DREG,2
+0910  1007     BCF PORTC, 0x0                     1915:      BCF PORTC,0
+0911  215C     CALL 0x15C                         1916:      CALL TXDELAY_232
+0912  19A0     BTFSC 0x20, 0x3                    1917:      BTFSC DREG,3
+0913  1407     BSF PORTC, 0x0                     1918:      BSF PORTC,0
+0914  1DA0     BTFSS 0x20, 0x3                    1919:      BTFSS DREG,3
+0915  1007     BCF PORTC, 0x0                     1920:      BCF PORTC,0
+0916  215C     CALL 0x15C                         1921:      CALL TXDELAY_232
+0917  1A20     BTFSC 0x20, 0x4                    1922:      BTFSC DREG,4
+0918  1407     BSF PORTC, 0x0                     1923:      BSF PORTC,0
+0919  1E20     BTFSS 0x20, 0x4                    1924:      BTFSS DREG,4
+091A  1007     BCF PORTC, 0x0                     1925:      BCF PORTC,0
+091B  215C     CALL 0x15C                         1926:      CALL TXDELAY_232
+091C  1AA0     BTFSC 0x20, 0x5                    1927:      BTFSC DREG,5
+091D  1407     BSF PORTC, 0x0                     1928:      BSF PORTC,0
+091E  1EA0     BTFSS 0x20, 0x5                    1929:      BTFSS DREG,5
+091F  1007     BCF PORTC, 0x0                     1930:      BCF PORTC,0
+0920  215C     CALL 0x15C                         1931:      CALL TXDELAY_232
+0921  1B20     BTFSC 0x20, 0x6                    1932:      BTFSC DREG,6
+0922  1407     BSF PORTC, 0x0                     1933:      BSF PORTC,0
+0923  1F20     BTFSS 0x20, 0x6                    1934:      BTFSS DREG,6
+0924  1007     BCF PORTC, 0x0                     1935:      BCF PORTC,0
+0925  215C     CALL 0x15C                         1936:      CALL TXDELAY_232
+0926  1BA0     BTFSC 0x20, 0x7                    1937:      BTFSC DREG,7
+0927  1407     BSF PORTC, 0x0                     1938:      BSF PORTC,0
+0928  1FA0     BTFSS 0x20, 0x7                    1939:      BTFSS DREG,7
+0929  1007     BCF PORTC, 0x0                     1940:      BCF PORTC,0
+092A  215C     CALL 0x15C                         1941:      CALL TXDELAY_232
+092B  1407     BSF PORTC, 0x0                     1942:      BSF PORTC,0 ;SEND STOP BIT
+092C  214C     CALL 0x14C                         1943:      CALL FULLDELAY_232
+092D  0008     RETURN                             1944:      RETURN
+                                                  1945:  
+092E  01A0     CLRF 0x20                          1946:  RECEIVE     CLRF DREG    ;CLEAR REGISTER WHERE MESSAGE WILL BE STORED
+092F  1887     BTFSC PORTC, 0x1                   1947:  WAIT_232    BTFSC PORTC,1
+0930  292F     GOTO 0x12F                         1948:              GOTO WAIT_232
+0931  2153     CALL 0x153                         1949:              CALL HALFDELAY_232
+0932  214C     CALL 0x14C                         1950:              CALL FULLDELAY_232
+0933  1887     BTFSC PORTC, 0x1                   1951:              BTFSC PORTC,1   ;CHECK FIRST BIT
+0934  1420     BSF 0x20, 0x0                      1952:              BSF DREG,0
+0935  214C     CALL 0x14C                         1953:              CALL FULLDELAY_232
+0936  1887     BTFSC PORTC, 0x1                   1954:              BTFSC PORTC,1   ;CHECK BIT 1
+0937  14A0     BSF 0x20, 0x1                      1955:              BSF DREG,1
+0938  214C     CALL 0x14C                         1956:              CALL FULLDELAY_232
+0939  1887     BTFSC PORTC, 0x1                   1957:              BTFSC PORTC,1   ;CHECK BIT2
+093A  1520     BSF 0x20, 0x2                      1958:              BSF DREG,2
+093B  214C     CALL 0x14C                         1959:              CALL FULLDELAY_232
+093C  1887     BTFSC PORTC, 0x1                   1960:              BTFSC PORTC,1   ;CHECK BIT 3
+093D  15A0     BSF 0x20, 0x3                      1961:              BSF DREG,3
+093E  214C     CALL 0x14C                         1962:              CALL FULLDELAY_232
+093F  1887     BTFSC PORTC, 0x1                   1963:              BTFSC PORTC,1   ;CHECK BIT 4
+0940  1620     BSF 0x20, 0x4                      1964:              BSF DREG,4
+0941  214C     CALL 0x14C                         1965:              CALL FULLDELAY_232
+0942  1887     BTFSC PORTC, 0x1                   1966:              BTFSC PORTC,1   ;CHECK BIT 5
+0943  16A0     BSF 0x20, 0x5                      1967:              BSF DREG,5
+0944  214C     CALL 0x14C                         1968:              CALL FULLDELAY_232
+0945  1887     BTFSC PORTC, 0x1                   1969:              BTFSC PORTC,1   ;CHECK BIT 6
+0946  1720     BSF 0x20, 0x6                      1970:              BSF DREG,6
+0947  214C     CALL 0x14C                         1971:              CALL FULLDELAY_232
+0948  1887     BTFSC PORTC, 0x1                   1972:              BTFSC PORTC,1   ;CHECK BIT 7
+0949  17A0     BSF 0x20, 0x7                      1973:              BSF DREG,7
+094A  2153     CALL 0x153                         1974:              CALL HALFDELAY_232  ;TO PREVENT FALSE TRIGGER
+094B  0008     RETURN                             1975:              RETURN
+                                                  1976:  
+                                                  1977:  FULLDELAY_232   ;DESIGNED FOR 4MHZ CLOCK AND 2400 BAUD RATE
+094C  3052     MOVLW 0x52                         1978:              MOVLW 52H
+094D  00AA     MOVWF 0x2A                         1979:              MOVWF GEN_COUNT
+                                                  1980:  FULLDELAY_2322
+094E  0000     NOP                                1981:              NOP
+094F  0000     NOP                                1982:              NOP
+0950  0BAA     DECFSZ 0x2A, F                     1983:              DECFSZ GEN_COUNT,1
+0951  294E     GOTO 0x14E                         1984:              GOTO FULLDELAY_2322
+0952  0008     RETURN                             1985:              RETURN
+                                                  1986:  HALFDELAY_232   ;DESIGNED FOR 4MHZ CLOCK AND 2400 BAUD RATE
+0953  301D     MOVLW 0x1D                         1987:              MOVLW 1DH
+0954  00AA     MOVWF 0x2A                         1988:              MOVWF GEN_COUNT
+                                                  1989:  HALFDELAY_2322
+0955  0000     NOP                                1990:              NOP
+0956  0000     NOP                                1991:              NOP
+0957  0000     NOP                                1992:              NOP
+0958  0000     NOP                                1993:              NOP
+0959  0BAA     DECFSZ 0x2A, F                     1994:              DECFSZ GEN_COUNT,1
+095A  2955     GOTO 0x155                         1995:              GOTO HALFDELAY_2322
+095B  0008     RETURN                             1996:              RETURN
+                                                  1997:  
+095C  3066     MOVLW 0x66                         1998:  TXDELAY_232 MOVLW 66H
+095D  00A4     MOVWF 0x24                         1999:              MOVWF 24H
+                                                  2000:  TXDELAY_2322
+095E  0000     NOP                                2001:              NOP ;DESIGNED FOR 4MHz CLOCK AND 2400 BAUD RATE
+095F  0BA4     DECFSZ 0x24, F                     2002:              DECFSZ 24H,1
+0960  295E     GOTO 0x15E                         2003:              GOTO TXDELAY_2322
+0961  0008     RETURN                             2004:              RETURN
+                                                  2005:  
+                                                  2006:  INT_TEST_START
+0962  0181     CLRF TMR0                          2007:      CLRF TMR0
+0963  0000     NOP                                2008:      NOP
+0964  110B     BCF INTCON, 0x2                    2009:      BCF INTCON, T0IF
+0965  178B     BSF INTCON, 0x7                    2010:      BSF INTCON, GIE
+0966  0008     RETURN                             2011:      RETURN
+                                                  2012:  
+                                                  2013:  INT_TEST_STOP
+0967  138B     BCF INTCON, 0x7                    2014:      BCF INTCON, GIE
+0968  0008     RETURN                             2015:      RETURN
+                                                  2016:  
+2007  0000     NOP                                2017:      END
