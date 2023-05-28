@@ -7,23 +7,23 @@
 [v ___fladd __fladd `(d  1 e 4 0 ]
 "4 /opt/microchip/xc8/v2.05/pic/sources/c90/common/Umul8_16.c
 [v __Umul8_16 _Umul8_16 `(ui  1 e 2 0 ]
-"110 /media/dragomir/4E20DD1220DD01BF/Users/Steve/Workspace/MPLABXProjects/MC10_Tape_Drive_C.X/main.c
+"117 /home/dragomir/repos/MC-10_Tape_Emulator/MC10_Tape_Drive_C.X/main.c
 [v _fifo_push fifo_push `(uc  1 e 1 0 ]
-"144
+"151
 [v _fifo_pop fifo_pop `(uc  1 e 1 0 ]
-"179
+"186
 [v _byte_to_hex byte_to_hex `(v  1 e 1 0 ]
-"187
+"194
 [v _print_string_lcd print_string_lcd `(v  1 e 1 0 ]
-"198
+"205
 [v _print_string_serial print_string_serial `(v  1 e 1 0 ]
-"219
+"226
 [v _print_capacity print_capacity `(v  1 e 1 0 ]
-"237
+"244
 [v _print_query print_query `(v  1 e 1 0 ]
-"269
+"276
 [v _usb_autoconfig usb_autoconfig `(v  1 e 1 0 ]
-"310
+"317
 [v _main main `(v  1 e 1 0 ]
 "30
 [v _temp3 temp3 `uc  1 e 1 0 ]
@@ -107,95 +107,95 @@
 [v _fifo_num_bytes fifo_num_bytes `uc  1 e 1 0 ]
 "71
 [v _tape_name tape_name `[8]uc  1 e 8 0 ]
-"97
-[v _fifo_bank_A fifo_bank_A `[64]uc  1 e 64 0 ]
-"98
-[v _fifo_bank_B fifo_bank_B `[64]uc  1 e 64 0 ]
-"99
-[v _fifo_bank_C fifo_bank_C `[32]uc  1 e 32 0 ]
-"100
-[v _fifo_bank_D fifo_bank_D `[32]uc  1 e 32 0 ]
-"101
-[v _fifo_bank_E fifo_bank_E `[32]uc  1 e 32 0 ]
-"102
-[v _fifo_bank_F fifo_bank_F `[32]uc  1 e 32 0 ]
 "104
-[v _str_timeout str_timeout `DC[10]uc  1 e 10 0 ]
+[v _fifo_bank_A fifo_bank_A `[64]uc  1 e 64 0 ]
 "105
-[v _str_cmd_mode str_cmd_mode `DC[14]uc  1 e 14 0 ]
+[v _fifo_bank_B fifo_bank_B `[64]uc  1 e 64 0 ]
+"106
+[v _fifo_bank_C fifo_bank_C `[32]uc  1 e 32 0 ]
 "107
+[v _fifo_bank_D fifo_bank_D `[32]uc  1 e 32 0 ]
+"108
+[v _fifo_bank_E fifo_bank_E `[32]uc  1 e 32 0 ]
+"109
+[v _fifo_bank_F fifo_bank_F `[32]uc  1 e 32 0 ]
+"111
+[v _str_timeout str_timeout `DC[10]uc  1 e 10 0 ]
+"112
+[v _str_cmd_mode str_cmd_mode `DC[14]uc  1 e 14 0 ]
+"114
 [v _hex_table hex_table `DC[16]uc  1 e 16 0 ]
-"310
+"317
 [v _main main `(v  1 e 1 0 ]
 {
-"324
+"331
 [v main@temp temp `uc  1 a 1 6 ]
-"312
+"319
 [v main@state state `uc  1 a 1 5 ]
-"420
+"448
 } 0
-"269
+"276
 [v _usb_autoconfig usb_autoconfig `(v  1 e 1 0 ]
 {
-"271
+"278
 [v usb_autoconfig@temp temp `uc  1 a 1 3 ]
-"308
+"315
 } 0
-"237
+"244
 [v _print_query print_query `(v  1 e 1 0 ]
 {
-"267
+"274
 } 0
-"187
+"194
 [v _print_string_lcd print_string_lcd `(v  1 e 1 0 ]
 {
 [v print_string_lcd@string string `*.24DCuc  1 a 1 wreg ]
-"189
-[v print_string_lcd@i i `uc  1 a 1 1 ]
-"187
-[v print_string_lcd@string string `*.24DCuc  1 a 1 wreg ]
-"189
-[v print_string_lcd@string string `*.24DCuc  1 a 1 0 ]
 "196
+[v print_string_lcd@i i `uc  1 a 1 1 ]
+"194
+[v print_string_lcd@string string `*.24DCuc  1 a 1 wreg ]
+"196
+[v print_string_lcd@string string `*.24DCuc  1 a 1 0 ]
+"203
 } 0
-"219
+"226
 [v _print_capacity print_capacity `(v  1 e 1 0 ]
 {
-"236
+"243
 } 0
-"198
+"205
 [v _print_string_serial print_string_serial `(v  1 e 1 0 ]
 {
 [v print_string_serial@string string `*.24DCuc  1 a 1 wreg ]
-"200
-[v print_string_serial@i i `uc  1 a 1 0 ]
-"198
-[v print_string_serial@string string `*.24DCuc  1 a 1 wreg ]
-"200
-[v print_string_serial@string string `*.24DCuc  1 a 1 1 ]
 "207
+[v print_string_serial@i i `uc  1 a 1 0 ]
+"205
+[v print_string_serial@string string `*.24DCuc  1 a 1 wreg ]
+"207
+[v print_string_serial@string string `*.24DCuc  1 a 1 1 ]
+"214
 } 0
-"110
+"117
 [v _fifo_push fifo_push `(uc  1 e 1 0 ]
 {
 [v fifo_push@data data `uc  1 a 1 wreg ]
 [v fifo_push@data data `uc  1 a 1 wreg ]
 [v fifo_push@data data `uc  1 a 1 1 ]
-"142
+"149
 } 0
-"144
+"151
 [v _fifo_pop fifo_pop `(uc  1 e 1 0 ]
 {
-"146
+"153
 [v fifo_pop@temp temp `uc  1 a 1 3 ]
-"177
+"184
 } 0
-"179
+"186
 [v _byte_to_hex byte_to_hex `(v  1 e 1 0 ]
 {
 [v byte_to_hex@data data `uc  1 a 1 wreg ]
 [v byte_to_hex@data data `uc  1 a 1 wreg ]
-"181
+"188
 [v byte_to_hex@data data `uc  1 a 1 2 ]
-"185
+"192
 } 0

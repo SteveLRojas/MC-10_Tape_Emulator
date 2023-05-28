@@ -1,7 +1,7 @@
 
 
 Microchip MPLAB XC8 Assembler V2.05 build -831301201 
-                                                                                               Sun May 21 19:42:53 2023
+                                                                                               Sun May 28 20:16:10 2023
 
 Microchip MPLAB XC8 C Compiler v2.05 (Free license) build 20181220022703 Og9 
      1                           	processor	16F747
@@ -143,17 +143,17 @@ Microchip MPLAB XC8 C Compiler v2.05 (Free license) build 20181220022703 Og9
    129  018C                     	;# 
    130                           
    131                           	psect	idataBANK0
-   132  01FC                     __pidataBANK0:	
+   132  01AC                     __pidataBANK0:	
    133                           
    134                           ;initializer for _tape_name
-   135  01FC  3444               	retlw	68
-   136  01FD  3445               	retlw	69
-   137  01FE  3452               	retlw	82
-   138  01FF  3447               	retlw	71
-   139  0200  3441               	retlw	65
-   140  0201  344E               	retlw	78
-   141  0202  3451               	retlw	81
-   142  0203  3451               	retlw	81
+   135  01AC  3444               	retlw	68
+   136  01AD  3445               	retlw	69
+   137  01AE  3452               	retlw	82
+   138  01AF  3447               	retlw	71
+   139  01B0  3441               	retlw	65
+   140  01B1  344E               	retlw	78
+   141  01B2  3451               	retlw	81
+   142  01B3  3451               	retlw	81
    143                           
    144                           	psect	strings
    145  0002                     __pstrings:	
@@ -346,21 +346,21 @@ Microchip MPLAB XC8 C Compiler v2.05 (Free license) build 20181220022703 Og9
    332  07BE                     __initialization:	
    333                           
    334                           ; Initialize objects allocated to BANK0
-   335  07BE  118A  21FC  118A   	fcall	__pidataBANK0	;fetch initializer
+   335  07BE  118A  21AC  118A   	fcall	__pidataBANK0	;fetch initializer
    336  07C1  00E1               	movwf	__pdataBANK0& (0+127)
-   337  07C2  118A  21FD  118A   	fcall	__pidataBANK0+1	;fetch initializer
+   337  07C2  118A  21AD  118A   	fcall	__pidataBANK0+1	;fetch initializer
    338  07C5  00E2               	movwf	(__pdataBANK0+1)& (0+127)
-   339  07C6  118A  21FE  118A   	fcall	__pidataBANK0+2	;fetch initializer
+   339  07C6  118A  21AE  118A   	fcall	__pidataBANK0+2	;fetch initializer
    340  07C9  00E3               	movwf	(__pdataBANK0+2)& (0+127)
-   341  07CA  118A  21FF  118A   	fcall	__pidataBANK0+3	;fetch initializer
+   341  07CA  118A  21AF  118A   	fcall	__pidataBANK0+3	;fetch initializer
    342  07CD  00E4               	movwf	(__pdataBANK0+3)& (0+127)
-   343  07CE  118A  2200  118A   	fcall	__pidataBANK0+4	;fetch initializer
+   343  07CE  118A  21B0  118A   	fcall	__pidataBANK0+4	;fetch initializer
    344  07D1  00E5               	movwf	(__pdataBANK0+4)& (0+127)
-   345  07D2  118A  2201  118A   	fcall	__pidataBANK0+5	;fetch initializer
+   345  07D2  118A  21B1  118A   	fcall	__pidataBANK0+5	;fetch initializer
    346  07D5  00E6               	movwf	(__pdataBANK0+5)& (0+127)
-   347  07D6  118A  2202  118A   	fcall	__pidataBANK0+6	;fetch initializer
+   347  07D6  118A  21B2  118A   	fcall	__pidataBANK0+6	;fetch initializer
    348  07D9  00E7               	movwf	(__pdataBANK0+6)& (0+127)
-   349  07DA  118A  2203  118A   	fcall	__pidataBANK0+7	;fetch initializer
+   349  07DA  118A  21B3  118A   	fcall	__pidataBANK0+7	;fetch initializer
    350  07DD  00E8               	movwf	(__pdataBANK0+7)& (0+127)
    351                           
    352                           ; Clear objects allocated to BANK3
@@ -368,38 +368,38 @@ Microchip MPLAB XC8 C Compiler v2.05 (Free license) build 20181220022703 Og9
    354  07DF  3090               	movlw	low __pbssBANK3
    355  07E0  0084               	movwf	4
    356  07E1  30F0               	movlw	low (__pbssBANK3+96)
-   357  07E2  118A  21F4  118A   	fcall	clear_ram0
+   357  07E2  118A  21A4  118A   	fcall	clear_ram0
    358                           
    359                           ; Clear objects allocated to BANK2
    360  07E5  3010               	movlw	low __pbssBANK2
    361  07E6  0084               	movwf	4
    362  07E7  3050               	movlw	low (__pbssBANK2+64)
-   363  07E8  118A  21F4  118A   	fcall	clear_ram0
+   363  07E8  118A  21A4  118A   	fcall	clear_ram0
    364                           
    365                           ; Clear objects allocated to BANK1
    366  07EB  1383               	bcf	3,7	;select IRP bank0
    367  07EC  30A0               	movlw	low __pbssBANK1
    368  07ED  0084               	movwf	4
    369  07EE  30E0               	movlw	low (__pbssBANK1+64)
-   370  07EF  118A  21F4  118A   	fcall	clear_ram0
+   370  07EF  118A  21A4  118A   	fcall	clear_ram0
    371                           
    372                           ; Clear objects allocated to BANK0
    373  07F2  3020               	movlw	low __pbssBANK0
    374  07F3  0084               	movwf	4
    375  07F4  3061               	movlw	low (__pbssBANK0+65)
-   376  07F5  118A  21F4  118A   	fcall	clear_ram0
+   376  07F5  118A  21A4  118A   	fcall	clear_ram0
    377                           
    378                           ; Clear objects allocated to COMMON
    379  07F8  3070               	movlw	low __pbssCOMMON
    380  07F9  0084               	movwf	4
    381  07FA  3077               	movlw	low (__pbssCOMMON+7)
-   382  07FB  118A  21F4         	fcall	clear_ram0
+   382  07FB  118A  21A4         	fcall	clear_ram0
    383  07FD                     end_of_initialization:	
    384                           ;End of C runtime variable initialization code
    385                           
    386  07FD                     __end_of__initialization:	
    387  07FD  0183               	clrf	3
-   388  07FE  118A  2C3F         	ljmp	_main	;jump to C main() function
+   388  07FE  118A  2BEF         	ljmp	_main	;jump to C main() function
    389                           
    390                           	psect	bssCOMMON
    391  0070                     __pbssCOMMON:	
@@ -514,19 +514,19 @@ Microchip MPLAB XC8 C Compiler v2.05 (Free license) build 20181220022703 Og9
    500  0110                     	ds	64
    501                           
    502                           	psect	clrtext
-   503  01F4                     clear_ram0:	
+   503  01A4                     clear_ram0:	
    504                           ;	Called with FSR containing the base address, and
    505                           ;	W with the last address+1
    506                           
-   507  01F4  0064               	clrwdt	;clear the watchdog before getting into this loop
-   508  01F5                     clrloop0:	
-   509  01F5  0180               	clrf	0	;clear RAM location pointed to by FSR
-   510  01F6  0A84               	incf	4,f	;increment pointer
-   511  01F7  0604               	xorwf	4,w	;XOR with final address
-   512  01F8  1903               	btfsc	3,2	;have we reached the end yet?
-   513  01F9  3400               	retlw	0	;all done for this memory range, return
-   514  01FA  0604               	xorwf	4,w	;XOR again to restore value
-   515  01FB  29F5               	goto	clrloop0	;do the next byte
+   507  01A4  0064               	clrwdt	;clear the watchdog before getting into this loop
+   508  01A5                     clrloop0:	
+   509  01A5  0180               	clrf	0	;clear RAM location pointed to by FSR
+   510  01A6  0A84               	incf	4,f	;increment pointer
+   511  01A7  0604               	xorwf	4,w	;XOR with final address
+   512  01A8  1903               	btfsc	3,2	;have we reached the end yet?
+   513  01A9  3400               	retlw	0	;all done for this memory range, return
+   514  01AA  0604               	xorwf	4,w	;XOR again to restore value
+   515  01AB  29A5               	goto	clrloop0	;do the next byte
    516                           
    517                           	psect	cstackBANK1
    518  00E0                     __pcstackBANK1:	
@@ -685,1566 +685,1651 @@ Microchip MPLAB XC8 C Compiler v2.05 (Free license) build 20181220022703 Og9
    671  0077                     ??_usb_get_file_size:	
    672                           ; 1 bytes @ 0x0
    673                           
-   674  0077                     ?_lcd_clear2:	
+   674  0077                     ?_usb_file_read:	
    675                           ; 1 bytes @ 0x0
    676                           
-   677  0077                     ??_lcd_clear2:	
+   677  0077                     ??_usb_file_read:	
    678                           ; 1 bytes @ 0x0
    679                           
-   680  0077                     ?_fifo_push:	
+   680  0077                     ?_usb_file_create:	
    681                           ; 1 bytes @ 0x0
    682                           
-   683  0077                     ??_fifo_push:	
+   683  0077                     ??_usb_file_create:	
    684                           ; 1 bytes @ 0x0
    685                           
-   686  0077                     ?_fifo_pop:	
+   686  0077                     ?_mem_clear:	
    687                           ; 1 bytes @ 0x0
    688                           
-   689  0077                     ?_byte_to_hex:	
+   689  0077                     ??_mem_clear:	
    690                           ; 1 bytes @ 0x0
    691                           
-   692  0077                     ?_print_string_lcd:	
+   692  0077                     ?_mem_dump:	
    693                           ; 1 bytes @ 0x0
    694                           
-   695  0077                     ?_print_string_serial:	
+   695  0077                     ??_mem_dump:	
    696                           ; 1 bytes @ 0x0
    697                           
-   698  0077                     ?_print_capacity:	
+   698  0077                     ?_print_test_data:	
    699                           ; 1 bytes @ 0x0
    700                           
-   701  0077                     ??_print_capacity:	
+   701  0077                     ??_print_test_data:	
    702                           ; 1 bytes @ 0x0
    703                           
-   704  0077                     ?_print_query:	
+   704  0077                     ?_lcd_clear2:	
    705                           ; 1 bytes @ 0x0
    706                           
-   707  0077                     ??_print_query:	
+   707  0077                     ??_lcd_clear2:	
    708                           ; 1 bytes @ 0x0
    709                           
-   710  0077                     ?_usb_autoconfig:	
+   710  0077                     ?_fifo_push:	
    711                           ; 1 bytes @ 0x0
    712                           
-   713  0077                     ?_main:	
+   713  0077                     ??_fifo_push:	
    714                           ; 1 bytes @ 0x0
    715                           
-   716                           
+   716  0077                     ?_fifo_pop:	
    717                           ; 1 bytes @ 0x0
-   718  0077                     	ds	1
-   719  0078                     fifo_push@data:	
-   720                           
-   721                           ; 1 bytes @ 0x1
-   722  0078                     	ds	1
-   723  0079                     ??_fifo_pop:	
+   718                           
+   719  0077                     ?_byte_to_hex:	
+   720                           ; 1 bytes @ 0x0
+   721                           
+   722  0077                     ?_print_string_lcd:	
+   723                           ; 1 bytes @ 0x0
    724                           
-   725                           ; 1 bytes @ 0x2
-   726  0079                     	ds	1
-   727  007A                     fifo_pop@temp:	
-   728                           
-   729                           ; 1 bytes @ 0x3
-   730  007A                     	ds	1
-   731                           
-   732                           	psect	cstackBANK0
-   733  0069                     __pcstackBANK0:	
-   734  0069                     ??_byte_to_hex:	
-   735                           
-   736                           ; 1 bytes @ 0x0
-   737  0069                     	ds	2
-   738  006B                     byte_to_hex@data:	
+   725  0077                     ?_print_string_serial:	
+   726                           ; 1 bytes @ 0x0
+   727                           
+   728  0077                     ?_print_capacity:	
+   729                           ; 1 bytes @ 0x0
+   730                           
+   731  0077                     ??_print_capacity:	
+   732                           ; 1 bytes @ 0x0
+   733                           
+   734  0077                     ?_print_query:	
+   735                           ; 1 bytes @ 0x0
+   736                           
+   737  0077                     ??_print_query:	
+   738                           ; 1 bytes @ 0x0
    739                           
-   740                           ; 1 bytes @ 0x2
-   741  006B                     	ds	1
-   742  006C                     ??_print_string_lcd:	
-   743  006C                     ??_print_string_serial:	
-   744                           ; 1 bytes @ 0x3
+   740  0077                     ?_usb_autoconfig:	
+   741                           ; 1 bytes @ 0x0
+   742                           
+   743  0077                     ?_main:	
+   744                           ; 1 bytes @ 0x0
    745                           
    746                           
-   747                           ; 1 bytes @ 0x3
-   748  006C                     	ds	1
-   749                           
-   750                           	psect	maintext
-   751  043F                     __pmaintext:	
-   752 ;;
-   753 ;;Main: autosize = 0, tempsize = 1, incstack = 0, save=0
-   754 ;;
-   755 ;; *************** function _main *****************
-   756 ;; Defined at:
-   757 ;;		line 310 in file "main.c"
-   758 ;; Parameters:    Size  Location     Type
-   759 ;;		None
-   760 ;; Auto vars:     Size  Location     Type
-   761 ;;  temp            1    6[BANK1 ] unsigned char 
-   762 ;;  state           1    5[BANK1 ] unsigned char 
-   763 ;; Return value:  Size  Location     Type
-   764 ;;                  1    wreg      void 
-   765 ;; Registers used:
-   766 ;;		wreg, fsr0l, fsr0h, fsr1l, fsr1h, fsr1l, fsr1h, status,2, status,0, btemp+1, pclath, cstack
-   767 ;; Tracked objects:
-   768 ;;		On entry : B00/0
-   769 ;;		On exit  : 300/100
-   770 ;;		Unchanged: 0/0
-   771 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
-   772 ;;      Params:         0       0       0       0       0
-   773 ;;      Locals:         0       0       2       0       0
-   774 ;;      Temps:          0       0       1       0       0
-   775 ;;      Totals:         0       0       3       0       0
-   776 ;;Total ram usage:        3 bytes
-   777 ;; Hardware stack levels required when called:    6
-   778 ;; This function calls:
-   779 ;;		_byte_to_hex
-   780 ;;		_delay_millis
-   781 ;;		_initialize
-   782 ;;		_lcd_clear2
-   783 ;;		_lcd_line2
-   784 ;;		_lcd_putc
-   785 ;;		_print_capacity
-   786 ;;		_print_name
-   787 ;;		_print_query
-   788 ;;		_print_string_lcd
-   789 ;;		_print_string_serial
-   790 ;;		_uart_read
-   791 ;;		_uart_send
-   792 ;;		_usb_autoconfig
-   793 ;;		_usb_disk_connect
-   794 ;;		_usb_disk_mount
-   795 ;;		_usb_file_close
-   796 ;;		_usb_file_open
-   797 ;;		_usb_get_file_size
-   798 ;;		_usb_get_status
-   799 ;;		_usb_get_version
-   800 ;;		_usb_reset_all
-   801 ;;		_usb_set_file_name
-   802 ;;		_usb_set_mode
-   803 ;; This function is called by:
-   804 ;;		Startup code after reset
-   805 ;; This function uses a non-reentrant model
-   806 ;;
-   807                           
-   808                           
-   809                           ;psect for function _main
-   810  043F                     _main:	
-   811                           
-   812                           ;main.c: 312: unsigned char state = 0;
-   813                           
-   814                           ;incstack = 0
-   815                           ; Regs used in _main: [allreg]
-   816  043F  1683               	bsf	3,5	;RP0=1, select bank1
-   817  0440  01E5               	clrf	main@state^(0+128)
-   818                           
-   819                           ;main.c: 313: initialize();
-   820  0441  118A  2549  118A   	fcall	_initialize
-   821                           
-   822                           ;main.c: 314: usb_reset_all();
-   823  0444  118A  26A2  118A   	fcall	_usb_reset_all
-   824                           
-   825                           ;main.c: 315: delay_millis(100);
-   826  0447  3064               	movlw	100
-   827  0448  118A  267D  118A   	fcall	_delay_millis
-   828                           
-   829                           ;main.c: 316: usb_autoconfig();
-   830  044B  118A  23B9  118A   	fcall	_usb_autoconfig
-   831                           
-   832                           ;main.c: 319: print_string_lcd("Dragons");
-   833  044E  3091               	movlw	(low ((STR_7-__stringbase)| (0+32768)))& (0+255)
-   834  044F  118A  2222  118A   	fcall	_print_string_lcd
-   835                           
-   836                           ;main.c: 320: lcd_line2();
-   837  0452  118A  261D  118A   	fcall	_lcd_line2
-   838                           
-   839                           ;main.c: 322: print_string_serial("deadbeef\n");
-   840  0455  3074               	movlw	(low ((STR_8-__stringbase)| (0+32768)))& (0+255)
-   841  0456  118A  2204  118A   	fcall	_print_string_serial
+   747                           ; 1 bytes @ 0x0
+   748  0077                     	ds	1
+   749  0078                     fifo_push@data:	
+   750                           
+   751                           ; 1 bytes @ 0x1
+   752  0078                     	ds	1
+   753  0079                     ??_fifo_pop:	
+   754                           
+   755                           ; 1 bytes @ 0x2
+   756  0079                     	ds	1
+   757  007A                     fifo_pop@temp:	
+   758                           
+   759                           ; 1 bytes @ 0x3
+   760  007A                     	ds	1
+   761                           
+   762                           	psect	cstackBANK0
+   763  0069                     __pcstackBANK0:	
+   764  0069                     ??_byte_to_hex:	
+   765                           
+   766                           ; 1 bytes @ 0x0
+   767  0069                     	ds	2
+   768  006B                     byte_to_hex@data:	
+   769                           
+   770                           ; 1 bytes @ 0x2
+   771  006B                     	ds	1
+   772  006C                     ??_print_string_lcd:	
+   773  006C                     ??_print_string_serial:	
+   774                           ; 1 bytes @ 0x3
+   775                           
+   776                           
+   777                           ; 1 bytes @ 0x3
+   778  006C                     	ds	1
+   779                           
+   780                           	psect	maintext
+   781  03EF                     __pmaintext:	
+   782 ;;
+   783 ;;Main: autosize = 0, tempsize = 1, incstack = 0, save=0
+   784 ;;
+   785 ;; *************** function _main *****************
+   786 ;; Defined at:
+   787 ;;		line 317 in file "main.c"
+   788 ;; Parameters:    Size  Location     Type
+   789 ;;		None
+   790 ;; Auto vars:     Size  Location     Type
+   791 ;;  temp            1    6[BANK1 ] unsigned char 
+   792 ;;  state           1    5[BANK1 ] unsigned char 
+   793 ;; Return value:  Size  Location     Type
+   794 ;;                  1    wreg      void 
+   795 ;; Registers used:
+   796 ;;		wreg, fsr0l, fsr0h, fsr1l, fsr1h, fsr1l, fsr1h, status,2, status,0, btemp+1, pclath, cstack
+   797 ;; Tracked objects:
+   798 ;;		On entry : B00/0
+   799 ;;		On exit  : 300/100
+   800 ;;		Unchanged: 0/0
+   801 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
+   802 ;;      Params:         0       0       0       0       0
+   803 ;;      Locals:         0       0       2       0       0
+   804 ;;      Temps:          0       0       1       0       0
+   805 ;;      Totals:         0       0       3       0       0
+   806 ;;Total ram usage:        3 bytes
+   807 ;; Hardware stack levels required when called:    6
+   808 ;; This function calls:
+   809 ;;		_byte_to_hex
+   810 ;;		_delay_millis
+   811 ;;		_initialize
+   812 ;;		_lcd_clear2
+   813 ;;		_lcd_line2
+   814 ;;		_lcd_putc
+   815 ;;		_mem_clear
+   816 ;;		_mem_dump
+   817 ;;		_print_capacity
+   818 ;;		_print_name
+   819 ;;		_print_query
+   820 ;;		_print_string_lcd
+   821 ;;		_print_string_serial
+   822 ;;		_print_test_data
+   823 ;;		_uart_read
+   824 ;;		_uart_send
+   825 ;;		_usb_autoconfig
+   826 ;;		_usb_disk_connect
+   827 ;;		_usb_disk_mount
+   828 ;;		_usb_file_close
+   829 ;;		_usb_file_create
+   830 ;;		_usb_file_open
+   831 ;;		_usb_file_read
+   832 ;;		_usb_get_file_size
+   833 ;;		_usb_get_status
+   834 ;;		_usb_get_version
+   835 ;;		_usb_reset_all
+   836 ;;		_usb_set_file_name
+   837 ;;		_usb_set_mode
+   838 ;; This function is called by:
+   839 ;;		Startup code after reset
+   840 ;; This function uses a non-reentrant model
+   841 ;;
    842                           
-   843                           ;main.c: 329: switch(state)
-   844  0459  2D2E               	goto	l2121
-   845  045A                     l2123:	
+   843                           
+   844                           ;psect for function _main
+   845  03EF                     _main:	
    846                           
-   847                           ;main.c: 332: if(temp == 0xDE)
-   848  045A  30DE               	movlw	222
-   849  045B  0666               	xorwf	main@temp^(0+128),w
-   850  045C  1D03               	btfss	3,2
-   851  045D  2D2E               	goto	l2121
-   852                           
-   853                           ;main.c: 333: state = 1;
-   854  045E  01E5               	clrf	main@state^(0+128)
-   855  045F  0AE5               	incf	main@state^(0+128),f
-   856  0460  2D2E               	goto	l2121
-   857  0461                     l2127:	
-   858                           
-   859                           ;main.c: 336: if(temp == 0xAD)
-   860  0461  30AD               	movlw	173
-   861  0462  0666               	xorwf	main@temp^(0+128),w
-   862  0463  1D03               	btfss	3,2
-   863  0464  2C67               	goto	l2131
-   864                           
-   865                           ;main.c: 337: state = 2;
-   866  0465  3002               	movlw	2
-   867  0466  2C78               	goto	L2
-   868  0467                     l2131:	
-   869                           
-   870                           ;main.c: 338: else;main.c: 339: state = 0;
-   871  0467  01E5               	clrf	main@state^(0+128)
-   872  0468  2D2E               	goto	l2121
-   873  0469                     l2133:	
-   874                           
-   875                           ;main.c: 342: if(temp == 0xBE)
-   876  0469  30BE               	movlw	190
-   877  046A  0666               	xorwf	main@temp^(0+128),w
-   878  046B  1D03               	btfss	3,2
-   879  046C  2C67               	goto	l2131
-   880                           
-   881                           ;main.c: 343: state = 3;
-   882  046D  3003               	movlw	3
-   883  046E  2C78               	goto	L2
-   884  046F                     l2139:	
-   885                           
-   886                           ;main.c: 348: if(temp == 0xEF)
-   887  046F  30EF               	movlw	239
-   888  0470  0666               	xorwf	main@temp^(0+128),w
-   889  0471  1D03               	btfss	3,2
-   890  0472  2C77               	goto	l2143
-   891                           
-   892                           ;main.c: 349: print_string_serial(str_cmd_mode);
-   893  0473  3011               	movlw	(low ((_str_cmd_mode-__stringbase)| (0+32768)))& (0+255)
-   894  0474  118A  2204  118A   	fcall	_print_string_serial
-   895  0477                     l2143:	
-   896                           
-   897                           ;main.c: 350: state = 4;
-   898  0477  3004               	movlw	4
-   899  0478                     L2:	
-   900  0478  00E4               	movwf	??_main^(0+128)
-   901  0479  0864               	movf	??_main^(0+128),w
-   902  047A  00E5               	movwf	main@state^(0+128)
-   903                           
-   904                           ;main.c: 351: break;
-   905  047B  2D2E               	goto	l2121
-   906  047C                     l2145:	
-   907                           
-   908                           ;main.c: 356: usb_reset_all();
-   909  047C  118A  26A2  118A   	fcall	_usb_reset_all
-   910                           
-   911                           ;main.c: 357: break;
-   912  047F  2D15               	goto	l2187
-   913  0480                     l2147:	
-   914                           
-   915                           ;main.c: 359: usb_autoconfig();
-   916  0480  118A  23B9  118A   	fcall	_usb_autoconfig
-   917                           
-   918                           ;main.c: 360: break;
-   919  0483  2D15               	goto	l2187
-   920  0484                     l2149:	
-   921                           
-   922                           ;main.c: 362: temp = usb_get_version();
-   923  0484  118A  2718  118A   	fcall	_usb_get_version
-   924  0487  2CA2               	goto	L3
-   925  0488                     l2151:	
-   926                           ;main.c: 363: break;
-   927                           
-   928                           
-   929                           ;main.c: 365: usb_set_mode(0x05);
-   930  0488  3005               	movlw	5
-   931  0489  118A  2710  118A   	fcall	_usb_set_mode
-   932                           
-   933                           ;main.c: 366: break;
-   934  048C  2D15               	goto	l2187
-   935  048D                     l2153:	
-   936                           
-   937                           ;main.c: 368: usb_set_mode(0x06);
-   938  048D  3006               	movlw	6
-   939  048E  118A  2710  118A   	fcall	_usb_set_mode
-   940                           
-   941                           ;main.c: 369: break;
-   942  0491  2D15               	goto	l2187
-   943  0492                     l2155:	
-   944                           
-   945                           ;main.c: 371: usb_set_mode(0x07);
-   946  0492  3007               	movlw	7
-   947  0493  118A  2710  118A   	fcall	_usb_set_mode
-   948                           
-   949                           ;main.c: 372: break;
-   950  0496  2D15               	goto	l2187
-   951  0497                     l2157:	
+   847                           ;main.c: 319: unsigned char state = 0;
+   848                           
+   849                           ;incstack = 0
+   850                           ; Regs used in _main: [allreg]
+   851  03EF  1683               	bsf	3,5	;RP0=1, select bank1
+   852  03F0  01E5               	clrf	main@state^(0+128)
+   853                           
+   854                           ;main.c: 320: initialize();
+   855  03F1  118A  251C  118A   	fcall	_initialize
+   856                           
+   857                           ;main.c: 321: usb_reset_all();
+   858  03F4  118A  268E  118A   	fcall	_usb_reset_all
+   859                           
+   860                           ;main.c: 322: delay_millis(100);
+   861  03F7  3064               	movlw	100
+   862  03F8  118A  2669  118A   	fcall	_delay_millis
+   863                           
+   864                           ;main.c: 323: usb_autoconfig();
+   865  03FB  118A  2369  118A   	fcall	_usb_autoconfig
+   866                           
+   867                           ;main.c: 326: print_string_lcd("Dragons");
+   868  03FE  3091               	movlw	(low ((STR_7-__stringbase)| (0+32768)))& (0+255)
+   869  03FF  118A  21D2  118A   	fcall	_print_string_lcd
+   870                           
+   871                           ;main.c: 327: lcd_line2();
+   872  0402  118A  2609  118A   	fcall	_lcd_line2
+   873                           
+   874                           ;main.c: 329: print_string_serial("deadbeef\n");
+   875  0405  3074               	movlw	(low ((STR_8-__stringbase)| (0+32768)))& (0+255)
+   876  0406  118A  21B4  118A   	fcall	_print_string_serial
+   877                           
+   878                           ;main.c: 336: switch(state)
+   879  0409  2D01               	goto	l2196
+   880  040A                     l2198:	
+   881                           
+   882                           ;main.c: 339: if(temp == 0xDE)
+   883  040A  30DE               	movlw	222
+   884  040B  0666               	xorwf	main@temp^(0+128),w
+   885  040C  1D03               	btfss	3,2
+   886  040D  2D01               	goto	l2196
+   887                           
+   888                           ;main.c: 340: state = 1;
+   889  040E  01E5               	clrf	main@state^(0+128)
+   890  040F  0AE5               	incf	main@state^(0+128),f
+   891  0410  2D01               	goto	l2196
+   892  0411                     l2202:	
+   893                           
+   894                           ;main.c: 343: if(temp == 0xAD)
+   895  0411  30AD               	movlw	173
+   896  0412  0666               	xorwf	main@temp^(0+128),w
+   897  0413  1D03               	btfss	3,2
+   898  0414  2C17               	goto	l2206
+   899                           
+   900                           ;main.c: 344: state = 2;
+   901  0415  3002               	movlw	2
+   902  0416  2C28               	goto	L2
+   903  0417                     l2206:	
+   904                           
+   905                           ;main.c: 345: else;main.c: 346: state = 0;
+   906  0417  01E5               	clrf	main@state^(0+128)
+   907  0418  2D01               	goto	l2196
+   908  0419                     l2208:	
+   909                           
+   910                           ;main.c: 349: if(temp == 0xBE)
+   911  0419  30BE               	movlw	190
+   912  041A  0666               	xorwf	main@temp^(0+128),w
+   913  041B  1D03               	btfss	3,2
+   914  041C  2C17               	goto	l2206
+   915                           
+   916                           ;main.c: 350: state = 3;
+   917  041D  3003               	movlw	3
+   918  041E  2C28               	goto	L2
+   919  041F                     l2214:	
+   920                           
+   921                           ;main.c: 355: if(temp == 0xEF)
+   922  041F  30EF               	movlw	239
+   923  0420  0666               	xorwf	main@temp^(0+128),w
+   924  0421  1D03               	btfss	3,2
+   925  0422  2C27               	goto	l2218
+   926                           
+   927                           ;main.c: 356: print_string_serial(str_cmd_mode);
+   928  0423  3011               	movlw	(low ((_str_cmd_mode-__stringbase)| (0+32768)))& (0+255)
+   929  0424  118A  21B4  118A   	fcall	_print_string_serial
+   930  0427                     l2218:	
+   931                           
+   932                           ;main.c: 357: state = 4;
+   933  0427  3004               	movlw	4
+   934  0428                     L2:	
+   935  0428  00E4               	movwf	??_main^(0+128)
+   936  0429  0864               	movf	??_main^(0+128),w
+   937  042A  00E5               	movwf	main@state^(0+128)
+   938                           
+   939                           ;main.c: 358: break;
+   940  042B  2D01               	goto	l2196
+   941  042C                     l2220:	
+   942                           
+   943                           ;main.c: 363: usb_reset_all();
+   944  042C  118A  268E  118A   	fcall	_usb_reset_all
+   945                           
+   946                           ;main.c: 364: break;
+   947  042F  2CE8               	goto	l2272
+   948  0430                     l2222:	
+   949                           
+   950                           ;main.c: 366: usb_autoconfig();
+   951  0430  118A  2369  118A   	fcall	_usb_autoconfig
    952                           
-   953                           ;main.c: 374: usb_disk_connect();
-   954  0497  118A  270B  118A   	fcall	_usb_disk_connect
-   955                           
-   956                           ;main.c: 375: break;
-   957  049A  2D15               	goto	l2187
-   958  049B                     l2159:	
-   959                           
-   960                           ;main.c: 377: usb_disk_mount();
-   961  049B  118A  2706  118A   	fcall	_usb_disk_mount
+   953                           ;main.c: 367: break;
+   954  0433  2CE8               	goto	l2272
+   955  0434                     l2224:	
+   956                           
+   957                           ;main.c: 369: temp = usb_get_version();
+   958  0434  118A  2718  118A   	fcall	_usb_get_version
+   959  0437  2C52               	goto	L3
+   960  0438                     l2226:	
+   961                           ;main.c: 370: break;
    962                           
-   963                           ;main.c: 378: break;
-   964  049E  2D15               	goto	l2187
-   965  049F                     l2161:	
-   966                           
-   967                           ;main.c: 380: temp = usb_get_status();
-   968  049F  118A  26FF  118A   	fcall	_usb_get_status
-   969  04A2                     L3:	
-   970  04A2  1683               	bsf	3,5	;RP0=1, select bank1
-   971  04A3  1303               	bcf	3,6	;RP1=0, select bank1
-   972  04A4  00E4               	movwf	??_main^(0+128)
-   973  04A5  0864               	movf	??_main^(0+128),w
-   974  04A6  00E6               	movwf	main@temp^(0+128)
+   963                           
+   964                           ;main.c: 372: usb_set_mode(0x05);
+   965  0438  3005               	movlw	5
+   966  0439  118A  2710  118A   	fcall	_usb_set_mode
+   967                           
+   968                           ;main.c: 373: break;
+   969  043C  2CE8               	goto	l2272
+   970  043D                     l2228:	
+   971                           
+   972                           ;main.c: 375: usb_set_mode(0x06);
+   973  043D  3006               	movlw	6
+   974  043E  118A  2710  118A   	fcall	_usb_set_mode
    975                           
-   976                           ;main.c: 381: break;
-   977  04A7  2D15               	goto	l2187
-   978  04A8                     l2163:	
+   976                           ;main.c: 376: break;
+   977  0441  2CE8               	goto	l2272
+   978  0442                     l2230:	
    979                           
-   980                           ;main.c: 383: print_query();
-   981  04A8  118A  2343  118A   	fcall	_print_query
-   982                           
-   983                           ;main.c: 384: break;
-   984  04AB  2D15               	goto	l2187
-   985  04AC                     l2165:	
-   986                           
-   987                           ;main.c: 386: print_capacity();
-   988  04AC  118A  2263  118A   	fcall	_print_capacity
-   989                           
-   990                           ;main.c: 387: break;
-   991  04AF  2D15               	goto	l2187
-   992  04B0                     l2167:	
-   993                           
-   994                           ;main.c: 389: usb_set_file_name();
-   995  04B0  118A  26A7  118A   	fcall	_usb_set_file_name
-   996                           
-   997                           ;main.c: 390: print_name();
-   998  04B3  118A  264E  118A   	fcall	_print_name
-   999                           
-  1000                           ;main.c: 391: break;
-  1001  04B6  2D15               	goto	l2187
-  1002  04B7                     l2169:	
-  1003                           
-  1004                           ;main.c: 393: usb_file_open();
-  1005  04B7  118A  26BA  118A   	fcall	_usb_file_open
-  1006                           
-  1007                           ;main.c: 394: break;
-  1008  04BA  2D15               	goto	l2187
-  1009  04BB                     l2171:	
+   980                           ;main.c: 378: usb_set_mode(0x07);
+   981  0442  3007               	movlw	7
+   982  0443  118A  2710  118A   	fcall	_usb_set_mode
+   983                           
+   984                           ;main.c: 379: break;
+   985  0446  2CE8               	goto	l2272
+   986  0447                     l2232:	
+   987                           
+   988                           ;main.c: 381: usb_disk_connect();
+   989  0447  118A  270B  118A   	fcall	_usb_disk_connect
+   990                           
+   991                           ;main.c: 382: break;
+   992  044A  2CE8               	goto	l2272
+   993  044B                     l2234:	
+   994                           
+   995                           ;main.c: 384: usb_disk_mount();
+   996  044B  118A  2706  118A   	fcall	_usb_disk_mount
+   997                           
+   998                           ;main.c: 385: break;
+   999  044E  2CE8               	goto	l2272
+  1000  044F                     l2236:	
+  1001                           
+  1002                           ;main.c: 387: temp = usb_get_status();
+  1003  044F  118A  26FF  118A   	fcall	_usb_get_status
+  1004  0452                     L3:	
+  1005  0452  1683               	bsf	3,5	;RP0=1, select bank1
+  1006  0453  1303               	bcf	3,6	;RP1=0, select bank1
+  1007  0454  00E4               	movwf	??_main^(0+128)
+  1008  0455  0864               	movf	??_main^(0+128),w
+  1009  0456  00E6               	movwf	main@temp^(0+128)
   1010                           
-  1011                           ;main.c: 396: usb_file_close();
-  1012  04BB  118A  26BF  118A   	fcall	_usb_file_close
-  1013                           
-  1014                           ;main.c: 397: break;
-  1015  04BE  2D15               	goto	l2187
-  1016  04BF                     l2173:	
+  1011                           ;main.c: 388: break;
+  1012  0457  2CE8               	goto	l2272
+  1013  0458                     l2238:	
+  1014                           
+  1015                           ;main.c: 390: print_query();
+  1016  0458  118A  22F3  118A   	fcall	_print_query
   1017                           
-  1018                           ;main.c: 399: usb_get_file_size();
-  1019  04BF  118A  26E4  118A   	fcall	_usb_get_file_size
-  1020                           
-  1021                           ;main.c: 400: print_string_serial("File size: ");
-  1022  04C2  3068               	movlw	(low ((STR_9-__stringbase)| (0+32768)))& (0+255)
-  1023  04C3  118A  2204  118A   	fcall	_print_string_serial
+  1018                           ;main.c: 391: break;
+  1019  045B  2CE8               	goto	l2272
+  1020  045C                     l2240:	
+  1021                           
+  1022                           ;main.c: 393: print_capacity();
+  1023  045C  118A  2213  118A   	fcall	_print_capacity
   1024                           
-  1025                           ;main.c: 401: byte_to_hex(usb_file_size_high);
-  1026  04C6  1283               	bcf	3,5	;RP0=0, select bank0
-  1027  04C7  0853               	movf	_usb_file_size_high,w
-  1028  04C8  118A  2240  118A   	fcall	_byte_to_hex
-  1029                           
-  1030                           ;main.c: 402: uart_send(hex_char_high);
-  1031  04CB  0876               	movf	_hex_char_high,w
-  1032  04CC  118A  2584  118A   	fcall	_uart_send
-  1033                           
-  1034                           ;main.c: 403: uart_send(hex_char_low);
-  1035  04CF  0875               	movf	_hex_char_low,w
-  1036  04D0  118A  2584  118A   	fcall	_uart_send
-  1037                           
-  1038                           ;main.c: 404: byte_to_hex(usb_file_size_low);
-  1039  04D3  1283               	bcf	3,5	;RP0=0, select bank0
-  1040  04D4  1303               	bcf	3,6	;RP1=0, select bank0
-  1041  04D5  0852               	movf	_usb_file_size_low,w
-  1042  04D6  118A  2240  118A   	fcall	_byte_to_hex
-  1043                           
-  1044                           ;main.c: 405: uart_send(hex_char_high);
-  1045  04D9  0876               	movf	_hex_char_high,w
-  1046  04DA  118A  2584  118A   	fcall	_uart_send
-  1047                           
-  1048                           ;main.c: 406: uart_send(hex_char_low);
-  1049  04DD  0875               	movf	_hex_char_low,w
-  1050  04DE  118A  2584  118A   	fcall	_uart_send
-  1051                           
-  1052                           ;main.c: 407: uart_send('\n');
-  1053  04E1  300A               	movlw	10
-  1054  04E2  118A  2584  118A   	fcall	_uart_send
+  1025                           ;main.c: 394: break;
+  1026  045F  2CE8               	goto	l2272
+  1027  0460                     l2242:	
+  1028                           
+  1029                           ;main.c: 396: usb_set_file_name();
+  1030  0460  118A  2693  118A   	fcall	_usb_set_file_name
+  1031                           
+  1032                           ;main.c: 397: print_name();
+  1033  0463  118A  263A  118A   	fcall	_print_name
+  1034                           
+  1035                           ;main.c: 398: break;
+  1036  0466  2CE8               	goto	l2272
+  1037  0467                     l2244:	
+  1038                           
+  1039                           ;main.c: 400: usb_file_open();
+  1040  0467  118A  26A6  118A   	fcall	_usb_file_open
+  1041                           
+  1042                           ;main.c: 401: break;
+  1043  046A  2CE8               	goto	l2272
+  1044  046B                     l2246:	
+  1045                           
+  1046                           ;main.c: 403: usb_file_close();
+  1047  046B  118A  26AB  118A   	fcall	_usb_file_close
+  1048                           
+  1049                           ;main.c: 404: break;
+  1050  046E  2CE8               	goto	l2272
+  1051  046F                     l2248:	
+  1052                           
+  1053                           ;main.c: 406: usb_get_file_size();
+  1054  046F  118A  26D1  118A   	fcall	_usb_get_file_size
   1055                           
-  1056                           ;main.c: 408: break;
-  1057  04E5  2D15               	goto	l2187
-  1058  04E6                     l2185:	
-  1059  04E6  0866               	movf	main@temp^(0+128),w
-  1060                           
-  1061                           ; Switch size 1, requested type "simple"
-  1062                           ; Number of cases is 15, Range of values is 0 to 14
-  1063                           ; switch strategies available:
-  1064                           ; Name         Instructions Cycles
-  1065                           ; direct_byte           37     7 (fixed)
-  1066                           ; simple_byte           46    24 (average)
-  1067                           ; jumptable            260     6 (fixed)
-  1068                           ;	Chosen strategy is simple_byte
-  1069  04E7  3A00               	xorlw	0	; case 0
-  1070  04E8  1903               	skipnz
-  1071  04E9  2C7C               	goto	l2145
-  1072  04EA  3A01               	xorlw	1	; case 1
-  1073  04EB  1903               	skipnz
-  1074  04EC  2C80               	goto	l2147
-  1075  04ED  3A03               	xorlw	3	; case 2
-  1076  04EE  1903               	skipnz
-  1077  04EF  2C84               	goto	l2149
-  1078  04F0  3A01               	xorlw	1	; case 3
-  1079  04F1  1903               	skipnz
-  1080  04F2  2C88               	goto	l2151
-  1081  04F3  3A07               	xorlw	7	; case 4
-  1082  04F4  1903               	skipnz
-  1083  04F5  2C8D               	goto	l2153
-  1084  04F6  3A01               	xorlw	1	; case 5
-  1085  04F7  1903               	skipnz
-  1086  04F8  2C92               	goto	l2155
-  1087  04F9  3A03               	xorlw	3	; case 6
-  1088  04FA  1903               	skipnz
-  1089  04FB  2C97               	goto	l2157
-  1090  04FC  3A01               	xorlw	1	; case 7
-  1091  04FD  1903               	skipnz
-  1092  04FE  2C9B               	goto	l2159
-  1093  04FF  3A0F               	xorlw	15	; case 8
-  1094  0500  1903               	skipnz
-  1095  0501  2C9F               	goto	l2161
-  1096  0502  3A01               	xorlw	1	; case 9
-  1097  0503  1903               	skipnz
-  1098  0504  2CA8               	goto	l2163
-  1099  0505  3A03               	xorlw	3	; case 10
-  1100  0506  1903               	skipnz
-  1101  0507  2CAC               	goto	l2165
-  1102  0508  3A01               	xorlw	1	; case 11
-  1103  0509  1903               	skipnz
-  1104  050A  2CB0               	goto	l2167
-  1105  050B  3A07               	xorlw	7	; case 12
-  1106  050C  1903               	skipnz
-  1107  050D  2CB7               	goto	l2169
-  1108  050E  3A01               	xorlw	1	; case 13
-  1109  050F  1903               	skipnz
-  1110  0510  2CBB               	goto	l2171
-  1111  0511  3A03               	xorlw	3	; case 14
-  1112  0512  1903               	skipnz
-  1113  0513  2CBF               	goto	l2173
-  1114  0514  2D15               	goto	l2187
-  1115  0515                     l2187:	
-  1116                           
-  1117                           ;main.c: 410: byte_to_hex(temp);
-  1118  0515  1683               	bsf	3,5	;RP0=1, select bank1
-  1119  0516  1303               	bcf	3,6	;RP1=0, select bank1
-  1120  0517  0866               	movf	main@temp^(0+128),w
-  1121  0518  118A  2240  118A   	fcall	_byte_to_hex
+  1056                           ;main.c: 407: print_string_serial("File size: ");
+  1057  0472  3068               	movlw	(low ((STR_9-__stringbase)| (0+32768)))& (0+255)
+  1058  0473  118A  21B4  118A   	fcall	_print_string_serial
+  1059                           
+  1060                           ;main.c: 408: byte_to_hex(usb_file_size_high);
+  1061  0476  1283               	bcf	3,5	;RP0=0, select bank0
+  1062  0477  0853               	movf	_usb_file_size_high,w
+  1063  0478  118A  21F0  118A   	fcall	_byte_to_hex
+  1064                           
+  1065                           ;main.c: 409: uart_send(hex_char_high);
+  1066  047B  0876               	movf	_hex_char_high,w
+  1067  047C  118A  2570  118A   	fcall	_uart_send
+  1068                           
+  1069                           ;main.c: 410: uart_send(hex_char_low);
+  1070  047F  0875               	movf	_hex_char_low,w
+  1071  0480  118A  2570  118A   	fcall	_uart_send
+  1072                           
+  1073                           ;main.c: 411: byte_to_hex(usb_file_size_low);
+  1074  0483  1283               	bcf	3,5	;RP0=0, select bank0
+  1075  0484  1303               	bcf	3,6	;RP1=0, select bank0
+  1076  0485  0852               	movf	_usb_file_size_low,w
+  1077  0486  118A  21F0  118A   	fcall	_byte_to_hex
+  1078                           
+  1079                           ;main.c: 412: uart_send(hex_char_high);
+  1080  0489  0876               	movf	_hex_char_high,w
+  1081  048A  118A  2570  118A   	fcall	_uart_send
+  1082                           
+  1083                           ;main.c: 413: uart_send(hex_char_low);
+  1084  048D  0875               	movf	_hex_char_low,w
+  1085  048E  118A  2570  118A   	fcall	_uart_send
+  1086                           
+  1087                           ;main.c: 414: uart_send('\n');
+  1088  0491  300A               	movlw	10
+  1089  0492  118A  2570  118A   	fcall	_uart_send
+  1090                           
+  1091                           ;main.c: 415: break;
+  1092  0495  2CE8               	goto	l2272
+  1093  0496                     l2258:	
+  1094                           
+  1095                           ;main.c: 417: usb_file_read();
+  1096  0496  118A  277C  118A   	fcall	_usb_file_read
+  1097                           
+  1098                           ;main.c: 418: break;
+  1099  0499  2CE8               	goto	l2272
+  1100  049A                     l2260:	
+  1101                           
+  1102                           ;main.c: 420: usb_file_create();
+  1103  049A  118A  26EC  118A   	fcall	_usb_file_create
+  1104                           
+  1105                           ;main.c: 421: break;
+  1106  049D  2CE8               	goto	l2272
+  1107  049E                     l2262:	
+  1108                           
+  1109                           ;main.c: 429: mem_clear();
+  1110  049E  118A  2550  118A   	fcall	_mem_clear
+  1111                           
+  1112                           ;main.c: 430: break;
+  1113  04A1  2CE8               	goto	l2272
+  1114  04A2                     l2264:	
+  1115                           
+  1116                           ;main.c: 432: mem_dump();
+  1117  04A2  118A  255E  118A   	fcall	_mem_dump
+  1118                           
+  1119                           ;main.c: 433: break;
+  1120  04A5  2CE8               	goto	l2272
+  1121  04A6                     l2266:	
   1122                           
-  1123                           ;main.c: 411: uart_send(hex_char_high);
-  1124  051B  0876               	movf	_hex_char_high,w
-  1125  051C  118A  2584  118A   	fcall	_uart_send
-  1126                           
-  1127                           ;main.c: 412: uart_send(hex_char_low);
-  1128  051F  0875               	movf	_hex_char_low,w
-  1129  0520  118A  2584  118A   	fcall	_uart_send
+  1123                           ;main.c: 435: print_test_data();
+  1124  04A6  118A  2675  118A   	fcall	_print_test_data
+  1125                           
+  1126                           ;main.c: 436: break;
+  1127  04A9  2CE8               	goto	l2272
+  1128  04AA                     l2270:	
+  1129  04AA  0866               	movf	main@temp^(0+128),w
   1130                           
-  1131                           ;main.c: 413: lcd_clear2();
-  1132  0523  118A  2636  118A   	fcall	_lcd_clear2
-  1133                           
-  1134                           ;main.c: 414: lcd_putc(hex_char_high);
-  1135  0526  0876               	movf	_hex_char_high,w
-  1136  0527  118A  25EA  118A   	fcall	_lcd_putc
-  1137                           
-  1138                           ;main.c: 415: lcd_putc(hex_char_low);
-  1139  052A  0875               	movf	_hex_char_low,w
-  1140  052B  118A  25EA  118A   	fcall	_lcd_putc
-  1141  052E                     l2121:	
-  1142                           ;main.c: 416: break;
-  1143                           
-  1144                           
-  1145                           ;main.c: 326: {;main.c: 327: temp = uart_read();
-  1146  052E  118A  2580  118A   	fcall	_uart_read
-  1147  0531  1683               	bsf	3,5	;RP0=1, select bank1
-  1148  0532  1303               	bcf	3,6	;RP1=0, select bank1
-  1149  0533  00E4               	movwf	??_main^(0+128)
-  1150  0534  0864               	movf	??_main^(0+128),w
-  1151  0535  00E6               	movwf	main@temp^(0+128)
-  1152  0536  0865               	movf	main@state^(0+128),w
-  1153                           
-  1154                           ; Switch size 1, requested type "simple"
-  1155                           ; Number of cases is 5, Range of values is 0 to 4
-  1156                           ; switch strategies available:
-  1157                           ; Name         Instructions Cycles
-  1158                           ; simple_byte           16     9 (average)
-  1159                           ; direct_byte           17     7 (fixed)
-  1160                           ; jumptable            260     6 (fixed)
-  1161                           ;	Chosen strategy is simple_byte
-  1162  0537  3A00               	xorlw	0	; case 0
-  1163  0538  1903               	skipnz
-  1164  0539  2C5A               	goto	l2123
-  1165  053A  3A01               	xorlw	1	; case 1
-  1166  053B  1903               	skipnz
-  1167  053C  2C61               	goto	l2127
-  1168  053D  3A03               	xorlw	3	; case 2
-  1169  053E  1903               	skipnz
-  1170  053F  2C69               	goto	l2133
-  1171  0540  3A01               	xorlw	1	; case 3
-  1172  0541  1903               	skipnz
-  1173  0542  2C6F               	goto	l2139
-  1174  0543  3A07               	xorlw	7	; case 4
-  1175  0544  1903               	skipnz
-  1176  0545  2CE6               	goto	l2185
-  1177  0546  2D2E               	goto	l2121
-  1178  0547  118A  2800         	ljmp	start
-  1179  0549                     __end_of_main:	
-  1180                           
-  1181                           	psect	text1
-  1182  03B9                     __ptext1:	
-  1183 ;; *************** function _usb_autoconfig *****************
-  1184 ;; Defined at:
-  1185 ;;		line 269 in file "main.c"
-  1186 ;; Parameters:    Size  Location     Type
-  1187 ;;		None
-  1188 ;; Auto vars:     Size  Location     Type
-  1189 ;;  temp            1    3[BANK1 ] unsigned char 
-  1190 ;; Return value:  Size  Location     Type
-  1191 ;;                  1    wreg      void 
-  1192 ;; Registers used:
-  1193 ;;		wreg, fsr0l, fsr0h, fsr1l, fsr1h, fsr1l, fsr1h, status,2, status,0, btemp+1, pclath, cstack
-  1194 ;; Tracked objects:
-  1195 ;;		On entry : 0/100
-  1196 ;;		On exit  : 0/0
-  1197 ;;		Unchanged: 0/0
-  1198 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
-  1199 ;;      Params:         0       0       0       0       0
-  1200 ;;      Locals:         0       0       1       0       0
-  1201 ;;      Temps:          0       0       1       0       0
-  1202 ;;      Totals:         0       0       2       0       0
-  1203 ;;Total ram usage:        2 bytes
-  1204 ;; Hardware stack levels used:    1
-  1205 ;; Hardware stack levels required when called:    5
-  1206 ;; This function calls:
-  1207 ;;		_byte_to_hex
-  1208 ;;		_delay_millis
-  1209 ;;		_print_query
-  1210 ;;		_print_string_serial
-  1211 ;;		_uart_send
-  1212 ;;		_usb_check_exists
-  1213 ;;		_usb_disk_connect
-  1214 ;;		_usb_disk_mount
-  1215 ;;		_usb_get_status
-  1216 ;;		_usb_get_version
-  1217 ;;		_usb_set_mode
-  1218 ;; This function is called by:
-  1219 ;;		_main
-  1220 ;; This function uses a non-reentrant model
-  1221 ;;
+  1131                           ; Switch size 1, requested type "simple"
+  1132                           ; Number of cases is 20, Range of values is 0 to 34
+  1133                           ; switch strategies available:
+  1134                           ; Name         Instructions Cycles
+  1135                           ; simple_byte           61    31 (average)
+  1136                           ; direct_byte           77     7 (fixed)
+  1137                           ; jumptable            260     6 (fixed)
+  1138                           ;	Chosen strategy is simple_byte
+  1139  04AB  3A00               	xorlw	0	; case 0
+  1140  04AC  1903               	skipnz
+  1141  04AD  2C2C               	goto	l2220
+  1142  04AE  3A01               	xorlw	1	; case 1
+  1143  04AF  1903               	skipnz
+  1144  04B0  2C30               	goto	l2222
+  1145  04B1  3A03               	xorlw	3	; case 2
+  1146  04B2  1903               	skipnz
+  1147  04B3  2C34               	goto	l2224
+  1148  04B4  3A01               	xorlw	1	; case 3
+  1149  04B5  1903               	skipnz
+  1150  04B6  2C38               	goto	l2226
+  1151  04B7  3A07               	xorlw	7	; case 4
+  1152  04B8  1903               	skipnz
+  1153  04B9  2C3D               	goto	l2228
+  1154  04BA  3A01               	xorlw	1	; case 5
+  1155  04BB  1903               	skipnz
+  1156  04BC  2C42               	goto	l2230
+  1157  04BD  3A03               	xorlw	3	; case 6
+  1158  04BE  1903               	skipnz
+  1159  04BF  2C47               	goto	l2232
+  1160  04C0  3A01               	xorlw	1	; case 7
+  1161  04C1  1903               	skipnz
+  1162  04C2  2C4B               	goto	l2234
+  1163  04C3  3A0F               	xorlw	15	; case 8
+  1164  04C4  1903               	skipnz
+  1165  04C5  2C4F               	goto	l2236
+  1166  04C6  3A01               	xorlw	1	; case 9
+  1167  04C7  1903               	skipnz
+  1168  04C8  2C58               	goto	l2238
+  1169  04C9  3A03               	xorlw	3	; case 10
+  1170  04CA  1903               	skipnz
+  1171  04CB  2C5C               	goto	l2240
+  1172  04CC  3A01               	xorlw	1	; case 11
+  1173  04CD  1903               	skipnz
+  1174  04CE  2C60               	goto	l2242
+  1175  04CF  3A07               	xorlw	7	; case 12
+  1176  04D0  1903               	skipnz
+  1177  04D1  2C67               	goto	l2244
+  1178  04D2  3A01               	xorlw	1	; case 13
+  1179  04D3  1903               	skipnz
+  1180  04D4  2C6B               	goto	l2246
+  1181  04D5  3A03               	xorlw	3	; case 14
+  1182  04D6  1903               	skipnz
+  1183  04D7  2C6F               	goto	l2248
+  1184  04D8  3A01               	xorlw	1	; case 15
+  1185  04D9  1903               	skipnz
+  1186  04DA  2C96               	goto	l2258
+  1187  04DB  3A1F               	xorlw	31	; case 16
+  1188  04DC  1903               	skipnz
+  1189  04DD  2C9A               	goto	l2260
+  1190  04DE  3A30               	xorlw	48	; case 32
+  1191  04DF  1903               	skipnz
+  1192  04E0  2C9E               	goto	l2262
+  1193  04E1  3A01               	xorlw	1	; case 33
+  1194  04E2  1903               	skipnz
+  1195  04E3  2CA2               	goto	l2264
+  1196  04E4  3A03               	xorlw	3	; case 34
+  1197  04E5  1903               	skipnz
+  1198  04E6  2CA6               	goto	l2266
+  1199  04E7  2CE8               	goto	l2272
+  1200  04E8                     l2272:	
+  1201                           
+  1202                           ;main.c: 438: byte_to_hex(temp);
+  1203  04E8  1683               	bsf	3,5	;RP0=1, select bank1
+  1204  04E9  1303               	bcf	3,6	;RP1=0, select bank1
+  1205  04EA  0866               	movf	main@temp^(0+128),w
+  1206  04EB  118A  21F0  118A   	fcall	_byte_to_hex
+  1207                           
+  1208                           ;main.c: 439: uart_send(hex_char_high);
+  1209  04EE  0876               	movf	_hex_char_high,w
+  1210  04EF  118A  2570  118A   	fcall	_uart_send
+  1211                           
+  1212                           ;main.c: 440: uart_send(hex_char_low);
+  1213  04F2  0875               	movf	_hex_char_low,w
+  1214  04F3  118A  2570  118A   	fcall	_uart_send
+  1215                           
+  1216                           ;main.c: 441: lcd_clear2();
+  1217  04F6  118A  2622  118A   	fcall	_lcd_clear2
+  1218                           
+  1219                           ;main.c: 442: lcd_putc(hex_char_high);
+  1220  04F9  0876               	movf	_hex_char_high,w
+  1221  04FA  118A  25D6  118A   	fcall	_lcd_putc
   1222                           
-  1223                           
-  1224                           ;psect for function _usb_autoconfig
-  1225  03B9                     _usb_autoconfig:	
-  1226                           
-  1227                           ;main.c: 271: unsigned char temp;;main.c: 272: print_string_serial("USB Autoconfig:\n");
+  1223                           ;main.c: 443: lcd_putc(hex_char_low);
+  1224  04FD  0875               	movf	_hex_char_low,w
+  1225  04FE  118A  25D6  118A   	fcall	_lcd_putc
+  1226  0501                     l2196:	
+  1227                           ;main.c: 444: break;
   1228                           
-  1229                           ;incstack = 0
-  1230                           ; Regs used in _usb_autoconfig: [allreg]
-  1231  03B9  3029               	movlw	(low ((STR_4-__stringbase)| (0+32768)))& (0+255)
-  1232  03BA  118A  2204  118A   	fcall	_print_string_serial
-  1233                           
-  1234                           ;main.c: 273: temp = usb_check_exists(0x55);
-  1235  03BD  3055               	movlw	85
-  1236  03BE  118A  26F5  118A   	fcall	_usb_check_exists
-  1237  03C1  1683               	bsf	3,5	;RP0=1, select bank1
-  1238  03C2  1303               	bcf	3,6	;RP1=0, select bank1
-  1239  03C3  00E2               	movwf	??_usb_autoconfig^(0+128)
-  1240  03C4  0862               	movf	??_usb_autoconfig^(0+128),w
-  1241  03C5  00E3               	movwf	usb_autoconfig@temp^(0+128)
-  1242                           
-  1243                           ;main.c: 274: byte_to_hex(temp);
-  1244  03C6  0863               	movf	usb_autoconfig@temp^(0+128),w
-  1245  03C7  118A  2240  118A   	fcall	_byte_to_hex
-  1246                           
-  1247                           ;main.c: 275: uart_send(hex_char_high);
-  1248  03CA  0876               	movf	_hex_char_high,w
-  1249  03CB  118A  2584  118A   	fcall	_uart_send
-  1250                           
-  1251                           ;main.c: 276: uart_send(hex_char_low);
-  1252  03CE  0875               	movf	_hex_char_low,w
-  1253  03CF  118A  2584  118A   	fcall	_uart_send
-  1254                           
-  1255                           ;main.c: 277: uart_send('\n');
-  1256  03D2  300A               	movlw	10
-  1257  03D3  118A  2584  118A   	fcall	_uart_send
-  1258                           
-  1259                           ;main.c: 279: temp = usb_get_version();
-  1260  03D6  118A  2718  118A   	fcall	_usb_get_version
-  1261  03D9  1683               	bsf	3,5	;RP0=1, select bank1
-  1262  03DA  1303               	bcf	3,6	;RP1=0, select bank1
-  1263  03DB  00E2               	movwf	??_usb_autoconfig^(0+128)
-  1264  03DC  0862               	movf	??_usb_autoconfig^(0+128),w
-  1265  03DD  00E3               	movwf	usb_autoconfig@temp^(0+128)
-  1266                           
-  1267                           ;main.c: 280: byte_to_hex(temp);
-  1268  03DE  0863               	movf	usb_autoconfig@temp^(0+128),w
-  1269  03DF  118A  2240  118A   	fcall	_byte_to_hex
-  1270                           
-  1271                           ;main.c: 281: print_string_serial("Version: ");
-  1272  03E2  307E               	movlw	(low ((STR_5-__stringbase)| (0+32768)))& (0+255)
-  1273  03E3  118A  2204  118A   	fcall	_print_string_serial
-  1274                           
-  1275                           ;main.c: 282: uart_send(hex_char_high);
-  1276  03E6  0876               	movf	_hex_char_high,w
-  1277  03E7  118A  2584  118A   	fcall	_uart_send
-  1278                           
-  1279                           ;main.c: 283: uart_send(hex_char_low);
-  1280  03EA  0875               	movf	_hex_char_low,w
-  1281  03EB  118A  2584  118A   	fcall	_uart_send
-  1282                           
-  1283                           ;main.c: 284: uart_send('\n');
-  1284  03EE  300A               	movlw	10
-  1285  03EF  118A  2584  118A   	fcall	_uart_send
-  1286                           
-  1287                           ;main.c: 286: usb_set_mode(0x05);
-  1288  03F2  3005               	movlw	5
-  1289  03F3  118A  2710  118A   	fcall	_usb_set_mode
-  1290                           
-  1291                           ;main.c: 287: delay_millis(1);
-  1292  03F6  3001               	movlw	1
-  1293  03F7  118A  267D  118A   	fcall	_delay_millis
-  1294                           
-  1295                           ;main.c: 288: usb_set_mode(0x07);
-  1296  03FA  3007               	movlw	7
-  1297  03FB  118A  2710  118A   	fcall	_usb_set_mode
-  1298                           
-  1299                           ;main.c: 289: delay_millis(1);
-  1300  03FE  3001               	movlw	1
-  1301  03FF  118A  267D  118A   	fcall	_delay_millis
-  1302                           
-  1303                           ;main.c: 290: usb_set_mode(0x06);
-  1304  0402  3006               	movlw	6
-  1305  0403  118A  2710  118A   	fcall	_usb_set_mode
-  1306                           
-  1307                           ;main.c: 291: delay_millis(1);
-  1308  0406  3001               	movlw	1
-  1309  0407  118A  267D  118A   	fcall	_delay_millis
-  1310                           
-  1311                           ;main.c: 292: usb_disk_connect();
-  1312  040A  118A  270B  118A   	fcall	_usb_disk_connect
+  1229                           
+  1230                           ;main.c: 333: {;main.c: 334: temp = uart_read();
+  1231  0501  118A  256C  118A   	fcall	_uart_read
+  1232  0504  1683               	bsf	3,5	;RP0=1, select bank1
+  1233  0505  1303               	bcf	3,6	;RP1=0, select bank1
+  1234  0506  00E4               	movwf	??_main^(0+128)
+  1235  0507  0864               	movf	??_main^(0+128),w
+  1236  0508  00E6               	movwf	main@temp^(0+128)
+  1237  0509  0865               	movf	main@state^(0+128),w
+  1238                           
+  1239                           ; Switch size 1, requested type "simple"
+  1240                           ; Number of cases is 5, Range of values is 0 to 4
+  1241                           ; switch strategies available:
+  1242                           ; Name         Instructions Cycles
+  1243                           ; simple_byte           16     9 (average)
+  1244                           ; direct_byte           17     7 (fixed)
+  1245                           ; jumptable            260     6 (fixed)
+  1246                           ;	Chosen strategy is simple_byte
+  1247  050A  3A00               	xorlw	0	; case 0
+  1248  050B  1903               	skipnz
+  1249  050C  2C0A               	goto	l2198
+  1250  050D  3A01               	xorlw	1	; case 1
+  1251  050E  1903               	skipnz
+  1252  050F  2C11               	goto	l2202
+  1253  0510  3A03               	xorlw	3	; case 2
+  1254  0511  1903               	skipnz
+  1255  0512  2C19               	goto	l2208
+  1256  0513  3A01               	xorlw	1	; case 3
+  1257  0514  1903               	skipnz
+  1258  0515  2C1F               	goto	l2214
+  1259  0516  3A07               	xorlw	7	; case 4
+  1260  0517  1903               	skipnz
+  1261  0518  2CAA               	goto	l2270
+  1262  0519  2D01               	goto	l2196
+  1263  051A  118A  2800         	ljmp	start
+  1264  051C                     __end_of_main:	
+  1265                           
+  1266                           	psect	text1
+  1267  0369                     __ptext1:	
+  1268 ;; *************** function _usb_autoconfig *****************
+  1269 ;; Defined at:
+  1270 ;;		line 276 in file "main.c"
+  1271 ;; Parameters:    Size  Location     Type
+  1272 ;;		None
+  1273 ;; Auto vars:     Size  Location     Type
+  1274 ;;  temp            1    3[BANK1 ] unsigned char 
+  1275 ;; Return value:  Size  Location     Type
+  1276 ;;                  1    wreg      void 
+  1277 ;; Registers used:
+  1278 ;;		wreg, fsr0l, fsr0h, fsr1l, fsr1h, fsr1l, fsr1h, status,2, status,0, btemp+1, pclath, cstack
+  1279 ;; Tracked objects:
+  1280 ;;		On entry : 0/100
+  1281 ;;		On exit  : 0/0
+  1282 ;;		Unchanged: 0/0
+  1283 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
+  1284 ;;      Params:         0       0       0       0       0
+  1285 ;;      Locals:         0       0       1       0       0
+  1286 ;;      Temps:          0       0       1       0       0
+  1287 ;;      Totals:         0       0       2       0       0
+  1288 ;;Total ram usage:        2 bytes
+  1289 ;; Hardware stack levels used:    1
+  1290 ;; Hardware stack levels required when called:    5
+  1291 ;; This function calls:
+  1292 ;;		_byte_to_hex
+  1293 ;;		_delay_millis
+  1294 ;;		_print_query
+  1295 ;;		_print_string_serial
+  1296 ;;		_uart_send
+  1297 ;;		_usb_check_exists
+  1298 ;;		_usb_disk_connect
+  1299 ;;		_usb_disk_mount
+  1300 ;;		_usb_get_status
+  1301 ;;		_usb_get_version
+  1302 ;;		_usb_set_mode
+  1303 ;; This function is called by:
+  1304 ;;		_main
+  1305 ;; This function uses a non-reentrant model
+  1306 ;;
+  1307                           
+  1308                           
+  1309                           ;psect for function _usb_autoconfig
+  1310  0369                     _usb_autoconfig:	
+  1311                           
+  1312                           ;main.c: 278: unsigned char temp;;main.c: 279: print_string_serial("USB Autoconfig:\n");
   1313                           
-  1314                           ;main.c: 293: delay_millis(250);
-  1315  040D  30FA               	movlw	250
-  1316  040E  118A  267D  118A   	fcall	_delay_millis
-  1317                           
-  1318                           ;main.c: 294: delay_millis(250);
-  1319  0411  30FA               	movlw	250
-  1320  0412  118A  267D  118A   	fcall	_delay_millis
-  1321                           
-  1322                           ;main.c: 295: usb_disk_mount();
-  1323  0415  118A  2706  118A   	fcall	_usb_disk_mount
-  1324                           
-  1325                           ;main.c: 296: delay_millis(250);
-  1326  0418  30FA               	movlw	250
-  1327  0419  118A  267D  118A   	fcall	_delay_millis
-  1328                           
-  1329                           ;main.c: 297: delay_millis(250);
-  1330  041C  30FA               	movlw	250
-  1331  041D  118A  267D  118A   	fcall	_delay_millis
-  1332                           
-  1333                           ;main.c: 299: temp = usb_get_status();
-  1334  0420  118A  26FF  118A   	fcall	_usb_get_status
-  1335  0423  1683               	bsf	3,5	;RP0=1, select bank1
-  1336  0424  1303               	bcf	3,6	;RP1=0, select bank1
-  1337  0425  00E2               	movwf	??_usb_autoconfig^(0+128)
-  1338  0426  0862               	movf	??_usb_autoconfig^(0+128),w
-  1339  0427  00E3               	movwf	usb_autoconfig@temp^(0+128)
-  1340                           
-  1341                           ;main.c: 300: byte_to_hex(temp);
-  1342  0428  0863               	movf	usb_autoconfig@temp^(0+128),w
-  1343  0429  118A  2240  118A   	fcall	_byte_to_hex
-  1344                           
-  1345                           ;main.c: 301: print_string_serial("Status: ");
-  1346  042C  3088               	movlw	(low ((STR_6-__stringbase)| (0+32768)))& (0+255)
-  1347  042D  118A  2204  118A   	fcall	_print_string_serial
-  1348                           
-  1349                           ;main.c: 302: uart_send(hex_char_high);
-  1350  0430  0876               	movf	_hex_char_high,w
-  1351  0431  118A  2584  118A   	fcall	_uart_send
-  1352                           
-  1353                           ;main.c: 303: uart_send(hex_char_low);
-  1354  0434  0875               	movf	_hex_char_low,w
-  1355  0435  118A  2584  118A   	fcall	_uart_send
-  1356                           
-  1357                           ;main.c: 304: uart_send('\n');
-  1358  0438  300A               	movlw	10
-  1359  0439  118A  2584  118A   	fcall	_uart_send
-  1360                           
-  1361                           ;main.c: 306: print_query();
-  1362  043C  118A  2343         	fcall	_print_query
-  1363  043E  0008               	return
-  1364  043F                     __end_of_usb_autoconfig:	
-  1365                           
-  1366                           	psect	text2
-  1367  0343                     __ptext2:	
-  1368 ;; *************** function _print_query *****************
-  1369 ;; Defined at:
-  1370 ;;		line 237 in file "main.c"
-  1371 ;; Parameters:    Size  Location     Type
-  1372 ;;		None
-  1373 ;; Auto vars:     Size  Location     Type
-  1374 ;;		None
-  1375 ;; Return value:  Size  Location     Type
-  1376 ;;                  1    wreg      void 
-  1377 ;; Registers used:
-  1378 ;;		wreg, fsr0l, fsr0h, fsr1l, fsr1h, fsr1l, fsr1h, status,2, status,0, btemp+1, pclath, cstack
-  1379 ;; Tracked objects:
-  1380 ;;		On entry : 0/100
-  1381 ;;		On exit  : 0/0
-  1382 ;;		Unchanged: 0/0
-  1383 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
-  1384 ;;      Params:         0       0       0       0       0
-  1385 ;;      Locals:         0       0       0       0       0
-  1386 ;;      Temps:          0       0       0       0       0
-  1387 ;;      Totals:         0       0       0       0       0
-  1388 ;;Total ram usage:        0 bytes
-  1389 ;; Hardware stack levels used:    1
-  1390 ;; Hardware stack levels required when called:    4
-  1391 ;; This function calls:
-  1392 ;;		_byte_to_hex
-  1393 ;;		_print_string_serial
-  1394 ;;		_uart_send
-  1395 ;;		_usb_disk_query
-  1396 ;; This function is called by:
-  1397 ;;		_usb_autoconfig
-  1398 ;;		_main
-  1399 ;; This function uses a non-reentrant model
-  1400 ;;
-  1401                           
+  1314                           ;incstack = 0
+  1315                           ; Regs used in _usb_autoconfig: [allreg]
+  1316  0369  3029               	movlw	(low ((STR_4-__stringbase)| (0+32768)))& (0+255)
+  1317  036A  118A  21B4  118A   	fcall	_print_string_serial
+  1318                           
+  1319                           ;main.c: 280: temp = usb_check_exists(0x55);
+  1320  036D  3055               	movlw	85
+  1321  036E  118A  26E2  118A   	fcall	_usb_check_exists
+  1322  0371  1683               	bsf	3,5	;RP0=1, select bank1
+  1323  0372  1303               	bcf	3,6	;RP1=0, select bank1
+  1324  0373  00E2               	movwf	??_usb_autoconfig^(0+128)
+  1325  0374  0862               	movf	??_usb_autoconfig^(0+128),w
+  1326  0375  00E3               	movwf	usb_autoconfig@temp^(0+128)
+  1327                           
+  1328                           ;main.c: 281: byte_to_hex(temp);
+  1329  0376  0863               	movf	usb_autoconfig@temp^(0+128),w
+  1330  0377  118A  21F0  118A   	fcall	_byte_to_hex
+  1331                           
+  1332                           ;main.c: 282: uart_send(hex_char_high);
+  1333  037A  0876               	movf	_hex_char_high,w
+  1334  037B  118A  2570  118A   	fcall	_uart_send
+  1335                           
+  1336                           ;main.c: 283: uart_send(hex_char_low);
+  1337  037E  0875               	movf	_hex_char_low,w
+  1338  037F  118A  2570  118A   	fcall	_uart_send
+  1339                           
+  1340                           ;main.c: 284: uart_send('\n');
+  1341  0382  300A               	movlw	10
+  1342  0383  118A  2570  118A   	fcall	_uart_send
+  1343                           
+  1344                           ;main.c: 286: temp = usb_get_version();
+  1345  0386  118A  2718  118A   	fcall	_usb_get_version
+  1346  0389  1683               	bsf	3,5	;RP0=1, select bank1
+  1347  038A  1303               	bcf	3,6	;RP1=0, select bank1
+  1348  038B  00E2               	movwf	??_usb_autoconfig^(0+128)
+  1349  038C  0862               	movf	??_usb_autoconfig^(0+128),w
+  1350  038D  00E3               	movwf	usb_autoconfig@temp^(0+128)
+  1351                           
+  1352                           ;main.c: 287: byte_to_hex(temp);
+  1353  038E  0863               	movf	usb_autoconfig@temp^(0+128),w
+  1354  038F  118A  21F0  118A   	fcall	_byte_to_hex
+  1355                           
+  1356                           ;main.c: 288: print_string_serial("Version: ");
+  1357  0392  307E               	movlw	(low ((STR_5-__stringbase)| (0+32768)))& (0+255)
+  1358  0393  118A  21B4  118A   	fcall	_print_string_serial
+  1359                           
+  1360                           ;main.c: 289: uart_send(hex_char_high);
+  1361  0396  0876               	movf	_hex_char_high,w
+  1362  0397  118A  2570  118A   	fcall	_uart_send
+  1363                           
+  1364                           ;main.c: 290: uart_send(hex_char_low);
+  1365  039A  0875               	movf	_hex_char_low,w
+  1366  039B  118A  2570  118A   	fcall	_uart_send
+  1367                           
+  1368                           ;main.c: 291: uart_send('\n');
+  1369  039E  300A               	movlw	10
+  1370  039F  118A  2570  118A   	fcall	_uart_send
+  1371                           
+  1372                           ;main.c: 293: usb_set_mode(0x05);
+  1373  03A2  3005               	movlw	5
+  1374  03A3  118A  2710  118A   	fcall	_usb_set_mode
+  1375                           
+  1376                           ;main.c: 294: delay_millis(1);
+  1377  03A6  3001               	movlw	1
+  1378  03A7  118A  2669  118A   	fcall	_delay_millis
+  1379                           
+  1380                           ;main.c: 295: usb_set_mode(0x07);
+  1381  03AA  3007               	movlw	7
+  1382  03AB  118A  2710  118A   	fcall	_usb_set_mode
+  1383                           
+  1384                           ;main.c: 296: delay_millis(1);
+  1385  03AE  3001               	movlw	1
+  1386  03AF  118A  2669  118A   	fcall	_delay_millis
+  1387                           
+  1388                           ;main.c: 297: usb_set_mode(0x06);
+  1389  03B2  3006               	movlw	6
+  1390  03B3  118A  2710  118A   	fcall	_usb_set_mode
+  1391                           
+  1392                           ;main.c: 298: delay_millis(1);
+  1393  03B6  3001               	movlw	1
+  1394  03B7  118A  2669  118A   	fcall	_delay_millis
+  1395                           
+  1396                           ;main.c: 299: usb_disk_connect();
+  1397  03BA  118A  270B  118A   	fcall	_usb_disk_connect
+  1398                           
+  1399                           ;main.c: 300: delay_millis(250);
+  1400  03BD  30FA               	movlw	250
+  1401  03BE  118A  2669  118A   	fcall	_delay_millis
   1402                           
-  1403                           ;psect for function _print_query
-  1404  0343                     _print_query:	
-  1405                           
-  1406                           ;main.c: 239: usb_disk_query();
-  1407                           
-  1408                           ;incstack = 0
-  1409                           ; Regs used in _print_query: [allreg]
-  1410  0343  118A  274D  118A   	fcall	_usb_disk_query
-  1411                           
-  1412                           ;main.c: 240: print_string_serial("Logical bytes: ");
-  1413  0346  304B               	movlw	(low ((STR_2-__stringbase)| (0+32768)))& (0+255)
-  1414  0347  118A  2204  118A   	fcall	_print_string_serial
-  1415                           
-  1416                           ;main.c: 241: byte_to_hex(usb_logical_bytes3);
-  1417  034A  1283               	bcf	3,5	;RP0=0, select bank0
-  1418  034B  084A               	movf	_usb_logical_bytes3,w
-  1419  034C  118A  2240  118A   	fcall	_byte_to_hex
-  1420                           
-  1421                           ;main.c: 242: uart_send(hex_char_high);
-  1422  034F  0876               	movf	_hex_char_high,w
-  1423  0350  118A  2584  118A   	fcall	_uart_send
-  1424                           
-  1425                           ;main.c: 243: uart_send(hex_char_low);
-  1426  0353  0875               	movf	_hex_char_low,w
-  1427  0354  118A  2584  118A   	fcall	_uart_send
-  1428                           
-  1429                           ;main.c: 244: byte_to_hex(usb_logical_bytes2);
-  1430  0357  1283               	bcf	3,5	;RP0=0, select bank0
-  1431  0358  1303               	bcf	3,6	;RP1=0, select bank0
-  1432  0359  084B               	movf	_usb_logical_bytes2,w
-  1433  035A  118A  2240  118A   	fcall	_byte_to_hex
-  1434                           
-  1435                           ;main.c: 245: uart_send(hex_char_high);
-  1436  035D  0876               	movf	_hex_char_high,w
-  1437  035E  118A  2584  118A   	fcall	_uart_send
-  1438                           
-  1439                           ;main.c: 246: uart_send(hex_char_low);
-  1440  0361  0875               	movf	_hex_char_low,w
-  1441  0362  118A  2584  118A   	fcall	_uart_send
-  1442                           
-  1443                           ;main.c: 247: byte_to_hex(usb_logical_bytes1);
-  1444  0365  1283               	bcf	3,5	;RP0=0, select bank0
-  1445  0366  1303               	bcf	3,6	;RP1=0, select bank0
-  1446  0367  084C               	movf	_usb_logical_bytes1,w
-  1447  0368  118A  2240  118A   	fcall	_byte_to_hex
-  1448                           
-  1449                           ;main.c: 248: uart_send(hex_char_high);
-  1450  036B  0876               	movf	_hex_char_high,w
-  1451  036C  118A  2584  118A   	fcall	_uart_send
-  1452                           
-  1453                           ;main.c: 249: uart_send(hex_char_low);
-  1454  036F  0875               	movf	_hex_char_low,w
-  1455  0370  118A  2584  118A   	fcall	_uart_send
-  1456                           
-  1457                           ;main.c: 250: uart_send('0');
-  1458  0373  3030               	movlw	48
-  1459  0374  118A  2584  118A   	fcall	_uart_send
-  1460                           
-  1461                           ;main.c: 251: uart_send('0');
-  1462  0377  3030               	movlw	48
-  1463  0378  118A  2584  118A   	fcall	_uart_send
-  1464                           
-  1465                           ;main.c: 252: uart_send('\n');
-  1466  037B  300A               	movlw	10
-  1467  037C  118A  2584  118A   	fcall	_uart_send
-  1468                           
-  1469                           ;main.c: 253: print_string_serial("Free bytes: ");
-  1470  037F  305B               	movlw	(low ((STR_3-__stringbase)| (0+32768)))& (0+255)
-  1471  0380  118A  2204  118A   	fcall	_print_string_serial
-  1472                           
-  1473                           ;main.c: 254: byte_to_hex(usb_free_space3);
-  1474  0383  1283               	bcf	3,5	;RP0=0, select bank0
-  1475  0384  084D               	movf	_usb_free_space3,w
-  1476  0385  118A  2240  118A   	fcall	_byte_to_hex
-  1477                           
-  1478                           ;main.c: 255: uart_send(hex_char_high);
-  1479  0388  0876               	movf	_hex_char_high,w
-  1480  0389  118A  2584  118A   	fcall	_uart_send
-  1481                           
-  1482                           ;main.c: 256: uart_send(hex_char_low);
-  1483  038C  0875               	movf	_hex_char_low,w
-  1484  038D  118A  2584  118A   	fcall	_uart_send
-  1485                           
-  1486                           ;main.c: 257: byte_to_hex(usb_free_space2);
-  1487  0390  1283               	bcf	3,5	;RP0=0, select bank0
-  1488  0391  1303               	bcf	3,6	;RP1=0, select bank0
-  1489  0392  084E               	movf	_usb_free_space2,w
-  1490  0393  118A  2240  118A   	fcall	_byte_to_hex
-  1491                           
-  1492                           ;main.c: 258: uart_send(hex_char_high);
-  1493  0396  0876               	movf	_hex_char_high,w
-  1494  0397  118A  2584  118A   	fcall	_uart_send
-  1495                           
-  1496                           ;main.c: 259: uart_send(hex_char_low);
-  1497  039A  0875               	movf	_hex_char_low,w
-  1498  039B  118A  2584  118A   	fcall	_uart_send
-  1499                           
-  1500                           ;main.c: 260: byte_to_hex(usb_free_space1);
-  1501  039E  1283               	bcf	3,5	;RP0=0, select bank0
-  1502  039F  1303               	bcf	3,6	;RP1=0, select bank0
-  1503  03A0  084F               	movf	_usb_free_space1,w
-  1504  03A1  118A  2240  118A   	fcall	_byte_to_hex
+  1403                           ;main.c: 301: delay_millis(250);
+  1404  03C1  30FA               	movlw	250
+  1405  03C2  118A  2669  118A   	fcall	_delay_millis
+  1406                           
+  1407                           ;main.c: 302: usb_disk_mount();
+  1408  03C5  118A  2706  118A   	fcall	_usb_disk_mount
+  1409                           
+  1410                           ;main.c: 303: delay_millis(250);
+  1411  03C8  30FA               	movlw	250
+  1412  03C9  118A  2669  118A   	fcall	_delay_millis
+  1413                           
+  1414                           ;main.c: 304: delay_millis(250);
+  1415  03CC  30FA               	movlw	250
+  1416  03CD  118A  2669  118A   	fcall	_delay_millis
+  1417                           
+  1418                           ;main.c: 306: temp = usb_get_status();
+  1419  03D0  118A  26FF  118A   	fcall	_usb_get_status
+  1420  03D3  1683               	bsf	3,5	;RP0=1, select bank1
+  1421  03D4  1303               	bcf	3,6	;RP1=0, select bank1
+  1422  03D5  00E2               	movwf	??_usb_autoconfig^(0+128)
+  1423  03D6  0862               	movf	??_usb_autoconfig^(0+128),w
+  1424  03D7  00E3               	movwf	usb_autoconfig@temp^(0+128)
+  1425                           
+  1426                           ;main.c: 307: byte_to_hex(temp);
+  1427  03D8  0863               	movf	usb_autoconfig@temp^(0+128),w
+  1428  03D9  118A  21F0  118A   	fcall	_byte_to_hex
+  1429                           
+  1430                           ;main.c: 308: print_string_serial("Status: ");
+  1431  03DC  3088               	movlw	(low ((STR_6-__stringbase)| (0+32768)))& (0+255)
+  1432  03DD  118A  21B4  118A   	fcall	_print_string_serial
+  1433                           
+  1434                           ;main.c: 309: uart_send(hex_char_high);
+  1435  03E0  0876               	movf	_hex_char_high,w
+  1436  03E1  118A  2570  118A   	fcall	_uart_send
+  1437                           
+  1438                           ;main.c: 310: uart_send(hex_char_low);
+  1439  03E4  0875               	movf	_hex_char_low,w
+  1440  03E5  118A  2570  118A   	fcall	_uart_send
+  1441                           
+  1442                           ;main.c: 311: uart_send('\n');
+  1443  03E8  300A               	movlw	10
+  1444  03E9  118A  2570  118A   	fcall	_uart_send
+  1445                           
+  1446                           ;main.c: 313: print_query();
+  1447  03EC  118A  22F3         	fcall	_print_query
+  1448  03EE  0008               	return
+  1449  03EF                     __end_of_usb_autoconfig:	
+  1450                           
+  1451                           	psect	text2
+  1452  02F3                     __ptext2:	
+  1453 ;; *************** function _print_query *****************
+  1454 ;; Defined at:
+  1455 ;;		line 244 in file "main.c"
+  1456 ;; Parameters:    Size  Location     Type
+  1457 ;;		None
+  1458 ;; Auto vars:     Size  Location     Type
+  1459 ;;		None
+  1460 ;; Return value:  Size  Location     Type
+  1461 ;;                  1    wreg      void 
+  1462 ;; Registers used:
+  1463 ;;		wreg, fsr0l, fsr0h, fsr1l, fsr1h, fsr1l, fsr1h, status,2, status,0, btemp+1, pclath, cstack
+  1464 ;; Tracked objects:
+  1465 ;;		On entry : 0/100
+  1466 ;;		On exit  : 0/0
+  1467 ;;		Unchanged: 0/0
+  1468 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
+  1469 ;;      Params:         0       0       0       0       0
+  1470 ;;      Locals:         0       0       0       0       0
+  1471 ;;      Temps:          0       0       0       0       0
+  1472 ;;      Totals:         0       0       0       0       0
+  1473 ;;Total ram usage:        0 bytes
+  1474 ;; Hardware stack levels used:    1
+  1475 ;; Hardware stack levels required when called:    4
+  1476 ;; This function calls:
+  1477 ;;		_byte_to_hex
+  1478 ;;		_print_string_serial
+  1479 ;;		_uart_send
+  1480 ;;		_usb_disk_query
+  1481 ;; This function is called by:
+  1482 ;;		_usb_autoconfig
+  1483 ;;		_main
+  1484 ;; This function uses a non-reentrant model
+  1485 ;;
+  1486                           
+  1487                           
+  1488                           ;psect for function _print_query
+  1489  02F3                     _print_query:	
+  1490                           
+  1491                           ;main.c: 246: usb_disk_query();
+  1492                           
+  1493                           ;incstack = 0
+  1494                           ; Regs used in _print_query: [allreg]
+  1495  02F3  118A  274D  118A   	fcall	_usb_disk_query
+  1496                           
+  1497                           ;main.c: 247: print_string_serial("Logical bytes: ");
+  1498  02F6  304B               	movlw	(low ((STR_2-__stringbase)| (0+32768)))& (0+255)
+  1499  02F7  118A  21B4  118A   	fcall	_print_string_serial
+  1500                           
+  1501                           ;main.c: 248: byte_to_hex(usb_logical_bytes3);
+  1502  02FA  1283               	bcf	3,5	;RP0=0, select bank0
+  1503  02FB  084A               	movf	_usb_logical_bytes3,w
+  1504  02FC  118A  21F0  118A   	fcall	_byte_to_hex
   1505                           
-  1506                           ;main.c: 261: uart_send(hex_char_high);
-  1507  03A4  0876               	movf	_hex_char_high,w
-  1508  03A5  118A  2584  118A   	fcall	_uart_send
+  1506                           ;main.c: 249: uart_send(hex_char_high);
+  1507  02FF  0876               	movf	_hex_char_high,w
+  1508  0300  118A  2570  118A   	fcall	_uart_send
   1509                           
-  1510                           ;main.c: 262: uart_send(hex_char_low);
-  1511  03A8  0875               	movf	_hex_char_low,w
-  1512  03A9  118A  2584  118A   	fcall	_uart_send
+  1510                           ;main.c: 250: uart_send(hex_char_low);
+  1511  0303  0875               	movf	_hex_char_low,w
+  1512  0304  118A  2570  118A   	fcall	_uart_send
   1513                           
-  1514                           ;main.c: 263: uart_send('0');
-  1515  03AC  3030               	movlw	48
-  1516  03AD  118A  2584  118A   	fcall	_uart_send
-  1517                           
-  1518                           ;main.c: 264: uart_send('0');
-  1519  03B0  3030               	movlw	48
-  1520  03B1  118A  2584  118A   	fcall	_uart_send
-  1521                           
-  1522                           ;main.c: 265: uart_send('\n');
-  1523  03B4  300A               	movlw	10
-  1524  03B5  118A  2584  118A   	fcall	_uart_send
-  1525  03B8  0008               	return
-  1526  03B9                     __end_of_print_query:	
+  1514                           ;main.c: 251: byte_to_hex(usb_logical_bytes2);
+  1515  0307  1283               	bcf	3,5	;RP0=0, select bank0
+  1516  0308  1303               	bcf	3,6	;RP1=0, select bank0
+  1517  0309  084B               	movf	_usb_logical_bytes2,w
+  1518  030A  118A  21F0  118A   	fcall	_byte_to_hex
+  1519                           
+  1520                           ;main.c: 252: uart_send(hex_char_high);
+  1521  030D  0876               	movf	_hex_char_high,w
+  1522  030E  118A  2570  118A   	fcall	_uart_send
+  1523                           
+  1524                           ;main.c: 253: uart_send(hex_char_low);
+  1525  0311  0875               	movf	_hex_char_low,w
+  1526  0312  118A  2570  118A   	fcall	_uart_send
   1527                           
-  1528                           	psect	text3
-  1529  0222                     __ptext3:	
-  1530 ;; *************** function _print_string_lcd *****************
-  1531 ;; Defined at:
-  1532 ;;		line 187 in file "main.c"
-  1533 ;; Parameters:    Size  Location     Type
-  1534 ;;  string          1    wreg     PTR const unsigned char 
-  1535 ;;		 -> STR_7(8), 
-  1536 ;; Auto vars:     Size  Location     Type
-  1537 ;;  string          1    0[BANK1 ] PTR const unsigned char 
-  1538 ;;		 -> STR_7(8), 
-  1539 ;;  i               1    1[BANK1 ] unsigned char 
-  1540 ;; Return value:  Size  Location     Type
-  1541 ;;                  1    wreg      void 
-  1542 ;; Registers used:
-  1543 ;;		wreg, fsr0l, fsr0h, fsr1l, fsr1h, fsr1l, fsr1h, status,2, status,0, btemp+1, pclath, cstack
-  1544 ;; Tracked objects:
-  1545 ;;		On entry : 0/100
-  1546 ;;		On exit  : 300/100
-  1547 ;;		Unchanged: 0/0
-  1548 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
-  1549 ;;      Params:         0       0       0       0       0
-  1550 ;;      Locals:         0       0       2       0       0
-  1551 ;;      Temps:          0       1       0       0       0
-  1552 ;;      Totals:         0       1       2       0       0
-  1553 ;;Total ram usage:        3 bytes
-  1554 ;; Hardware stack levels used:    1
-  1555 ;; Hardware stack levels required when called:    3
-  1556 ;; This function calls:
-  1557 ;;		_lcd_putc
-  1558 ;; This function is called by:
-  1559 ;;		_main
-  1560 ;; This function uses a non-reentrant model
-  1561 ;;
+  1528                           ;main.c: 254: byte_to_hex(usb_logical_bytes1);
+  1529  0315  1283               	bcf	3,5	;RP0=0, select bank0
+  1530  0316  1303               	bcf	3,6	;RP1=0, select bank0
+  1531  0317  084C               	movf	_usb_logical_bytes1,w
+  1532  0318  118A  21F0  118A   	fcall	_byte_to_hex
+  1533                           
+  1534                           ;main.c: 255: uart_send(hex_char_high);
+  1535  031B  0876               	movf	_hex_char_high,w
+  1536  031C  118A  2570  118A   	fcall	_uart_send
+  1537                           
+  1538                           ;main.c: 256: uart_send(hex_char_low);
+  1539  031F  0875               	movf	_hex_char_low,w
+  1540  0320  118A  2570  118A   	fcall	_uart_send
+  1541                           
+  1542                           ;main.c: 257: uart_send('0');
+  1543  0323  3030               	movlw	48
+  1544  0324  118A  2570  118A   	fcall	_uart_send
+  1545                           
+  1546                           ;main.c: 258: uart_send('0');
+  1547  0327  3030               	movlw	48
+  1548  0328  118A  2570  118A   	fcall	_uart_send
+  1549                           
+  1550                           ;main.c: 259: uart_send('\n');
+  1551  032B  300A               	movlw	10
+  1552  032C  118A  2570  118A   	fcall	_uart_send
+  1553                           
+  1554                           ;main.c: 260: print_string_serial("Free bytes: ");
+  1555  032F  305B               	movlw	(low ((STR_3-__stringbase)| (0+32768)))& (0+255)
+  1556  0330  118A  21B4  118A   	fcall	_print_string_serial
+  1557                           
+  1558                           ;main.c: 261: byte_to_hex(usb_free_space3);
+  1559  0333  1283               	bcf	3,5	;RP0=0, select bank0
+  1560  0334  084D               	movf	_usb_free_space3,w
+  1561  0335  118A  21F0  118A   	fcall	_byte_to_hex
   1562                           
-  1563                           
-  1564                           ;psect for function _print_string_lcd
-  1565  0222                     _print_string_lcd:	
+  1563                           ;main.c: 262: uart_send(hex_char_high);
+  1564  0338  0876               	movf	_hex_char_high,w
+  1565  0339  118A  2570  118A   	fcall	_uart_send
   1566                           
-  1567                           ;incstack = 0
-  1568                           ; Regs used in _print_string_lcd: [allreg]
-  1569                           ;print_string_lcd@string stored from wreg
-  1570  0222  1683               	bsf	3,5	;RP0=1, select bank1
-  1571  0223  1303               	bcf	3,6	;RP1=0, select bank1
-  1572  0224  00E0               	movwf	print_string_lcd@string^(0+128)
-  1573                           
-  1574                           ;main.c: 189: unsigned char i = 0;
-  1575  0225  01E1               	clrf	print_string_lcd@i^(0+128)
-  1576  0226                     l2043:	
-  1577                           ;main.c: 190: while(string[i])
-  1578                           
-  1579  0226  0861               	movf	print_string_lcd@i^(0+128),w
-  1580  0227  0760               	addwf	print_string_lcd@string^(0+128),w
-  1581  0228  0084               	movwf	4
-  1582  0229  118A  2002  118A   	fcall	stringdir
-  1583  022C  3A00               	xorlw	0
-  1584  022D  1903               	btfsc	3,2
-  1585  022E  0008               	return
-  1586                           
-  1587                           ;main.c: 191: {;main.c: 192: lcd_putc(string[i]);
-  1588  022F  0861               	movf	print_string_lcd@i^(0+128),w
-  1589  0230  0760               	addwf	print_string_lcd@string^(0+128),w
-  1590  0231  0084               	movwf	4
-  1591  0232  118A  2002  118A   	fcall	stringdir
-  1592  0235  118A  25EA  118A   	fcall	_lcd_putc
-  1593                           
-  1594                           ;main.c: 193: ++i;
-  1595  0238  3001               	movlw	1
-  1596  0239  1283               	bcf	3,5	;RP0=0, select bank0
-  1597  023A  1303               	bcf	3,6	;RP1=0, select bank0
-  1598  023B  00EC               	movwf	??_print_string_lcd
-  1599  023C  086C               	movf	??_print_string_lcd,w
-  1600  023D  1683               	bsf	3,5	;RP0=1, select bank1
-  1601  023E  07E1               	addwf	print_string_lcd@i^(0+128),f
-  1602  023F  2A26               	goto	l2043
-  1603  0240                     __end_of_print_string_lcd:	
-  1604                           
-  1605                           	psect	text4
-  1606  0263                     __ptext4:	
-  1607 ;; *************** function _print_capacity *****************
-  1608 ;; Defined at:
-  1609 ;;		line 219 in file "main.c"
-  1610 ;; Parameters:    Size  Location     Type
-  1611 ;;		None
-  1612 ;; Auto vars:     Size  Location     Type
-  1613 ;;		None
-  1614 ;; Return value:  Size  Location     Type
-  1615 ;;                  1    wreg      void 
-  1616 ;; Registers used:
-  1617 ;;		wreg, fsr0l, fsr0h, fsr1l, fsr1h, fsr1l, fsr1h, status,2, status,0, btemp+1, pclath, cstack
-  1618 ;; Tracked objects:
-  1619 ;;		On entry : 200/100
-  1620 ;;		On exit  : 0/0
-  1621 ;;		Unchanged: 0/0
-  1622 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
-  1623 ;;      Params:         0       0       0       0       0
-  1624 ;;      Locals:         0       0       0       0       0
-  1625 ;;      Temps:          0       0       0       0       0
-  1626 ;;      Totals:         0       0       0       0       0
-  1627 ;;Total ram usage:        0 bytes
-  1628 ;; Hardware stack levels used:    1
-  1629 ;; Hardware stack levels required when called:    4
-  1630 ;; This function calls:
-  1631 ;;		_byte_to_hex
-  1632 ;;		_print_string_serial
-  1633 ;;		_uart_send
-  1634 ;;		_usb_disk_capacity
-  1635 ;; This function is called by:
-  1636 ;;		_main
-  1637 ;; This function uses a non-reentrant model
-  1638 ;;
-  1639                           
-  1640                           
-  1641                           ;psect for function _print_capacity
-  1642  0263                     _print_capacity:	
-  1643                           
-  1644                           ;main.c: 221: usb_disk_capacity();
-  1645                           
-  1646                           ;incstack = 0
-  1647                           ; Regs used in _print_capacity: [allreg]
-  1648  0263  118A  272D  118A   	fcall	_usb_disk_capacity
-  1649                           
-  1650                           ;main.c: 222: print_string_serial("Physical bytes: ");
-  1651  0266  303A               	movlw	(low ((STR_1-__stringbase)| (0+32768)))& (0+255)
-  1652  0267  118A  2204  118A   	fcall	_print_string_serial
-  1653                           
-  1654                           ;main.c: 223: byte_to_hex(usb_drive_size3);
-  1655  026A  0872               	movf	_usb_drive_size3,w
-  1656  026B  118A  2240  118A   	fcall	_byte_to_hex
-  1657                           
-  1658                           ;main.c: 224: uart_send(hex_char_high);
-  1659  026E  0876               	movf	_hex_char_high,w
-  1660  026F  118A  2584  118A   	fcall	_uart_send
-  1661                           
-  1662                           ;main.c: 225: uart_send(hex_char_low);
-  1663  0272  0875               	movf	_hex_char_low,w
-  1664  0273  118A  2584  118A   	fcall	_uart_send
-  1665                           
-  1666                           ;main.c: 226: byte_to_hex(usb_drive_size2);
-  1667  0276  0873               	movf	_usb_drive_size2,w
-  1668  0277  118A  2240  118A   	fcall	_byte_to_hex
-  1669                           
-  1670                           ;main.c: 227: uart_send(hex_char_high);
-  1671  027A  0876               	movf	_hex_char_high,w
-  1672  027B  118A  2584  118A   	fcall	_uart_send
-  1673                           
-  1674                           ;main.c: 228: uart_send(hex_char_low);
-  1675  027E  0875               	movf	_hex_char_low,w
-  1676  027F  118A  2584  118A   	fcall	_uart_send
-  1677                           
-  1678                           ;main.c: 229: byte_to_hex(usb_drive_size1);
-  1679  0282  0874               	movf	_usb_drive_size1,w
-  1680  0283  118A  2240  118A   	fcall	_byte_to_hex
-  1681                           
-  1682                           ;main.c: 230: uart_send(hex_char_high);
-  1683  0286  0876               	movf	_hex_char_high,w
-  1684  0287  118A  2584  118A   	fcall	_uart_send
-  1685                           
-  1686                           ;main.c: 231: uart_send(hex_char_low);
-  1687  028A  0875               	movf	_hex_char_low,w
-  1688  028B  118A  2584  118A   	fcall	_uart_send
+  1567                           ;main.c: 263: uart_send(hex_char_low);
+  1568  033C  0875               	movf	_hex_char_low,w
+  1569  033D  118A  2570  118A   	fcall	_uart_send
+  1570                           
+  1571                           ;main.c: 264: byte_to_hex(usb_free_space2);
+  1572  0340  1283               	bcf	3,5	;RP0=0, select bank0
+  1573  0341  1303               	bcf	3,6	;RP1=0, select bank0
+  1574  0342  084E               	movf	_usb_free_space2,w
+  1575  0343  118A  21F0  118A   	fcall	_byte_to_hex
+  1576                           
+  1577                           ;main.c: 265: uart_send(hex_char_high);
+  1578  0346  0876               	movf	_hex_char_high,w
+  1579  0347  118A  2570  118A   	fcall	_uart_send
+  1580                           
+  1581                           ;main.c: 266: uart_send(hex_char_low);
+  1582  034A  0875               	movf	_hex_char_low,w
+  1583  034B  118A  2570  118A   	fcall	_uart_send
+  1584                           
+  1585                           ;main.c: 267: byte_to_hex(usb_free_space1);
+  1586  034E  1283               	bcf	3,5	;RP0=0, select bank0
+  1587  034F  1303               	bcf	3,6	;RP1=0, select bank0
+  1588  0350  084F               	movf	_usb_free_space1,w
+  1589  0351  118A  21F0  118A   	fcall	_byte_to_hex
+  1590                           
+  1591                           ;main.c: 268: uart_send(hex_char_high);
+  1592  0354  0876               	movf	_hex_char_high,w
+  1593  0355  118A  2570  118A   	fcall	_uart_send
+  1594                           
+  1595                           ;main.c: 269: uart_send(hex_char_low);
+  1596  0358  0875               	movf	_hex_char_low,w
+  1597  0359  118A  2570  118A   	fcall	_uart_send
+  1598                           
+  1599                           ;main.c: 270: uart_send('0');
+  1600  035C  3030               	movlw	48
+  1601  035D  118A  2570  118A   	fcall	_uart_send
+  1602                           
+  1603                           ;main.c: 271: uart_send('0');
+  1604  0360  3030               	movlw	48
+  1605  0361  118A  2570  118A   	fcall	_uart_send
+  1606                           
+  1607                           ;main.c: 272: uart_send('\n');
+  1608  0364  300A               	movlw	10
+  1609  0365  118A  2570  118A   	fcall	_uart_send
+  1610  0368  0008               	return
+  1611  0369                     __end_of_print_query:	
+  1612                           
+  1613                           	psect	text3
+  1614  01D2                     __ptext3:	
+  1615 ;; *************** function _print_string_lcd *****************
+  1616 ;; Defined at:
+  1617 ;;		line 194 in file "main.c"
+  1618 ;; Parameters:    Size  Location     Type
+  1619 ;;  string          1    wreg     PTR const unsigned char 
+  1620 ;;		 -> STR_7(8), 
+  1621 ;; Auto vars:     Size  Location     Type
+  1622 ;;  string          1    0[BANK1 ] PTR const unsigned char 
+  1623 ;;		 -> STR_7(8), 
+  1624 ;;  i               1    1[BANK1 ] unsigned char 
+  1625 ;; Return value:  Size  Location     Type
+  1626 ;;                  1    wreg      void 
+  1627 ;; Registers used:
+  1628 ;;		wreg, fsr0l, fsr0h, fsr1l, fsr1h, fsr1l, fsr1h, status,2, status,0, btemp+1, pclath, cstack
+  1629 ;; Tracked objects:
+  1630 ;;		On entry : 0/100
+  1631 ;;		On exit  : 300/100
+  1632 ;;		Unchanged: 0/0
+  1633 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
+  1634 ;;      Params:         0       0       0       0       0
+  1635 ;;      Locals:         0       0       2       0       0
+  1636 ;;      Temps:          0       1       0       0       0
+  1637 ;;      Totals:         0       1       2       0       0
+  1638 ;;Total ram usage:        3 bytes
+  1639 ;; Hardware stack levels used:    1
+  1640 ;; Hardware stack levels required when called:    3
+  1641 ;; This function calls:
+  1642 ;;		_lcd_putc
+  1643 ;; This function is called by:
+  1644 ;;		_main
+  1645 ;; This function uses a non-reentrant model
+  1646 ;;
+  1647                           
+  1648                           
+  1649                           ;psect for function _print_string_lcd
+  1650  01D2                     _print_string_lcd:	
+  1651                           
+  1652                           ;incstack = 0
+  1653                           ; Regs used in _print_string_lcd: [allreg]
+  1654                           ;print_string_lcd@string stored from wreg
+  1655  01D2  1683               	bsf	3,5	;RP0=1, select bank1
+  1656  01D3  1303               	bcf	3,6	;RP1=0, select bank1
+  1657  01D4  00E0               	movwf	print_string_lcd@string^(0+128)
+  1658                           
+  1659                           ;main.c: 196: unsigned char i = 0;
+  1660  01D5  01E1               	clrf	print_string_lcd@i^(0+128)
+  1661  01D6                     l2118:	
+  1662                           ;main.c: 197: while(string[i])
+  1663                           
+  1664  01D6  0861               	movf	print_string_lcd@i^(0+128),w
+  1665  01D7  0760               	addwf	print_string_lcd@string^(0+128),w
+  1666  01D8  0084               	movwf	4
+  1667  01D9  118A  2002  118A   	fcall	stringdir
+  1668  01DC  3A00               	xorlw	0
+  1669  01DD  1903               	btfsc	3,2
+  1670  01DE  0008               	return
+  1671                           
+  1672                           ;main.c: 198: {;main.c: 199: lcd_putc(string[i]);
+  1673  01DF  0861               	movf	print_string_lcd@i^(0+128),w
+  1674  01E0  0760               	addwf	print_string_lcd@string^(0+128),w
+  1675  01E1  0084               	movwf	4
+  1676  01E2  118A  2002  118A   	fcall	stringdir
+  1677  01E5  118A  25D6  118A   	fcall	_lcd_putc
+  1678                           
+  1679                           ;main.c: 200: ++i;
+  1680  01E8  3001               	movlw	1
+  1681  01E9  1283               	bcf	3,5	;RP0=0, select bank0
+  1682  01EA  1303               	bcf	3,6	;RP1=0, select bank0
+  1683  01EB  00EC               	movwf	??_print_string_lcd
+  1684  01EC  086C               	movf	??_print_string_lcd,w
+  1685  01ED  1683               	bsf	3,5	;RP0=1, select bank1
+  1686  01EE  07E1               	addwf	print_string_lcd@i^(0+128),f
+  1687  01EF  29D6               	goto	l2118
+  1688  01F0                     __end_of_print_string_lcd:	
   1689                           
-  1690                           ;main.c: 232: uart_send('0');
-  1691  028E  3030               	movlw	48
-  1692  028F  118A  2584  118A   	fcall	_uart_send
-  1693                           
-  1694                           ;main.c: 233: uart_send('0');
-  1695  0292  3030               	movlw	48
-  1696  0293  118A  2584  118A   	fcall	_uart_send
-  1697                           
-  1698                           ;main.c: 234: uart_send('\n');
-  1699  0296  300A               	movlw	10
-  1700  0297  118A  2584  118A   	fcall	_uart_send
-  1701  029A  0008               	return
-  1702  029B                     __end_of_print_capacity:	
-  1703                           
-  1704                           	psect	text5
-  1705  0204                     __ptext5:	
-  1706 ;; *************** function _print_string_serial *****************
-  1707 ;; Defined at:
-  1708 ;;		line 198 in file "main.c"
-  1709 ;; Parameters:    Size  Location     Type
-  1710 ;;  string          1    wreg     PTR const unsigned char 
-  1711 ;;		 -> STR_9(12), str_cmd_mode(14), STR_8(10), STR_6(9), 
-  1712 ;;		 -> STR_5(10), STR_4(17), STR_3(13), STR_2(16), 
-  1713 ;;		 -> STR_1(17), str_timeout(10), 
-  1714 ;; Auto vars:     Size  Location     Type
-  1715 ;;  string          1    1[BANK1 ] PTR const unsigned char 
-  1716 ;;		 -> STR_9(12), str_cmd_mode(14), STR_8(10), STR_6(9), 
-  1717 ;;		 -> STR_5(10), STR_4(17), STR_3(13), STR_2(16), 
-  1718 ;;		 -> STR_1(17), str_timeout(10), 
-  1719 ;;  i               1    0[BANK1 ] unsigned char 
-  1720 ;; Return value:  Size  Location     Type
-  1721 ;;                  1    wreg      void 
-  1722 ;; Registers used:
-  1723 ;;		wreg, fsr0l, fsr0h, fsr1l, fsr1h, fsr1l, fsr1h, status,2, status,0, btemp+1, pclath, cstack
-  1724 ;; Tracked objects:
-  1725 ;;		On entry : 0/100
-  1726 ;;		On exit  : 300/100
-  1727 ;;		Unchanged: 0/0
-  1728 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
-  1729 ;;      Params:         0       0       0       0       0
-  1730 ;;      Locals:         0       0       2       0       0
-  1731 ;;      Temps:          0       1       0       0       0
-  1732 ;;      Totals:         0       1       2       0       0
-  1733 ;;Total ram usage:        3 bytes
-  1734 ;; Hardware stack levels used:    1
-  1735 ;; Hardware stack levels required when called:    3
-  1736 ;; This function calls:
-  1737 ;;		_uart_send
-  1738 ;; This function is called by:
-  1739 ;;		_print_capacity
-  1740 ;;		_print_query
-  1741 ;;		_usb_autoconfig
-  1742 ;;		_main
-  1743 ;; This function uses a non-reentrant model
-  1744 ;;
-  1745                           
+  1690                           	psect	text4
+  1691  0213                     __ptext4:	
+  1692 ;; *************** function _print_capacity *****************
+  1693 ;; Defined at:
+  1694 ;;		line 226 in file "main.c"
+  1695 ;; Parameters:    Size  Location     Type
+  1696 ;;		None
+  1697 ;; Auto vars:     Size  Location     Type
+  1698 ;;		None
+  1699 ;; Return value:  Size  Location     Type
+  1700 ;;                  1    wreg      void 
+  1701 ;; Registers used:
+  1702 ;;		wreg, fsr0l, fsr0h, fsr1l, fsr1h, fsr1l, fsr1h, status,2, status,0, btemp+1, pclath, cstack
+  1703 ;; Tracked objects:
+  1704 ;;		On entry : 200/100
+  1705 ;;		On exit  : 0/0
+  1706 ;;		Unchanged: 0/0
+  1707 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
+  1708 ;;      Params:         0       0       0       0       0
+  1709 ;;      Locals:         0       0       0       0       0
+  1710 ;;      Temps:          0       0       0       0       0
+  1711 ;;      Totals:         0       0       0       0       0
+  1712 ;;Total ram usage:        0 bytes
+  1713 ;; Hardware stack levels used:    1
+  1714 ;; Hardware stack levels required when called:    4
+  1715 ;; This function calls:
+  1716 ;;		_byte_to_hex
+  1717 ;;		_print_string_serial
+  1718 ;;		_uart_send
+  1719 ;;		_usb_disk_capacity
+  1720 ;; This function is called by:
+  1721 ;;		_main
+  1722 ;; This function uses a non-reentrant model
+  1723 ;;
+  1724                           
+  1725                           
+  1726                           ;psect for function _print_capacity
+  1727  0213                     _print_capacity:	
+  1728                           
+  1729                           ;main.c: 228: usb_disk_capacity();
+  1730                           
+  1731                           ;incstack = 0
+  1732                           ; Regs used in _print_capacity: [allreg]
+  1733  0213  118A  272D  118A   	fcall	_usb_disk_capacity
+  1734                           
+  1735                           ;main.c: 229: print_string_serial("Physical bytes: ");
+  1736  0216  303A               	movlw	(low ((STR_1-__stringbase)| (0+32768)))& (0+255)
+  1737  0217  118A  21B4  118A   	fcall	_print_string_serial
+  1738                           
+  1739                           ;main.c: 230: byte_to_hex(usb_drive_size3);
+  1740  021A  0872               	movf	_usb_drive_size3,w
+  1741  021B  118A  21F0  118A   	fcall	_byte_to_hex
+  1742                           
+  1743                           ;main.c: 231: uart_send(hex_char_high);
+  1744  021E  0876               	movf	_hex_char_high,w
+  1745  021F  118A  2570  118A   	fcall	_uart_send
   1746                           
-  1747                           ;psect for function _print_string_serial
-  1748  0204                     _print_string_serial:	
-  1749                           
-  1750                           ;incstack = 0
-  1751                           ; Regs used in _print_string_serial: [allreg]
-  1752                           ;print_string_serial@string stored from wreg
-  1753  0204  1683               	bsf	3,5	;RP0=1, select bank1
-  1754  0205  1303               	bcf	3,6	;RP1=0, select bank1
-  1755  0206  00E1               	movwf	print_string_serial@string^(0+128)
-  1756                           
-  1757                           ;main.c: 200: unsigned char i = 0;
-  1758  0207  01E0               	clrf	print_string_serial@i^(0+128)
-  1759  0208                     l1999:	
-  1760                           ;main.c: 201: while(string[i])
-  1761                           
-  1762  0208  0860               	movf	print_string_serial@i^(0+128),w
-  1763  0209  0761               	addwf	print_string_serial@string^(0+128),w
-  1764  020A  0084               	movwf	4
-  1765  020B  118A  2002  118A   	fcall	stringdir
-  1766  020E  3A00               	xorlw	0
-  1767  020F  1903               	btfsc	3,2
-  1768  0210  0008               	return
-  1769                           
-  1770                           ;main.c: 202: {;main.c: 203: uart_send(string[i]);
-  1771  0211  0860               	movf	print_string_serial@i^(0+128),w
-  1772  0212  0761               	addwf	print_string_serial@string^(0+128),w
-  1773  0213  0084               	movwf	4
-  1774  0214  118A  2002  118A   	fcall	stringdir
-  1775  0217  118A  2584  118A   	fcall	_uart_send
-  1776                           
-  1777                           ;main.c: 204: ++i;
-  1778  021A  3001               	movlw	1
-  1779  021B  1283               	bcf	3,5	;RP0=0, select bank0
-  1780  021C  1303               	bcf	3,6	;RP1=0, select bank0
-  1781  021D  00EC               	movwf	??_print_string_serial
-  1782  021E  086C               	movf	??_print_string_serial,w
-  1783  021F  1683               	bsf	3,5	;RP0=1, select bank1
-  1784  0220  07E0               	addwf	print_string_serial@i^(0+128),f
-  1785  0221  2A08               	goto	l1999
-  1786  0222                     __end_of_print_string_serial:	
-  1787                           
-  1788                           	psect	text6
-  1789  02E8                     __ptext6:	
-  1790 ;; *************** function _fifo_push *****************
-  1791 ;; Defined at:
-  1792 ;;		line 110 in file "main.c"
-  1793 ;; Parameters:    Size  Location     Type
-  1794 ;;  data            1    wreg     unsigned char 
-  1795 ;; Auto vars:     Size  Location     Type
-  1796 ;;  data            1    1[COMMON] unsigned char 
-  1797 ;; Return value:  Size  Location     Type
-  1798 ;;                  1    wreg      unsigned char 
-  1799 ;; Registers used:
-  1800 ;;		wreg, fsr0l, fsr0h, status,2, status,0
-  1801 ;; Tracked objects:
-  1802 ;;		On entry : 0/0
-  1803 ;;		On exit  : 300/0
-  1804 ;;		Unchanged: 0/0
-  1805 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
-  1806 ;;      Params:         0       0       0       0       0
-  1807 ;;      Locals:         1       0       0       0       0
-  1808 ;;      Temps:          1       0       0       0       0
-  1809 ;;      Totals:         2       0       0       0       0
-  1810 ;;Total ram usage:        2 bytes
-  1811 ;; Hardware stack levels used:    1
-  1812 ;; This function calls:
-  1813 ;;		Nothing
-  1814 ;; This function is called by:
-  1815 ;;		Interrupt level 1
-  1816 ;; This function uses a non-reentrant model
-  1817 ;;
-  1818                           
-  1819                           
-  1820                           ;psect for function _fifo_push
-  1821  02E8                     _fifo_push:	
-  1822                           
-  1823                           ;incstack = 0
-  1824                           ; Regs used in _fifo_push: [wreg-fsr0h+status,2+status,0]
-  1825                           ;fifo_push@data stored from wreg
-  1826  02E8  00F8               	movwf	fifo_push@data
-  1827                           
-  1828                           ;main.c: 112: switch(fifo_write_bank)
-  1829  02E9  2B15               	goto	l1055
-  1830  02EA                     l1041:	
+  1747                           ;main.c: 232: uart_send(hex_char_low);
+  1748  0222  0875               	movf	_hex_char_low,w
+  1749  0223  118A  2570  118A   	fcall	_uart_send
+  1750                           
+  1751                           ;main.c: 233: byte_to_hex(usb_drive_size2);
+  1752  0226  0873               	movf	_usb_drive_size2,w
+  1753  0227  118A  21F0  118A   	fcall	_byte_to_hex
+  1754                           
+  1755                           ;main.c: 234: uart_send(hex_char_high);
+  1756  022A  0876               	movf	_hex_char_high,w
+  1757  022B  118A  2570  118A   	fcall	_uart_send
+  1758                           
+  1759                           ;main.c: 235: uart_send(hex_char_low);
+  1760  022E  0875               	movf	_hex_char_low,w
+  1761  022F  118A  2570  118A   	fcall	_uart_send
+  1762                           
+  1763                           ;main.c: 236: byte_to_hex(usb_drive_size1);
+  1764  0232  0874               	movf	_usb_drive_size1,w
+  1765  0233  118A  21F0  118A   	fcall	_byte_to_hex
+  1766                           
+  1767                           ;main.c: 237: uart_send(hex_char_high);
+  1768  0236  0876               	movf	_hex_char_high,w
+  1769  0237  118A  2570  118A   	fcall	_uart_send
+  1770                           
+  1771                           ;main.c: 238: uart_send(hex_char_low);
+  1772  023A  0875               	movf	_hex_char_low,w
+  1773  023B  118A  2570  118A   	fcall	_uart_send
+  1774                           
+  1775                           ;main.c: 239: uart_send('0');
+  1776  023E  3030               	movlw	48
+  1777  023F  118A  2570  118A   	fcall	_uart_send
+  1778                           
+  1779                           ;main.c: 240: uart_send('0');
+  1780  0242  3030               	movlw	48
+  1781  0243  118A  2570  118A   	fcall	_uart_send
+  1782                           
+  1783                           ;main.c: 241: uart_send('\n');
+  1784  0246  300A               	movlw	10
+  1785  0247  118A  2570  118A   	fcall	_uart_send
+  1786  024A  0008               	return
+  1787  024B                     __end_of_print_capacity:	
+  1788                           
+  1789                           	psect	text5
+  1790  01B4                     __ptext5:	
+  1791 ;; *************** function _print_string_serial *****************
+  1792 ;; Defined at:
+  1793 ;;		line 205 in file "main.c"
+  1794 ;; Parameters:    Size  Location     Type
+  1795 ;;  string          1    wreg     PTR const unsigned char 
+  1796 ;;		 -> STR_9(12), str_cmd_mode(14), STR_8(10), STR_6(9), 
+  1797 ;;		 -> STR_5(10), STR_4(17), STR_3(13), STR_2(16), 
+  1798 ;;		 -> STR_1(17), str_timeout(10), 
+  1799 ;; Auto vars:     Size  Location     Type
+  1800 ;;  string          1    1[BANK1 ] PTR const unsigned char 
+  1801 ;;		 -> STR_9(12), str_cmd_mode(14), STR_8(10), STR_6(9), 
+  1802 ;;		 -> STR_5(10), STR_4(17), STR_3(13), STR_2(16), 
+  1803 ;;		 -> STR_1(17), str_timeout(10), 
+  1804 ;;  i               1    0[BANK1 ] unsigned char 
+  1805 ;; Return value:  Size  Location     Type
+  1806 ;;                  1    wreg      void 
+  1807 ;; Registers used:
+  1808 ;;		wreg, fsr0l, fsr0h, fsr1l, fsr1h, fsr1l, fsr1h, status,2, status,0, btemp+1, pclath, cstack
+  1809 ;; Tracked objects:
+  1810 ;;		On entry : 0/100
+  1811 ;;		On exit  : 300/100
+  1812 ;;		Unchanged: 0/0
+  1813 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
+  1814 ;;      Params:         0       0       0       0       0
+  1815 ;;      Locals:         0       0       2       0       0
+  1816 ;;      Temps:          0       1       0       0       0
+  1817 ;;      Totals:         0       1       2       0       0
+  1818 ;;Total ram usage:        3 bytes
+  1819 ;; Hardware stack levels used:    1
+  1820 ;; Hardware stack levels required when called:    3
+  1821 ;; This function calls:
+  1822 ;;		_uart_send
+  1823 ;; This function is called by:
+  1824 ;;		_print_capacity
+  1825 ;;		_print_query
+  1826 ;;		_usb_autoconfig
+  1827 ;;		_main
+  1828 ;; This function uses a non-reentrant model
+  1829 ;;
+  1830                           
   1831                           
-  1832                           ;main.c: 115: case 1:;main.c: 116: fifo_bank_A[fifo_write_idx & 0x3F] = data;
-  1833  02EA  0878               	movf	fifo_push@data,w
-  1834  02EB  00F7               	movwf	??_fifo_push
-  1835  02EC  0870               	movf	_fifo_write_idx,w
-  1836  02ED  393F               	andlw	63
-  1837  02EE  3E90               	addlw	(low (_fifo_bank_A| (0+256)))& (0+255)
-  1838  02EF  2B10               	goto	L9
-  1839  02F0                     l1043:	
-  1840                           ;main.c: 117: break;
+  1832                           ;psect for function _print_string_serial
+  1833  01B4                     _print_string_serial:	
+  1834                           
+  1835                           ;incstack = 0
+  1836                           ; Regs used in _print_string_serial: [allreg]
+  1837                           ;print_string_serial@string stored from wreg
+  1838  01B4  1683               	bsf	3,5	;RP0=1, select bank1
+  1839  01B5  1303               	bcf	3,6	;RP1=0, select bank1
+  1840  01B6  00E1               	movwf	print_string_serial@string^(0+128)
   1841                           
-  1842                           
-  1843                           ;main.c: 119: case 3:;main.c: 120: fifo_bank_B[fifo_write_idx & 0x3F] = data;
-  1844  02F0  0878               	movf	fifo_push@data,w
-  1845  02F1  00F7               	movwf	??_fifo_push
-  1846  02F2  0870               	movf	_fifo_write_idx,w
-  1847  02F3  393F               	andlw	63
-  1848  02F4  3E10               	addlw	(low (_fifo_bank_B| (0+256)))& (0+255)
-  1849  02F5  2B10               	goto	L9
-  1850  02F6                     l1045:	
-  1851                           ;main.c: 121: break;
-  1852                           
-  1853                           
-  1854                           ;main.c: 123: fifo_bank_C[fifo_write_idx & 0x1F] = data;
-  1855  02F6  0878               	movf	fifo_push@data,w
-  1856  02F7  00F7               	movwf	??_fifo_push
-  1857  02F8  0870               	movf	_fifo_write_idx,w
-  1858  02F9  391F               	andlw	31
-  1859  02FA  3E20               	addlw	(low (_fifo_bank_C| 0))& (0+255)
-  1860  02FB  2B07               	goto	L11
-  1861  02FC                     l1047:	
-  1862                           ;main.c: 124: break;
-  1863                           
-  1864                           
-  1865                           ;main.c: 126: fifo_bank_D[fifo_write_idx & 0x1F] = data;
-  1866  02FC  0878               	movf	fifo_push@data,w
-  1867  02FD  00F7               	movwf	??_fifo_push
-  1868  02FE  0870               	movf	_fifo_write_idx,w
-  1869  02FF  391F               	andlw	31
-  1870  0300  3EC0               	addlw	(low (_fifo_bank_D| 0))& (0+255)
-  1871  0301  2B07               	goto	L11
-  1872  0302                     l1049:	
-  1873                           ;main.c: 127: break;
-  1874                           
-  1875                           
-  1876                           ;main.c: 129: fifo_bank_E[fifo_write_idx & 0x1F] = data;
-  1877  0302  0878               	movf	fifo_push@data,w
-  1878  0303  00F7               	movwf	??_fifo_push
-  1879  0304  0870               	movf	_fifo_write_idx,w
-  1880  0305  391F               	andlw	31
-  1881  0306  3EA0               	addlw	(low (_fifo_bank_E| 0))& (0+255)
-  1882  0307                     L11:	
-  1883  0307  0084               	movwf	4
-  1884  0308  0877               	movf	??_fifo_push,w
-  1885  0309  1383               	bcf	3,7	;select IRP bank1
-  1886  030A  2B13               	goto	L8
-  1887  030B                     l1051:	
-  1888                           ;main.c: 130: break;
-  1889                           
-  1890                           
-  1891                           ;main.c: 132: fifo_bank_F[fifo_write_idx & 0x1F] = data;
-  1892  030B  0878               	movf	fifo_push@data,w
-  1893  030C  00F7               	movwf	??_fifo_push
-  1894  030D  0870               	movf	_fifo_write_idx,w
-  1895  030E  391F               	andlw	31
-  1896  030F  3ED0               	addlw	(low (_fifo_bank_F| (0+256)))& (0+255)
-  1897  0310                     L9:	
-  1898  0310  0084               	movwf	4
-  1899  0311  0877               	movf	??_fifo_push,w
-  1900  0312  1783               	bsf	3,7	;select IRP bank3
-  1901  0313                     L8:	
-  1902  0313  0080               	movwf	0
+  1842                           ;main.c: 207: unsigned char i = 0;
+  1843  01B7  01E0               	clrf	print_string_serial@i^(0+128)
+  1844  01B8                     l2074:	
+  1845                           ;main.c: 208: while(string[i])
+  1846                           
+  1847  01B8  0860               	movf	print_string_serial@i^(0+128),w
+  1848  01B9  0761               	addwf	print_string_serial@string^(0+128),w
+  1849  01BA  0084               	movwf	4
+  1850  01BB  118A  2002  118A   	fcall	stringdir
+  1851  01BE  3A00               	xorlw	0
+  1852  01BF  1903               	btfsc	3,2
+  1853  01C0  0008               	return
+  1854                           
+  1855                           ;main.c: 209: {;main.c: 210: uart_send(string[i]);
+  1856  01C1  0860               	movf	print_string_serial@i^(0+128),w
+  1857  01C2  0761               	addwf	print_string_serial@string^(0+128),w
+  1858  01C3  0084               	movwf	4
+  1859  01C4  118A  2002  118A   	fcall	stringdir
+  1860  01C7  118A  2570  118A   	fcall	_uart_send
+  1861                           
+  1862                           ;main.c: 211: ++i;
+  1863  01CA  3001               	movlw	1
+  1864  01CB  1283               	bcf	3,5	;RP0=0, select bank0
+  1865  01CC  1303               	bcf	3,6	;RP1=0, select bank0
+  1866  01CD  00EC               	movwf	??_print_string_serial
+  1867  01CE  086C               	movf	??_print_string_serial,w
+  1868  01CF  1683               	bsf	3,5	;RP0=1, select bank1
+  1869  01D0  07E0               	addwf	print_string_serial@i^(0+128),f
+  1870  01D1  29B8               	goto	l2074
+  1871  01D2                     __end_of_print_string_serial:	
+  1872                           
+  1873                           	psect	text6
+  1874  0298                     __ptext6:	
+  1875 ;; *************** function _fifo_push *****************
+  1876 ;; Defined at:
+  1877 ;;		line 117 in file "main.c"
+  1878 ;; Parameters:    Size  Location     Type
+  1879 ;;  data            1    wreg     unsigned char 
+  1880 ;; Auto vars:     Size  Location     Type
+  1881 ;;  data            1    1[COMMON] unsigned char 
+  1882 ;; Return value:  Size  Location     Type
+  1883 ;;                  1    wreg      unsigned char 
+  1884 ;; Registers used:
+  1885 ;;		wreg, fsr0l, fsr0h, status,2, status,0
+  1886 ;; Tracked objects:
+  1887 ;;		On entry : 0/0
+  1888 ;;		On exit  : 300/0
+  1889 ;;		Unchanged: 0/0
+  1890 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
+  1891 ;;      Params:         0       0       0       0       0
+  1892 ;;      Locals:         1       0       0       0       0
+  1893 ;;      Temps:          1       0       0       0       0
+  1894 ;;      Totals:         2       0       0       0       0
+  1895 ;;Total ram usage:        2 bytes
+  1896 ;; Hardware stack levels used:    1
+  1897 ;; This function calls:
+  1898 ;;		Nothing
+  1899 ;; This function is called by:
+  1900 ;;		Interrupt level 1
+  1901 ;; This function uses a non-reentrant model
+  1902 ;;
   1903                           
-  1904                           ;main.c: 133: break;
-  1905  0314  2B31               	goto	l1057
-  1906  0315                     l1055:	
-  1907  0315  1283               	bcf	3,5	;RP0=0, select bank0
-  1908  0316  1303               	bcf	3,6	;RP1=0, select bank0
-  1909  0317  0841               	movf	_fifo_write_bank,w
-  1910                           
-  1911                           ; Switch size 1, requested type "simple"
-  1912                           ; Number of cases is 8, Range of values is 0 to 7
-  1913                           ; switch strategies available:
-  1914                           ; Name         Instructions Cycles
-  1915                           ; direct_byte           23     7 (fixed)
-  1916                           ; simple_byte           25    13 (average)
-  1917                           ; jumptable            260     6 (fixed)
-  1918                           ;	Chosen strategy is simple_byte
-  1919  0318  3A00               	xorlw	0	; case 0
-  1920  0319  1903               	skipnz
-  1921  031A  2AEA               	goto	l1041
-  1922  031B  3A01               	xorlw	1	; case 1
-  1923  031C  1903               	skipnz
-  1924  031D  2AEA               	goto	l1041
-  1925  031E  3A03               	xorlw	3	; case 2
-  1926  031F  1903               	skipnz
-  1927  0320  2AF0               	goto	l1043
-  1928  0321  3A01               	xorlw	1	; case 3
-  1929  0322  1903               	skipnz
-  1930  0323  2AF0               	goto	l1043
-  1931  0324  3A07               	xorlw	7	; case 4
-  1932  0325  1903               	skipnz
-  1933  0326  2AF6               	goto	l1045
-  1934  0327  3A01               	xorlw	1	; case 5
-  1935  0328  1903               	skipnz
-  1936  0329  2AFC               	goto	l1047
-  1937  032A  3A03               	xorlw	3	; case 6
-  1938  032B  1903               	skipnz
-  1939  032C  2B02               	goto	l1049
-  1940  032D  3A01               	xorlw	1	; case 7
-  1941  032E  1903               	skipnz
-  1942  032F  2B0B               	goto	l1051
-  1943  0330  2B31               	goto	l1057
-  1944  0331                     l1057:	
-  1945                           
-  1946                           ;main.c: 135: ++fifo_write_idx;
-  1947  0331  3001               	movlw	1
-  1948  0332  00F7               	movwf	??_fifo_push
-  1949  0333  0877               	movf	??_fifo_push,w
-  1950  0334  07F0               	addwf	_fifo_write_idx,f
-  1951                           
-  1952                           ;main.c: 136: if(!(fifo_write_idx & 0x1F))
-  1953  0335  0870               	movf	_fifo_write_idx,w
-  1954  0336  391F               	andlw	31
-  1955  0337  1D03               	btfss	3,2
-  1956  0338  2B3D               	goto	l155
-  1957                           
-  1958                           ;main.c: 137: {;main.c: 138: ++fifo_write_bank;
-  1959  0339  3001               	movlw	1
-  1960  033A  00F7               	movwf	??_fifo_push
-  1961  033B  0877               	movf	??_fifo_push,w
-  1962  033C  07C1               	addwf	_fifo_write_bank,f
-  1963  033D                     l155:	
-  1964                           
-  1965                           ;main.c: 139: };main.c: 140: ++fifo_num_bytes;
-  1966  033D  3001               	movlw	1
-  1967  033E  00F7               	movwf	??_fifo_push
-  1968  033F  0877               	movf	??_fifo_push,w
-  1969  0340  07C0               	addwf	_fifo_num_bytes,f
-  1970                           
-  1971                           ;main.c: 141: return fifo_num_bytes;
-  1972  0341  0840               	movf	_fifo_num_bytes,w
-  1973  0342  0008               	return
-  1974  0343                     __end_of_fifo_push:	
+  1904                           
+  1905                           ;psect for function _fifo_push
+  1906  0298                     _fifo_push:	
+  1907                           
+  1908                           ;incstack = 0
+  1909                           ; Regs used in _fifo_push: [wreg-fsr0h+status,2+status,0]
+  1910                           ;fifo_push@data stored from wreg
+  1911  0298  00F8               	movwf	fifo_push@data
+  1912                           
+  1913                           ;main.c: 119: switch(fifo_write_bank)
+  1914  0299  2AC5               	goto	l1080
+  1915  029A                     l1066:	
+  1916                           
+  1917                           ;main.c: 122: case 1:;main.c: 123: fifo_bank_A[fifo_write_idx & 0x3F] = data;
+  1918  029A  0878               	movf	fifo_push@data,w
+  1919  029B  00F7               	movwf	??_fifo_push
+  1920  029C  0870               	movf	_fifo_write_idx,w
+  1921  029D  393F               	andlw	63
+  1922  029E  3E90               	addlw	(low (_fifo_bank_A| (0+256)))& (0+255)
+  1923  029F  2AC0               	goto	L9
+  1924  02A0                     l1068:	
+  1925                           ;main.c: 124: break;
+  1926                           
+  1927                           
+  1928                           ;main.c: 126: case 3:;main.c: 127: fifo_bank_B[fifo_write_idx & 0x3F] = data;
+  1929  02A0  0878               	movf	fifo_push@data,w
+  1930  02A1  00F7               	movwf	??_fifo_push
+  1931  02A2  0870               	movf	_fifo_write_idx,w
+  1932  02A3  393F               	andlw	63
+  1933  02A4  3E10               	addlw	(low (_fifo_bank_B| (0+256)))& (0+255)
+  1934  02A5  2AC0               	goto	L9
+  1935  02A6                     l1070:	
+  1936                           ;main.c: 128: break;
+  1937                           
+  1938                           
+  1939                           ;main.c: 130: fifo_bank_C[fifo_write_idx & 0x1F] = data;
+  1940  02A6  0878               	movf	fifo_push@data,w
+  1941  02A7  00F7               	movwf	??_fifo_push
+  1942  02A8  0870               	movf	_fifo_write_idx,w
+  1943  02A9  391F               	andlw	31
+  1944  02AA  3E20               	addlw	(low (_fifo_bank_C| 0))& (0+255)
+  1945  02AB  2AB7               	goto	L11
+  1946  02AC                     l1072:	
+  1947                           ;main.c: 131: break;
+  1948                           
+  1949                           
+  1950                           ;main.c: 133: fifo_bank_D[fifo_write_idx & 0x1F] = data;
+  1951  02AC  0878               	movf	fifo_push@data,w
+  1952  02AD  00F7               	movwf	??_fifo_push
+  1953  02AE  0870               	movf	_fifo_write_idx,w
+  1954  02AF  391F               	andlw	31
+  1955  02B0  3EC0               	addlw	(low (_fifo_bank_D| 0))& (0+255)
+  1956  02B1  2AB7               	goto	L11
+  1957  02B2                     l1074:	
+  1958                           ;main.c: 134: break;
+  1959                           
+  1960                           
+  1961                           ;main.c: 136: fifo_bank_E[fifo_write_idx & 0x1F] = data;
+  1962  02B2  0878               	movf	fifo_push@data,w
+  1963  02B3  00F7               	movwf	??_fifo_push
+  1964  02B4  0870               	movf	_fifo_write_idx,w
+  1965  02B5  391F               	andlw	31
+  1966  02B6  3EA0               	addlw	(low (_fifo_bank_E| 0))& (0+255)
+  1967  02B7                     L11:	
+  1968  02B7  0084               	movwf	4
+  1969  02B8  0877               	movf	??_fifo_push,w
+  1970  02B9  1383               	bcf	3,7	;select IRP bank1
+  1971  02BA  2AC3               	goto	L8
+  1972  02BB                     l1076:	
+  1973                           ;main.c: 137: break;
+  1974                           
   1975                           
-  1976                           	psect	text7
-  1977  029B                     __ptext7:	
-  1978 ;; *************** function _fifo_pop *****************
-  1979 ;; Defined at:
-  1980 ;;		line 144 in file "main.c"
-  1981 ;; Parameters:    Size  Location     Type
-  1982 ;;		None
-  1983 ;; Auto vars:     Size  Location     Type
-  1984 ;;  temp            1    3[COMMON] unsigned char 
-  1985 ;; Return value:  Size  Location     Type
-  1986 ;;                  1    wreg      unsigned char 
-  1987 ;; Registers used:
-  1988 ;;		wreg, fsr0l, fsr0h, status,2, status,0
-  1989 ;; Tracked objects:
-  1990 ;;		On entry : 0/0
-  1991 ;;		On exit  : 300/0
-  1992 ;;		Unchanged: 0/0
-  1993 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
-  1994 ;;      Params:         0       0       0       0       0
-  1995 ;;      Locals:         1       0       0       0       0
-  1996 ;;      Temps:          1       0       0       0       0
-  1997 ;;      Totals:         2       0       0       0       0
-  1998 ;;Total ram usage:        2 bytes
-  1999 ;; Hardware stack levels used:    1
-  2000 ;; This function calls:
-  2001 ;;		Nothing
-  2002 ;; This function is called by:
-  2003 ;;		Interrupt level 1
-  2004 ;; This function uses a non-reentrant model
-  2005 ;;
-  2006                           
-  2007                           
-  2008                           ;psect for function _fifo_pop
-  2009  029B                     _fifo_pop:	
-  2010                           
-  2011                           ;main.c: 146: unsigned char temp;;main.c: 147: switch(fifo_read_bank)
-  2012                           
-  2013                           ;incstack = 0
-  2014                           ; Regs used in _fifo_pop: [wreg-fsr0h+status,2+status,0]
-  2015  029B  2ABC               	goto	l1083
-  2016  029C                     l1069:	
-  2017                           
-  2018                           ;main.c: 150: case 1:;main.c: 151: temp = fifo_bank_A[fifo_read_idx & 0x3F];
-  2019  029C  0871               	movf	_fifo_read_idx,w
-  2020  029D  393F               	andlw	63
-  2021  029E  3E90               	addlw	(low (_fifo_bank_A| (0+256)))& (0+255)
-  2022  029F  2AB5               	goto	L17
-  2023  02A0                     l1071:	
-  2024                           ;main.c: 152: break;
-  2025                           
-  2026                           
-  2027                           ;main.c: 154: case 3:;main.c: 155: temp = fifo_bank_B[fifo_read_idx & 0x3F];
-  2028  02A0  0871               	movf	_fifo_read_idx,w
-  2029  02A1  393F               	andlw	63
-  2030  02A2  3E10               	addlw	(low (_fifo_bank_B| (0+256)))& (0+255)
-  2031  02A3  2AB5               	goto	L17
-  2032  02A4                     l1073:	
-  2033                           ;main.c: 156: break;
-  2034                           
-  2035                           
-  2036                           ;main.c: 158: temp = fifo_bank_C[fifo_read_idx & 0x1F];
-  2037  02A4  0871               	movf	_fifo_read_idx,w
-  2038  02A5  391F               	andlw	31
-  2039  02A6  3E20               	addlw	(low (_fifo_bank_C| 0))& (0+255)
-  2040  02A7  2AAF               	goto	L19
-  2041  02A8                     l1075:	
-  2042                           ;main.c: 159: break;
-  2043                           
-  2044                           
-  2045                           ;main.c: 161: temp = fifo_bank_D[fifo_read_idx & 0x1F];
-  2046  02A8  0871               	movf	_fifo_read_idx,w
-  2047  02A9  391F               	andlw	31
-  2048  02AA  3EC0               	addlw	(low (_fifo_bank_D| 0))& (0+255)
-  2049  02AB  2AAF               	goto	L19
-  2050  02AC                     l1077:	
-  2051                           ;main.c: 162: break;
-  2052                           
-  2053                           
-  2054                           ;main.c: 164: temp = fifo_bank_E[fifo_read_idx & 0x1F];
-  2055  02AC  0871               	movf	_fifo_read_idx,w
-  2056  02AD  391F               	andlw	31
-  2057  02AE  3EA0               	addlw	(low (_fifo_bank_E| 0))& (0+255)
-  2058  02AF                     L19:	
-  2059  02AF  0084               	movwf	4
-  2060  02B0  1383               	bcf	3,7	;select IRP bank1
-  2061  02B1  2AB7               	goto	L16
-  2062  02B2                     l1079:	
-  2063                           ;main.c: 165: break;
-  2064                           
-  2065                           
-  2066                           ;main.c: 167: temp = fifo_bank_F[fifo_read_idx & 0x1F];
-  2067  02B2  0871               	movf	_fifo_read_idx,w
-  2068  02B3  391F               	andlw	31
-  2069  02B4  3ED0               	addlw	(low (_fifo_bank_F| (0+256)))& (0+255)
-  2070  02B5                     L17:	
-  2071  02B5  0084               	movwf	4
-  2072  02B6  1783               	bsf	3,7	;select IRP bank3
-  2073  02B7                     L16:	
-  2074  02B7  0800               	movf	0,w
-  2075  02B8  00F9               	movwf	??_fifo_pop
-  2076  02B9  0879               	movf	??_fifo_pop,w
-  2077  02BA  00FA               	movwf	fifo_pop@temp
-  2078                           
-  2079                           ;main.c: 168: break;
-  2080  02BB  2AD8               	goto	l1085
-  2081  02BC                     l1083:	
-  2082  02BC  1283               	bcf	3,5	;RP0=0, select bank0
-  2083  02BD  1303               	bcf	3,6	;RP1=0, select bank0
-  2084  02BE  0842               	movf	_fifo_read_bank,w
-  2085                           
-  2086                           ; Switch size 1, requested type "simple"
-  2087                           ; Number of cases is 8, Range of values is 0 to 7
-  2088                           ; switch strategies available:
-  2089                           ; Name         Instructions Cycles
-  2090                           ; direct_byte           23     7 (fixed)
-  2091                           ; simple_byte           25    13 (average)
-  2092                           ; jumptable            260     6 (fixed)
-  2093                           ;	Chosen strategy is simple_byte
-  2094  02BF  3A00               	xorlw	0	; case 0
-  2095  02C0  1903               	skipnz
-  2096  02C1  2A9C               	goto	l1069
-  2097  02C2  3A01               	xorlw	1	; case 1
-  2098  02C3  1903               	skipnz
-  2099  02C4  2A9C               	goto	l1069
-  2100  02C5  3A03               	xorlw	3	; case 2
-  2101  02C6  1903               	skipnz
-  2102  02C7  2AA0               	goto	l1071
-  2103  02C8  3A01               	xorlw	1	; case 3
-  2104  02C9  1903               	skipnz
-  2105  02CA  2AA0               	goto	l1071
-  2106  02CB  3A07               	xorlw	7	; case 4
-  2107  02CC  1903               	skipnz
-  2108  02CD  2AA4               	goto	l1073
-  2109  02CE  3A01               	xorlw	1	; case 5
-  2110  02CF  1903               	skipnz
-  2111  02D0  2AA8               	goto	l1075
-  2112  02D1  3A03               	xorlw	3	; case 6
-  2113  02D2  1903               	skipnz
-  2114  02D3  2AAC               	goto	l1077
-  2115  02D4  3A01               	xorlw	1	; case 7
-  2116  02D5  1903               	skipnz
-  2117  02D6  2AB2               	goto	l1079
-  2118  02D7  2AD8               	goto	l1085
-  2119  02D8                     l1085:	
+  1976                           ;main.c: 139: fifo_bank_F[fifo_write_idx & 0x1F] = data;
+  1977  02BB  0878               	movf	fifo_push@data,w
+  1978  02BC  00F7               	movwf	??_fifo_push
+  1979  02BD  0870               	movf	_fifo_write_idx,w
+  1980  02BE  391F               	andlw	31
+  1981  02BF  3ED0               	addlw	(low (_fifo_bank_F| (0+256)))& (0+255)
+  1982  02C0                     L9:	
+  1983  02C0  0084               	movwf	4
+  1984  02C1  0877               	movf	??_fifo_push,w
+  1985  02C2  1783               	bsf	3,7	;select IRP bank3
+  1986  02C3                     L8:	
+  1987  02C3  0080               	movwf	0
+  1988                           
+  1989                           ;main.c: 140: break;
+  1990  02C4  2AE1               	goto	l1082
+  1991  02C5                     l1080:	
+  1992  02C5  1283               	bcf	3,5	;RP0=0, select bank0
+  1993  02C6  1303               	bcf	3,6	;RP1=0, select bank0
+  1994  02C7  0841               	movf	_fifo_write_bank,w
+  1995                           
+  1996                           ; Switch size 1, requested type "simple"
+  1997                           ; Number of cases is 8, Range of values is 0 to 7
+  1998                           ; switch strategies available:
+  1999                           ; Name         Instructions Cycles
+  2000                           ; direct_byte           23     7 (fixed)
+  2001                           ; simple_byte           25    13 (average)
+  2002                           ; jumptable            260     6 (fixed)
+  2003                           ;	Chosen strategy is simple_byte
+  2004  02C8  3A00               	xorlw	0	; case 0
+  2005  02C9  1903               	skipnz
+  2006  02CA  2A9A               	goto	l1066
+  2007  02CB  3A01               	xorlw	1	; case 1
+  2008  02CC  1903               	skipnz
+  2009  02CD  2A9A               	goto	l1066
+  2010  02CE  3A03               	xorlw	3	; case 2
+  2011  02CF  1903               	skipnz
+  2012  02D0  2AA0               	goto	l1068
+  2013  02D1  3A01               	xorlw	1	; case 3
+  2014  02D2  1903               	skipnz
+  2015  02D3  2AA0               	goto	l1068
+  2016  02D4  3A07               	xorlw	7	; case 4
+  2017  02D5  1903               	skipnz
+  2018  02D6  2AA6               	goto	l1070
+  2019  02D7  3A01               	xorlw	1	; case 5
+  2020  02D8  1903               	skipnz
+  2021  02D9  2AAC               	goto	l1072
+  2022  02DA  3A03               	xorlw	3	; case 6
+  2023  02DB  1903               	skipnz
+  2024  02DC  2AB2               	goto	l1074
+  2025  02DD  3A01               	xorlw	1	; case 7
+  2026  02DE  1903               	skipnz
+  2027  02DF  2ABB               	goto	l1076
+  2028  02E0  2AE1               	goto	l1082
+  2029  02E1                     l1082:	
+  2030                           
+  2031                           ;main.c: 142: ++fifo_write_idx;
+  2032  02E1  3001               	movlw	1
+  2033  02E2  00F7               	movwf	??_fifo_push
+  2034  02E3  0877               	movf	??_fifo_push,w
+  2035  02E4  07F0               	addwf	_fifo_write_idx,f
+  2036                           
+  2037                           ;main.c: 143: if(!(fifo_write_idx & 0x1F))
+  2038  02E5  0870               	movf	_fifo_write_idx,w
+  2039  02E6  391F               	andlw	31
+  2040  02E7  1D03               	btfss	3,2
+  2041  02E8  2AED               	goto	l165
+  2042                           
+  2043                           ;main.c: 144: {;main.c: 145: ++fifo_write_bank;
+  2044  02E9  3001               	movlw	1
+  2045  02EA  00F7               	movwf	??_fifo_push
+  2046  02EB  0877               	movf	??_fifo_push,w
+  2047  02EC  07C1               	addwf	_fifo_write_bank,f
+  2048  02ED                     l165:	
+  2049                           
+  2050                           ;main.c: 146: };main.c: 147: ++fifo_num_bytes;
+  2051  02ED  3001               	movlw	1
+  2052  02EE  00F7               	movwf	??_fifo_push
+  2053  02EF  0877               	movf	??_fifo_push,w
+  2054  02F0  07C0               	addwf	_fifo_num_bytes,f
+  2055                           
+  2056                           ;main.c: 148: return fifo_num_bytes;
+  2057  02F1  0840               	movf	_fifo_num_bytes,w
+  2058  02F2  0008               	return
+  2059  02F3                     __end_of_fifo_push:	
+  2060                           
+  2061                           	psect	text7
+  2062  024B                     __ptext7:	
+  2063 ;; *************** function _fifo_pop *****************
+  2064 ;; Defined at:
+  2065 ;;		line 151 in file "main.c"
+  2066 ;; Parameters:    Size  Location     Type
+  2067 ;;		None
+  2068 ;; Auto vars:     Size  Location     Type
+  2069 ;;  temp            1    3[COMMON] unsigned char 
+  2070 ;; Return value:  Size  Location     Type
+  2071 ;;                  1    wreg      unsigned char 
+  2072 ;; Registers used:
+  2073 ;;		wreg, fsr0l, fsr0h, status,2, status,0
+  2074 ;; Tracked objects:
+  2075 ;;		On entry : 0/0
+  2076 ;;		On exit  : 300/0
+  2077 ;;		Unchanged: 0/0
+  2078 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
+  2079 ;;      Params:         0       0       0       0       0
+  2080 ;;      Locals:         1       0       0       0       0
+  2081 ;;      Temps:          1       0       0       0       0
+  2082 ;;      Totals:         2       0       0       0       0
+  2083 ;;Total ram usage:        2 bytes
+  2084 ;; Hardware stack levels used:    1
+  2085 ;; This function calls:
+  2086 ;;		Nothing
+  2087 ;; This function is called by:
+  2088 ;;		Interrupt level 1
+  2089 ;; This function uses a non-reentrant model
+  2090 ;;
+  2091                           
+  2092                           
+  2093                           ;psect for function _fifo_pop
+  2094  024B                     _fifo_pop:	
+  2095                           
+  2096                           ;main.c: 153: unsigned char temp;;main.c: 154: switch(fifo_read_bank)
+  2097                           
+  2098                           ;incstack = 0
+  2099                           ; Regs used in _fifo_pop: [wreg-fsr0h+status,2+status,0]
+  2100  024B  2A6C               	goto	l1108
+  2101  024C                     l1094:	
+  2102                           
+  2103                           ;main.c: 157: case 1:;main.c: 158: temp = fifo_bank_A[fifo_read_idx & 0x3F];
+  2104  024C  0871               	movf	_fifo_read_idx,w
+  2105  024D  393F               	andlw	63
+  2106  024E  3E90               	addlw	(low (_fifo_bank_A| (0+256)))& (0+255)
+  2107  024F  2A65               	goto	L17
+  2108  0250                     l1096:	
+  2109                           ;main.c: 159: break;
+  2110                           
+  2111                           
+  2112                           ;main.c: 161: case 3:;main.c: 162: temp = fifo_bank_B[fifo_read_idx & 0x3F];
+  2113  0250  0871               	movf	_fifo_read_idx,w
+  2114  0251  393F               	andlw	63
+  2115  0252  3E10               	addlw	(low (_fifo_bank_B| (0+256)))& (0+255)
+  2116  0253  2A65               	goto	L17
+  2117  0254                     l1098:	
+  2118                           ;main.c: 163: break;
+  2119                           
   2120                           
-  2121                           ;main.c: 170: ++fifo_read_idx;
-  2122  02D8  3001               	movlw	1
-  2123  02D9  00F9               	movwf	??_fifo_pop
-  2124  02DA  0879               	movf	??_fifo_pop,w
-  2125  02DB  07F1               	addwf	_fifo_read_idx,f
-  2126                           
-  2127                           ;main.c: 171: if(!(fifo_read_idx & 0x1F))
-  2128  02DC  0871               	movf	_fifo_read_idx,w
-  2129  02DD  391F               	andlw	31
-  2130  02DE  1D03               	btfss	3,2
-  2131  02DF  2AE4               	goto	l169
-  2132                           
-  2133                           ;main.c: 172: {;main.c: 173: ++fifo_read_bank;
-  2134  02E0  3001               	movlw	1
-  2135  02E1  00F9               	movwf	??_fifo_pop
-  2136  02E2  0879               	movf	??_fifo_pop,w
-  2137  02E3  07C2               	addwf	_fifo_read_bank,f
-  2138  02E4                     l169:	
-  2139                           
-  2140                           ;main.c: 174: };main.c: 175: --fifo_num_bytes;
-  2141  02E4  3001               	movlw	1
-  2142  02E5  02C0               	subwf	_fifo_num_bytes,f
-  2143                           
-  2144                           ;main.c: 176: return temp;
-  2145  02E6  087A               	movf	fifo_pop@temp,w
-  2146  02E7  0008               	return
-  2147  02E8                     __end_of_fifo_pop:	
-  2148                           
-  2149                           	psect	text8
-  2150  0240                     __ptext8:	
-  2151 ;; *************** function _byte_to_hex *****************
-  2152 ;; Defined at:
-  2153 ;;		line 179 in file "main.c"
-  2154 ;; Parameters:    Size  Location     Type
-  2155 ;;  data            1    wreg     unsigned char 
-  2156 ;; Auto vars:     Size  Location     Type
-  2157 ;;  data            1    2[BANK0 ] unsigned char 
-  2158 ;; Return value:  Size  Location     Type
-  2159 ;;                  1    wreg      void 
-  2160 ;; Registers used:
-  2161 ;;		wreg, fsr0l, fsr0h, status,2, status,0, pclath
-  2162 ;; Tracked objects:
-  2163 ;;		On entry : 0/0
-  2164 ;;		On exit  : 300/0
-  2165 ;;		Unchanged: 0/0
-  2166 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
-  2167 ;;      Params:         0       0       0       0       0
-  2168 ;;      Locals:         0       1       0       0       0
-  2169 ;;      Temps:          0       2       0       0       0
-  2170 ;;      Totals:         0       3       0       0       0
-  2171 ;;Total ram usage:        3 bytes
-  2172 ;; Hardware stack levels used:    2
-  2173 ;; Hardware stack levels required when called:    2
-  2174 ;; This function calls:
-  2175 ;;		Nothing
-  2176 ;; This function is called by:
-  2177 ;;		_print_capacity
-  2178 ;;		_print_query
-  2179 ;;		_usb_autoconfig
-  2180 ;;		_main
-  2181 ;; This function uses a non-reentrant model
-  2182 ;;
-  2183                           
-  2184                           
-  2185                           ;psect for function _byte_to_hex
-  2186  0240                     _byte_to_hex:	
-  2187                           
-  2188                           ;incstack = 0
-  2189 ;; using string table level
-  2190                           ; Regs used in _byte_to_hex: [wreg-fsr0h+status,2+status,0+pclath]
-  2191                           ;byte_to_hex@data stored from wreg
-  2192  0240  1283               	bcf	3,5	;RP0=0, select bank0
-  2193  0241  1303               	bcf	3,6	;RP1=0, select bank0
-  2194  0242  00EB               	movwf	byte_to_hex@data
-  2195                           
-  2196                           ;main.c: 181: hex_char_low = hex_table[data & (unsigned char)0x0F];
-  2197  0243  086B               	movf	byte_to_hex@data,w
-  2198  0244  390F               	andlw	15
-  2199  0245  3E01               	addlw	low ((_hex_table-__stringbase)| (0+32768))
-  2200  0246  0084               	movwf	4
-  2201  0247  118A  2002  118A   	fcall	stringdir
-  2202  024A  00E9               	movwf	??_byte_to_hex
-  2203  024B  0869               	movf	??_byte_to_hex,w
-  2204  024C  00F5               	movwf	_hex_char_low
+  2121                           ;main.c: 165: temp = fifo_bank_C[fifo_read_idx & 0x1F];
+  2122  0254  0871               	movf	_fifo_read_idx,w
+  2123  0255  391F               	andlw	31
+  2124  0256  3E20               	addlw	(low (_fifo_bank_C| 0))& (0+255)
+  2125  0257  2A5F               	goto	L19
+  2126  0258                     l1100:	
+  2127                           ;main.c: 166: break;
+  2128                           
+  2129                           
+  2130                           ;main.c: 168: temp = fifo_bank_D[fifo_read_idx & 0x1F];
+  2131  0258  0871               	movf	_fifo_read_idx,w
+  2132  0259  391F               	andlw	31
+  2133  025A  3EC0               	addlw	(low (_fifo_bank_D| 0))& (0+255)
+  2134  025B  2A5F               	goto	L19
+  2135  025C                     l1102:	
+  2136                           ;main.c: 169: break;
+  2137                           
+  2138                           
+  2139                           ;main.c: 171: temp = fifo_bank_E[fifo_read_idx & 0x1F];
+  2140  025C  0871               	movf	_fifo_read_idx,w
+  2141  025D  391F               	andlw	31
+  2142  025E  3EA0               	addlw	(low (_fifo_bank_E| 0))& (0+255)
+  2143  025F                     L19:	
+  2144  025F  0084               	movwf	4
+  2145  0260  1383               	bcf	3,7	;select IRP bank1
+  2146  0261  2A67               	goto	L16
+  2147  0262                     l1104:	
+  2148                           ;main.c: 172: break;
+  2149                           
+  2150                           
+  2151                           ;main.c: 174: temp = fifo_bank_F[fifo_read_idx & 0x1F];
+  2152  0262  0871               	movf	_fifo_read_idx,w
+  2153  0263  391F               	andlw	31
+  2154  0264  3ED0               	addlw	(low (_fifo_bank_F| (0+256)))& (0+255)
+  2155  0265                     L17:	
+  2156  0265  0084               	movwf	4
+  2157  0266  1783               	bsf	3,7	;select IRP bank3
+  2158  0267                     L16:	
+  2159  0267  0800               	movf	0,w
+  2160  0268  00F9               	movwf	??_fifo_pop
+  2161  0269  0879               	movf	??_fifo_pop,w
+  2162  026A  00FA               	movwf	fifo_pop@temp
+  2163                           
+  2164                           ;main.c: 175: break;
+  2165  026B  2A88               	goto	l1110
+  2166  026C                     l1108:	
+  2167  026C  1283               	bcf	3,5	;RP0=0, select bank0
+  2168  026D  1303               	bcf	3,6	;RP1=0, select bank0
+  2169  026E  0842               	movf	_fifo_read_bank,w
+  2170                           
+  2171                           ; Switch size 1, requested type "simple"
+  2172                           ; Number of cases is 8, Range of values is 0 to 7
+  2173                           ; switch strategies available:
+  2174                           ; Name         Instructions Cycles
+  2175                           ; direct_byte           23     7 (fixed)
+  2176                           ; simple_byte           25    13 (average)
+  2177                           ; jumptable            260     6 (fixed)
+  2178                           ;	Chosen strategy is simple_byte
+  2179  026F  3A00               	xorlw	0	; case 0
+  2180  0270  1903               	skipnz
+  2181  0271  2A4C               	goto	l1094
+  2182  0272  3A01               	xorlw	1	; case 1
+  2183  0273  1903               	skipnz
+  2184  0274  2A4C               	goto	l1094
+  2185  0275  3A03               	xorlw	3	; case 2
+  2186  0276  1903               	skipnz
+  2187  0277  2A50               	goto	l1096
+  2188  0278  3A01               	xorlw	1	; case 3
+  2189  0279  1903               	skipnz
+  2190  027A  2A50               	goto	l1096
+  2191  027B  3A07               	xorlw	7	; case 4
+  2192  027C  1903               	skipnz
+  2193  027D  2A54               	goto	l1098
+  2194  027E  3A01               	xorlw	1	; case 5
+  2195  027F  1903               	skipnz
+  2196  0280  2A58               	goto	l1100
+  2197  0281  3A03               	xorlw	3	; case 6
+  2198  0282  1903               	skipnz
+  2199  0283  2A5C               	goto	l1102
+  2200  0284  3A01               	xorlw	1	; case 7
+  2201  0285  1903               	skipnz
+  2202  0286  2A62               	goto	l1104
+  2203  0287  2A88               	goto	l1110
+  2204  0288                     l1110:	
   2205                           
-  2206                           ;main.c: 182: data = data >> 4;
-  2207  024D  086B               	movf	byte_to_hex@data,w
-  2208  024E  00E9               	movwf	??_byte_to_hex
-  2209  024F  3004               	movlw	4
-  2210  0250                     u43_25:	
-  2211  0250  1003               	clrc
-  2212  0251  0CE9               	rrf	??_byte_to_hex,f
-  2213  0252  3EFF               	addlw	-1
-  2214  0253  1D03               	skipz
-  2215  0254  2A50               	goto	u43_25
-  2216  0255  0869               	movf	??_byte_to_hex,w
-  2217  0256  00EA               	movwf	??_byte_to_hex+1
-  2218  0257  086A               	movf	??_byte_to_hex+1,w
-  2219  0258  00EB               	movwf	byte_to_hex@data
-  2220                           
-  2221                           ;main.c: 183: hex_char_high = hex_table[data & (unsigned char)0x0F];
-  2222  0259  086B               	movf	byte_to_hex@data,w
-  2223  025A  390F               	andlw	15
-  2224  025B  3E01               	addlw	low ((_hex_table-__stringbase)| (0+32768))
-  2225  025C  0084               	movwf	4
-  2226  025D  118A  2002         	fcall	stringdir
-  2227  025F  00E9               	movwf	??_byte_to_hex
-  2228  0260  0869               	movf	??_byte_to_hex,w
-  2229  0261  00F6               	movwf	_hex_char_high
-  2230  0262  0008               	return
-  2231  0263                     __end_of_byte_to_hex:	
-  2232  007E                     btemp	set	126	;btemp
-  2233  007E                     wtemp0	set	126
+  2206                           ;main.c: 177: ++fifo_read_idx;
+  2207  0288  3001               	movlw	1
+  2208  0289  00F9               	movwf	??_fifo_pop
+  2209  028A  0879               	movf	??_fifo_pop,w
+  2210  028B  07F1               	addwf	_fifo_read_idx,f
+  2211                           
+  2212                           ;main.c: 178: if(!(fifo_read_idx & 0x1F))
+  2213  028C  0871               	movf	_fifo_read_idx,w
+  2214  028D  391F               	andlw	31
+  2215  028E  1D03               	btfss	3,2
+  2216  028F  2A94               	goto	l179
+  2217                           
+  2218                           ;main.c: 179: {;main.c: 180: ++fifo_read_bank;
+  2219  0290  3001               	movlw	1
+  2220  0291  00F9               	movwf	??_fifo_pop
+  2221  0292  0879               	movf	??_fifo_pop,w
+  2222  0293  07C2               	addwf	_fifo_read_bank,f
+  2223  0294                     l179:	
+  2224                           
+  2225                           ;main.c: 181: };main.c: 182: --fifo_num_bytes;
+  2226  0294  3001               	movlw	1
+  2227  0295  02C0               	subwf	_fifo_num_bytes,f
+  2228                           
+  2229                           ;main.c: 183: return temp;
+  2230  0296  087A               	movf	fifo_pop@temp,w
+  2231  0297  0008               	return
+  2232  0298                     __end_of_fifo_pop:	
+  2233                           
+  2234                           	psect	text8
+  2235  01F0                     __ptext8:	
+  2236 ;; *************** function _byte_to_hex *****************
+  2237 ;; Defined at:
+  2238 ;;		line 186 in file "main.c"
+  2239 ;; Parameters:    Size  Location     Type
+  2240 ;;  data            1    wreg     unsigned char 
+  2241 ;; Auto vars:     Size  Location     Type
+  2242 ;;  data            1    2[BANK0 ] unsigned char 
+  2243 ;; Return value:  Size  Location     Type
+  2244 ;;                  1    wreg      void 
+  2245 ;; Registers used:
+  2246 ;;		wreg, fsr0l, fsr0h, status,2, status,0, pclath
+  2247 ;; Tracked objects:
+  2248 ;;		On entry : 0/0
+  2249 ;;		On exit  : 300/0
+  2250 ;;		Unchanged: 0/0
+  2251 ;; Data sizes:     COMMON   BANK0   BANK1   BANK3   BANK2
+  2252 ;;      Params:         0       0       0       0       0
+  2253 ;;      Locals:         0       1       0       0       0
+  2254 ;;      Temps:          0       2       0       0       0
+  2255 ;;      Totals:         0       3       0       0       0
+  2256 ;;Total ram usage:        3 bytes
+  2257 ;; Hardware stack levels used:    2
+  2258 ;; Hardware stack levels required when called:    2
+  2259 ;; This function calls:
+  2260 ;;		Nothing
+  2261 ;; This function is called by:
+  2262 ;;		_print_capacity
+  2263 ;;		_print_query
+  2264 ;;		_usb_autoconfig
+  2265 ;;		_main
+  2266 ;; This function uses a non-reentrant model
+  2267 ;;
+  2268                           
+  2269                           
+  2270                           ;psect for function _byte_to_hex
+  2271  01F0                     _byte_to_hex:	
+  2272                           
+  2273                           ;incstack = 0
+  2274 ;; using string table level
+  2275                           ; Regs used in _byte_to_hex: [wreg-fsr0h+status,2+status,0+pclath]
+  2276                           ;byte_to_hex@data stored from wreg
+  2277  01F0  1283               	bcf	3,5	;RP0=0, select bank0
+  2278  01F1  1303               	bcf	3,6	;RP1=0, select bank0
+  2279  01F2  00EB               	movwf	byte_to_hex@data
+  2280                           
+  2281                           ;main.c: 188: hex_char_low = hex_table[data & (unsigned char)0x0F];
+  2282  01F3  086B               	movf	byte_to_hex@data,w
+  2283  01F4  390F               	andlw	15
+  2284  01F5  3E01               	addlw	low ((_hex_table-__stringbase)| (0+32768))
+  2285  01F6  0084               	movwf	4
+  2286  01F7  118A  2002  118A   	fcall	stringdir
+  2287  01FA  00E9               	movwf	??_byte_to_hex
+  2288  01FB  0869               	movf	??_byte_to_hex,w
+  2289  01FC  00F5               	movwf	_hex_char_low
+  2290                           
+  2291                           ;main.c: 189: data = data >> 4;
+  2292  01FD  086B               	movf	byte_to_hex@data,w
+  2293  01FE  00E9               	movwf	??_byte_to_hex
+  2294  01FF  3004               	movlw	4
+  2295  0200                     u43_25:	
+  2296  0200  1003               	clrc
+  2297  0201  0CE9               	rrf	??_byte_to_hex,f
+  2298  0202  3EFF               	addlw	-1
+  2299  0203  1D03               	skipz
+  2300  0204  2A00               	goto	u43_25
+  2301  0205  0869               	movf	??_byte_to_hex,w
+  2302  0206  00EA               	movwf	??_byte_to_hex+1
+  2303  0207  086A               	movf	??_byte_to_hex+1,w
+  2304  0208  00EB               	movwf	byte_to_hex@data
+  2305                           
+  2306                           ;main.c: 190: hex_char_high = hex_table[data & (unsigned char)0x0F];
+  2307  0209  086B               	movf	byte_to_hex@data,w
+  2308  020A  390F               	andlw	15
+  2309  020B  3E01               	addlw	low ((_hex_table-__stringbase)| (0+32768))
+  2310  020C  0084               	movwf	4
+  2311  020D  118A  2002         	fcall	stringdir
+  2312  020F  00E9               	movwf	??_byte_to_hex
+  2313  0210  0869               	movf	??_byte_to_hex,w
+  2314  0211  00F6               	movwf	_hex_char_high
+  2315  0212  0008               	return
+  2316  0213                     __end_of_byte_to_hex:	
+  2317  007E                     btemp	set	126	;btemp
+  2318  007E                     wtemp0	set	126
 
 
 Data Sizes:
@@ -2374,18 +2459,23 @@ Call Graph Tables:
                          _lcd_clear2
                           _lcd_line2
                            _lcd_putc
+                          _mem_clear
+                           _mem_dump
                      _print_capacity
                          _print_name
                         _print_query
                    _print_string_lcd
                 _print_string_serial
+                    _print_test_data
                           _uart_read
                           _uart_send
                      _usb_autoconfig
                    _usb_disk_connect
                      _usb_disk_mount
                      _usb_file_close
+                    _usb_file_create
                       _usb_file_open
+                      _usb_file_read
                   _usb_get_file_size
                      _usb_get_status
                     _usb_get_version
@@ -2399,7 +2489,11 @@ Call Graph Tables:
  ---------------------------------------------------------------------------------
  (1) _usb_get_file_size                                    0     0      0       0
  ---------------------------------------------------------------------------------
+ (1) _usb_file_read                                        0     0      0       0
+ ---------------------------------------------------------------------------------
  (1) _usb_file_open                                        0     0      0       0
+ ---------------------------------------------------------------------------------
+ (1) _usb_file_create                                      0     0      0       0
  ---------------------------------------------------------------------------------
  (1) _usb_file_close                                       0     0      0       0
  ---------------------------------------------------------------------------------
@@ -2441,6 +2535,8 @@ Call Graph Tables:
  ---------------------------------------------------------------------------------
  (1) _uart_read                                            0     0      0       0
  ---------------------------------------------------------------------------------
+ (1) _print_test_data                                      0     0      0       0
+ ---------------------------------------------------------------------------------
  (1) _print_string_lcd                                     3     3      0     219
                                               3 BANK0      1     1      0
                                               0 BANK1      2     2      0
@@ -2467,6 +2563,10 @@ Call Graph Tables:
  ---------------------------------------------------------------------------------
  (6) _byte_to_hex                                          3     3      0     282
                                               0 BANK0      3     3      0
+ ---------------------------------------------------------------------------------
+ (1) _mem_dump                                             0     0      0       0
+ ---------------------------------------------------------------------------------
+ (1) _mem_clear                                            0     0      0       0
  ---------------------------------------------------------------------------------
  (1) _lcd_line2                                            0     0      0       0
  ---------------------------------------------------------------------------------
@@ -2507,6 +2607,8 @@ Call Graph Tables:
    _lcd_clear2
    _lcd_line2
    _lcd_putc
+   _mem_clear
+   _mem_dump
    _print_capacity
      _byte_to_hex
      _print_string_serial
@@ -2524,6 +2626,7 @@ Call Graph Tables:
      _lcd_putc
    _print_string_serial
      _uart_send
+   _print_test_data
    _uart_read
    _uart_send
    _usb_autoconfig
@@ -2547,7 +2650,9 @@ Call Graph Tables:
    _usb_disk_connect
    _usb_disk_mount
    _usb_file_close
+   _usb_file_create
    _usb_file_open
+   _usb_file_read
    _usb_get_file_size
    _usb_get_status
    _usb_get_version
@@ -2589,98 +2694,105 @@ STACK                0      0       0       2        0.0%
 
 
 Microchip Technology PIC Macro Assembler V2.05 build -831301201 
-Symbol Table                                                                                   Sun May 21 19:42:53 2023
+Symbol Table                                                                                   Sun May 28 20:16:10 2023
 
                            pc 0002                   __CFG_CP$OFF 0000                            fsr 0004  
-               _hex_char_high 0076                 _usb_file_open 06BA                           l155 033D  
-                         l169 02E4                           fsr0 0004                           indf 0000  
-                __CFG_BORV$42 0000                  __CFG_FOSC$XT 0000           _usb_bytes_read_high 0051  
-              _usb_file_close 06BF                  _usb_set_mode 0710                          l1041 02EA  
-                        l1051 030B                          l1043 02F0                          l1045 02F6  
-                        l1071 02A0                          l1047 02FC                          l1055 0315  
-                        l1073 02A4                          l1049 0302                          l1057 0331  
-                        l2121 052E                          l1075 02A8                          l1083 02BC  
-                        l2043 0226                          l2131 0467                          l2123 045A  
-                        l1077 02AC                          l1085 02D8                          l1069 029C  
-                        l2133 0469                          l1079 02B2                          l2151 0488  
-                        l2143 0477                          l2127 0461                          l2161 049F  
-                        l2153 048D                          l2145 047C                          l2171 04BB  
-                        l2163 04A8                          l2155 0492                          l2147 0480  
-                        l2139 046F                _usb_disk_mount 0706                          l2173 04BF  
-                        l2165 04AC                          l2157 0497                          l2149 0484  
-                        l2167 04B0                          l2159 049B                          l2185 04E6  
-                        l2169 04B7                          l2187 0515                          l1999 0208  
-              _usb_disk_query 074D                          STR_1 0041                          STR_2 0052  
-                        STR_3 0062                          STR_4 0030                          STR_5 0085  
-                        STR_6 008F                          STR_7 0098                          STR_8 007B  
-                        STR_9 006F                _usb_get_status 06FF                          _main 043F  
-          usb_autoconfig@temp 00E3                          btemp 007E                 __CFG_BOREN$ON 0000  
-                        start 0000                 __CFG_IESO$OFF 0000                   _str_timeout 0026  
-               __CFG_MCLRE$ON 0000                 _usb_reset_all 06A2                _usb_autoconfig 03B9  
+               _hex_char_high 0076                 _usb_file_read 077C                 _usb_file_open 06A6  
+                         l165 02ED                           l179 0294              ?_print_test_data 0077  
+                         fsr0 0004                           indf 0000                  __CFG_BORV$42 0000  
+                __CFG_FOSC$XT 0000           _usb_bytes_read_high 0051                _usb_file_close 06AB  
+                _usb_set_mode 0710                          l1100 0258                          l1102 025C  
+                        l1110 0288                          l1104 0262                          l1108 026C  
+                        l1070 02A6                          l1072 02AC                          l1080 02C5  
+                        l1074 02B2                          l1082 02E1                          l1066 029A  
+                        l2202 0411                          l1076 02BB                          l1068 02A0  
+                        l2220 042C                          l1094 024C                          l2118 01D6  
+                        l2230 0442                          l2222 0430                          l2214 041F  
+                        l2206 0417                          l1096 0250                          l2240 045C  
+                        l2232 0447                          l2224 0434                          l2208 0419  
+                        l1098 0254                          l2074 01B8                          l2242 0460  
+                        l2234 044B                          l2226 0438                          l2218 0427  
+                        l2260 049A                          l2244 0467                          l2236 044F  
+                        l2228 043D                _usb_disk_mount 0706                          l2270 04AA  
+                        l2262 049E                          l2246 046B                          l2238 0458  
+                        l2264 04A2                          l2248 046F                          l2272 04E8  
+                        l2266 04A6                          l2258 0496                          l2196 0501  
+                        l2198 040A                _usb_disk_query 074D                          STR_1 0041  
+                        STR_2 0052                          STR_3 0062                          STR_4 0030  
+                        STR_5 0085                          STR_6 008F                          STR_7 0098  
+                        STR_8 007B                          STR_9 006F                _usb_get_status 06FF  
+                        _main 03EF            usb_autoconfig@temp 00E3                          btemp 007E  
+               __CFG_BOREN$ON 0000                          start 0000                 __CFG_IESO$OFF 0000  
+                 _str_timeout 0026                 __CFG_MCLRE$ON 0000               _usb_file_create 06EC  
+               _usb_reset_all 068E                _usb_autoconfig 0369                ?_usb_file_read 0077  
               ?_usb_file_open 0077                         ?_main 0077                  ?_byte_to_hex 0077  
-               __CFG_WDTE$OFF 0000                  _str_cmd_mode 0018                         u43_25 0250  
+               __CFG_WDTE$OFF 0000                  _str_cmd_mode 0018                         u43_25 0200  
                __CFG_PWRTE$ON 0000             ?_print_string_lcd 0077                __CFG_FCMEN$OFF 0000  
              _usb_get_version 0718            ??_print_string_lcd 006C                         _temp3 0060  
                        _temp4 005F                         _temp5 005E                         pclath 000A  
                        status 0003                         wtemp0 007E               _usb_free_space1 004F  
              _usb_free_space2 004E               _usb_free_space3 004D             _usb_target_status 0049  
-             __initialization 07BE        __end_of_usb_autoconfig 043F                ?_usb_reset_all 0077  
-                __end_of_main 0549               _usb_drive_size1 0074               _usb_drive_size2 0073  
-             _usb_drive_size3 0072             _usb_set_file_name 06A7            ?_usb_set_file_name 0077  
+             __initialization 07BE        __end_of_usb_autoconfig 03EF                ?_usb_reset_all 0077  
+                __end_of_main 051C               _usb_drive_size1 0074               _usb_drive_size2 0073  
+             _usb_drive_size3 0072             _usb_set_file_name 0693            ?_usb_set_file_name 0077  
                       ??_main 00E4              _usb_disk_connect 070B               ?_usb_file_close 0077  
          ??_usb_set_file_name 0077               __CFG_CCP2MX$RC1 0000               ?_usb_disk_mount 0077  
-             ?_usb_disk_query 0077               ?_usb_get_status 0077   __end_of_print_string_serial 0222  
-            __end_of_fifo_pop 02E8               ?_usb_autoconfig 0077               ??_usb_file_open 0077  
-            ??_print_capacity 0077               __CFG_BORSEN$OFF 0000       __end_of__initialization 07FD  
-                ?_print_query 0077                _tape_size_high 0055               ??_usb_reset_all 0077  
-              __pcstackCOMMON 0077                  __pidataBANK0 01FC          __size_of_byte_to_hex 0023  
-          __size_of_fifo_push 005B             _usb_disk_capacity 072D            ?_usb_disk_capacity 0077  
-                  __pbssBANK0 0020                    __pbssBANK1 00A0                    __pbssBANK2 0110  
-                  __pbssBANK3 0190             _usb_file_size_low 0052           ??_usb_disk_capacity 0077  
-                _delay_millis 067D             _usb_get_file_size 06E4                    __pmaintext 043F  
-          ?_usb_get_file_size 0077                    _gen_count2 0058                    _gen_count3 0057  
-                  _gen_count4 0056              ?_usb_get_version 0077           ??_usb_get_file_size 0077  
-             byte_to_hex@data 006B                    _lcd_clear2 0636                 _ram_address_h 005D  
-               _ram_address_l 005C                     ?_fifo_pop 0077                     ?_lcd_putc 0077  
-                  __stringtab 0002                    _ldel_count 005A     __size_of_print_string_lcd 001E  
-           __end_of_fifo_push 0343        print_string_lcd@string 00E0             __end_of_hex_table 0018  
-            ??_usb_file_close 0077                    _initialize 0549                       __ptext1 03B9  
-                     __ptext2 0343                       __ptext3 0222                       __ptext4 0263  
-                     __ptext5 0204                       __ptext6 02E8                       __ptext7 029B  
-                     __ptext8 0240              ??_usb_disk_mount 0077              ??_usb_disk_query 0077  
+             ?_usb_disk_query 0077               ?_usb_get_status 0077   __end_of_print_string_serial 01D2  
+            __end_of_fifo_pop 0298               ?_usb_autoconfig 0077               ??_usb_file_read 0077  
+             ??_usb_file_open 0077              ??_print_capacity 0077               __CFG_BORSEN$OFF 0000  
+     __end_of__initialization 07FD                  ?_print_query 0077                _tape_size_high 0055  
+             ??_usb_reset_all 0077                __pcstackCOMMON 0077                  __pidataBANK0 01AC  
+        __size_of_byte_to_hex 0023            __size_of_fifo_push 005B             _usb_disk_capacity 072D  
+          ?_usb_disk_capacity 0077                    __pbssBANK0 0020                    __pbssBANK1 00A0  
+                  __pbssBANK2 0110                    __pbssBANK3 0190             _usb_file_size_low 0052  
+            ?_usb_file_create 0077           ??_usb_disk_capacity 0077                  _delay_millis 0669  
+           _usb_get_file_size 06D1                    __pmaintext 03EF            ?_usb_get_file_size 0077  
+                  _gen_count2 0058                    _gen_count3 0057                    _gen_count4 0056  
+            ?_usb_get_version 0077           ??_usb_get_file_size 0077               byte_to_hex@data 006B  
+                  _lcd_clear2 0622                 _ram_address_h 005D                 _ram_address_l 005C  
+                   ?_fifo_pop 0077                     ?_lcd_putc 0077                    __stringtab 0002  
+                  _ldel_count 005A                     ?_mem_dump 0077     __size_of_print_string_lcd 001E  
+           __end_of_fifo_push 02F3        print_string_lcd@string 00E0             __end_of_hex_table 0018  
+            ??_usb_file_close 0077                    _initialize 051C                       __ptext1 0369  
+                     __ptext2 02F3                       __ptext3 01D2                       __ptext4 0213  
+                     __ptext5 01B4                       __ptext6 0298                       __ptext7 024B  
+                     __ptext8 01F0              ??_usb_disk_mount 0077              ??_usb_disk_query 0077  
             ??_usb_get_status 0077                    _s_reg_high 0048                    _sdel_count 005B  
-                  ??_fifo_pop 0079                       clrloop0 01F5                    ??_lcd_putc 0077  
-        end_of_initialization 07FD              ??_usb_autoconfig 00E2          __size_of_print_query 0076  
-           ?_usb_check_exists 0077            ??_usb_check_exists 0077                    _print_name 064E  
-                 ?_lcd_clear2 0077                  _hex_char_low 0075               _fifo_write_bank 0041  
-          _usb_bytes_read_low 0050  __size_of_print_string_serial 001E                   ?_initialize 0077  
-         start_initialization 07BE                 ?_usb_set_mode 0077              _print_string_lcd 0222  
-                 __pdataBANK0 0061                 ??_byte_to_hex 0069                   ?_print_name 0077  
-          _usb_file_size_high 0053                 _tape_size_low 0054                   __pbssCOMMON 0070  
-                   ___latbits 0001                ??_usb_set_mode 0077          print_string_serial@i 00E0  
-               __pcstackBANK0 0069                 __pcstackBANK1 00E0                 _delay_counter 0044  
-     __size_of_print_capacity 0038             __size_of_fifo_pop 004D             ?_usb_disk_connect 0077  
-          ??_usb_disk_connect 0077                     _gen_count 0059                     _fifo_push 02E8  
-                   _lcd_line2 061D            _usb_logical_bytes1 004C            _usb_logical_bytes2 004B  
-          _usb_logical_bytes3 004A                     __pstrings 0002                _fifo_read_bank 0042  
-                   _hex_table 0008             print_string_lcd@i 00E1                   _fifo_bank_A 0190  
+                  ??_fifo_pop 0079                       clrloop0 01A5                    ??_lcd_putc 0077  
+        end_of_initialization 07FD                    ??_mem_dump 0077              ??_usb_autoconfig 00E2  
+        __size_of_print_query 0076             ?_usb_check_exists 0077            ??_usb_check_exists 0077  
+                  _print_name 063A                   ?_lcd_clear2 0077                  _hex_char_low 0075  
+             _fifo_write_bank 0041            _usb_bytes_read_low 0050             ??_print_test_data 0077  
+__size_of_print_string_serial 001E                   ?_initialize 0077           start_initialization 07BE  
+               ?_usb_set_mode 0077              _print_string_lcd 01D2                   __pdataBANK0 0061  
+               ??_byte_to_hex 0069                   ?_print_name 0077            _usb_file_size_high 0053  
+               _tape_size_low 0054                   __pbssCOMMON 0070                     ___latbits 0001  
+              ??_usb_set_mode 0077          print_string_serial@i 00E0                 __pcstackBANK0 0069  
+               __pcstackBANK1 00E0                 _delay_counter 0044       __size_of_print_capacity 0038  
+           __size_of_fifo_pop 004D             ?_usb_disk_connect 0077            ??_usb_disk_connect 0077  
+                   _gen_count 0059                     _fifo_push 0298                     _lcd_line2 0609  
+          _usb_logical_bytes1 004C            _usb_logical_bytes2 004B            _usb_logical_bytes3 004A  
+                   __pstrings 0002                _fifo_read_bank 0042                     _hex_table 0008  
+                   _mem_clear 0550             print_string_lcd@i 00E1                   _fifo_bank_A 0190  
                  _fifo_bank_B 0110                   _fifo_bank_C 0020                   _fifo_bank_D 00C0  
-                 _fifo_bank_E 00A0                   _fifo_bank_F 01D0           __end_of_byte_to_hex 0263  
-                   _s_reg_low 0047                _fifo_num_bytes 0040                     clear_ram0 01F4  
-                   _tape_name 0061                     _uart_read 0580                     _uart_send 0584  
+                 _fifo_bank_E 00A0                   _fifo_bank_F 01D0           __end_of_byte_to_hex 0213  
+                   _s_reg_low 0047                _fifo_num_bytes 0040                     clear_ram0 01A4  
+                   _tape_name 0061                     _uart_read 056C                     _uart_send 0570  
                   ?_fifo_push 0077                    ?_lcd_line2 0077                   __stringbase 0007  
                 ??_lcd_clear2 0077                _fifo_write_idx 0070                     main@state 00E5  
-         _print_string_serial 0204                 ??_print_query 0077          ?_print_string_serial 0077  
-                  ?_uart_read 0077                    ?_uart_send 0077                  ??_initialize 0077  
-   print_string_serial@string 00E1            __end_of__stringtab 0008                   _byte_to_hex 0240  
-    __end_of_print_string_lcd 0240                      _flag_reg 0043                      _fifo_pop 029B  
-              _print_capacity 0263                      _lcd_putc 05EA                 _fifo_read_idx 0071  
-        __end_of_str_cmd_mode 0026                 __size_of_main 010A                 ?_delay_millis 0077  
-           ??_usb_get_version 0077         ??_print_string_serial 006C           __end_of_print_query 03B9  
-     __size_of_usb_autoconfig 0086                   ??_fifo_push 0077                   ??_lcd_line2 0077  
-                    main@temp 00E6                  ??_print_name 0077        __end_of_print_capacity 029B  
-                    intlevel1 0000                ??_delay_millis 0077                     stringcode 0002  
-                 ??_uart_read 0077                   ??_uart_send 0077           __end_of_str_timeout 0030  
-                _timeout_high 0046                      stringdir 0002                      stringtab 0002  
-             ?_print_capacity 0077              _usb_check_exists 06F5                   _timeout_low 0045  
-                 _print_query 0343                  fifo_pop@temp 007A                 fifo_push@data 0078  
+                  ?_mem_clear 0077           _print_string_serial 01B4               _print_test_data 0675  
+               ??_print_query 0077          ?_print_string_serial 0077                    ?_uart_read 0077  
+                  ?_uart_send 0077                  ??_initialize 0077     print_string_serial@string 00E1  
+          __end_of__stringtab 0008                   _byte_to_hex 01F0             ??_usb_file_create 0077  
+    __end_of_print_string_lcd 01F0                      _flag_reg 0043                      _fifo_pop 024B  
+              _print_capacity 0213                      _lcd_putc 05D6                 _fifo_read_idx 0071  
+                    _mem_dump 055E          __end_of_str_cmd_mode 0026                 __size_of_main 012D  
+               ?_delay_millis 0077             ??_usb_get_version 0077         ??_print_string_serial 006C  
+         __end_of_print_query 0369       __size_of_usb_autoconfig 0086                   ??_fifo_push 0077  
+                 ??_lcd_line2 0077                      main@temp 00E6                  ??_print_name 0077  
+                 ??_mem_clear 0077        __end_of_print_capacity 024B                      intlevel1 0000  
+              ??_delay_millis 0077                     stringcode 0002                   ??_uart_read 0077  
+                 ??_uart_send 0077           __end_of_str_timeout 0030                  _timeout_high 0046  
+                    stringdir 0002                      stringtab 0002               ?_print_capacity 0077  
+            _usb_check_exists 06E2                   _timeout_low 0045                   _print_query 02F3  
+                fifo_pop@temp 007A                 fifo_push@data 0078  

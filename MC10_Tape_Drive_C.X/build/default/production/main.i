@@ -2068,19 +2068,23 @@ unsigned char tape_name[8] = {'D', 'E', 'R', 'G', 'A', 'N', 'Q', 'Q'};
 
 
 void initialize();
-void print_name();
-void delay_millis(unsigned char);
+void mem_clear();
+void mem_dump();
 unsigned char uart_read();
 void uart_send(unsigned char);
 void lcd_putc(unsigned char);
 void lcd_line2();
 void lcd_clear2();
+void print_name();
+void delay_millis(unsigned char);
+void print_test_data();
 void usb_reset_all();
 void usb_set_file_name();
 void usb_file_open();
 void usb_file_close();
 void usb_get_file_size();
 unsigned char usb_check_exists(unsigned char);
+void usb_file_create();
 unsigned char usb_get_status();
 void usb_disk_mount();
 void usb_disk_connect();
@@ -2088,6 +2092,9 @@ void usb_set_mode(unsigned char);
 unsigned char usb_get_version();
 void usb_disk_capacity();
 void usb_disk_query();
+
+
+void usb_file_read();
 
 
 unsigned char fifo_bank_A[64];
@@ -2348,34 +2355,34 @@ break;
 case 4:
 switch(temp)
 {
-case 0:
+case 0x00:
 usb_reset_all();
 break;
-case 1:
+case 0x01:
 usb_autoconfig();
 break;
-case 2:
+case 0x02:
 temp = usb_get_version();
 break;
-case 3:
+case 0x03:
 usb_set_mode(0x05);
 break;
-case 4:
+case 0x04:
 usb_set_mode(0x06);
 break;
-case 5:
+case 0x05:
 usb_set_mode(0x07);
 break;
-case 6:
+case 0x06:
 usb_disk_connect();
 break;
-case 7:
+case 0x07:
 usb_disk_mount();
 break;
-case 8:
+case 0x08:
 temp = usb_get_status();
 break;
-case 9:
+case 0x09:
 print_query();
 break;
 case 0x0A:
@@ -2401,6 +2408,23 @@ byte_to_hex(usb_file_size_low);
 uart_send(hex_char_high);
 uart_send(hex_char_low);
 uart_send('\n');
+break;
+case 0x0F:
+usb_file_read();
+break;
+case 0x10:
+usb_file_create();
+break;
+
+# 428
+case 0x20:
+mem_clear();
+break;
+case 0x21:
+mem_dump();
+break;
+case 0x22:
+print_test_data();
 break;
 }
 byte_to_hex(temp);
