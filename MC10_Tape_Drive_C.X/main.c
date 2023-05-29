@@ -74,6 +74,7 @@ unsigned char tape_name[8] = {'D', 'E', 'R', 'G', 'A', 'N', 'Q', 'Q'};
 void initialize();
 void mem_clear();
 void mem_dump();
+void file_dump();
 unsigned char uart_read();
 void uart_send(unsigned char);
 void lcd_putc(unsigned char);
@@ -98,15 +99,12 @@ void usb_disk_capacity();
 void usb_disk_query();
 //void usb_write_test_data();
 //void usb_file_write();
-void usb_file_read();
+unsigned char usb_file_read();
 
 //C globals
 unsigned char fifo_bank_A[64];
-unsigned char fifo_bank_B[64];
-unsigned char fifo_bank_C[32];
-unsigned char fifo_bank_D[32];
-unsigned char fifo_bank_E[32];
-unsigned char fifo_bank_F[32];
+unsigned char fifo_bank_B[96];
+unsigned char fifo_bank_C[96];
 
 const char str_timeout[] = "Timeout: ";
 const char str_cmd_mode[] = "Command mode\n";
@@ -120,23 +118,17 @@ unsigned char fifo_push(unsigned char data)
     {
         case 0:
         case 1:
-            fifo_bank_A[fifo_write_idx & 0x3F] = data;
+            fifo_bank_A[fifo_write_idx] = data;
             break;
         case 2:
         case 3:
-            fifo_bank_B[fifo_write_idx & 0x3F] = data;
-            break;
         case 4:
-            fifo_bank_C[fifo_write_idx & 0x1F] = data;
+            fifo_bank_B[fifo_write_idx - 64] = data;
             break;
         case 5:
-            fifo_bank_D[fifo_write_idx & 0x1F] = data;
-            break;
         case 6:
-            fifo_bank_E[fifo_write_idx & 0x1F] = data;
-            break;
         case 7:
-            fifo_bank_F[fifo_write_idx & 0x1F] = data;
+            fifo_bank_C[fifo_write_idx - (64 + 96)] = data;
             break;
     }
     ++fifo_write_idx;
@@ -155,23 +147,17 @@ unsigned char fifo_pop(void)
     {
         case 0:
         case 1:
-            temp = fifo_bank_A[fifo_read_idx & 0x3F];
+            temp = fifo_bank_A[fifo_read_idx];
             break;
         case 2:
         case 3:
-            temp = fifo_bank_B[fifo_read_idx & 0x3F];
-            break;
         case 4:
-            temp = fifo_bank_C[fifo_read_idx & 0x1F];
+            temp = fifo_bank_B[fifo_read_idx - 64];
             break;
         case 5:
-            temp = fifo_bank_D[fifo_read_idx & 0x1F];
-            break;
         case 6:
-            temp = fifo_bank_E[fifo_read_idx & 0x1F];
-            break;
         case 7:
-            temp = fifo_bank_F[fifo_read_idx & 0x1F];
+            temp = fifo_bank_C[fifo_read_idx - (64 + 96)];
             break;
     }
     ++fifo_read_idx;
@@ -318,9 +304,9 @@ void main(void)
 {
     unsigned char state = 0;
     initialize();
-    usb_reset_all();
-    delay_millis(100);
-    usb_autoconfig();
+    //usb_reset_all();
+    //delay_millis(100);
+    //usb_autoconfig();
     //print_name();
 
     print_string_lcd("Dragons");
@@ -414,7 +400,7 @@ void main(void)
                         uart_send('\n');
                         break;
                     case 0x0F:
-                        usb_file_read();
+                        temp = usb_file_read();
                         break;
                     case 0x10:
                         usb_file_create();
@@ -432,8 +418,15 @@ void main(void)
                         mem_dump();
                         break;
                     case 0x22:
+                        file_dump();
+                        break;
+                    case 0x23:
                         print_test_data();
                         break;
+                    case 0x24:
+                        usb_file_size_low = 16;
+                        usb_file_size_high = 0;
+                        file_dump();
                 }
                 byte_to_hex(temp);
                 uart_send(hex_char_high);

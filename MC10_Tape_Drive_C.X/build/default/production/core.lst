@@ -1,7 +1,7 @@
 
 
 Microchip MPLAB XC8 Assembler V2.05 build -831301201 
-                                                                                                           Sun May 28 20:16:09 2023
+                                                                                                           Mon May 29 14:49:11 2023
 
 
      1                           	processor	16F747
@@ -25,7 +25,7 @@ Microchip MPLAB XC8 Assembler V2.05 build -831301201
     19  0000                     	; PIC10/12/16
     20                           
     21                           	psect	barfunc
-    22  051C                     _initialize:	
+    22  04F9                     _initialize:	
     23                           ;PIN USAGE:
     24                           ; PORTA,0 UNUSED OUTPUT
     25                           ; PORTA,1 UNUSED OUTPUT
@@ -87,1399 +87,1432 @@ Microchip MPLAB XC8 Assembler V2.05 build -831301201
     79                           ; psect barfunc,local,class=CODE,reloc=2 ; PIC18
     80                           ;extern entry__byte_to_hex
     81                           
-    82  051C  1303 1283          	banksel	5
-    83  051E  0185               	clrf	5
-    84  051F  0186               	clrf	6
-    85  0520  0187               	clrf	7
-    86  0521  0188               	clrf	8
-    87  0522  0986               	comf	6,f
-    88  0523  0987               	comf	7,f
-    89  0524  0988               	comf	8,f
-    90  0525  1303 1683          	banksel	133	;SWITCH TO BANK 1
-    91  0527  30C0               	movlw	192
-    92  0528  0085               	movwf	133	;CONFIGURE PORTA
-    93  0529  307B               	movlw	123
-    94  052A  0086               	movwf	134	;CONFIGURE PORTB
-    95  052B  30D0               	movlw	208
-    96  052C  0087               	movwf	135	;CONFIGURE PORTC
-    97  052D  3000               	movlw	0
-    98  052E  0088               	movwf	136	;CONFIGURE PORTD
-    99  052F  30F8               	movlw	248
-   100  0530  0089               	movwf	137	;CONFIGURE PORTE
-   101  0531  3000               	movlw	0	;((SSPSTAT) and 07Fh), 7=0, ((SSPSTAT) and 07Fh), 6=0, DA=0, P=0, S=0, RW=0, ((SSPSTAT) and
+    82  04F9  1303 1283          	banksel	5
+    83  04FB  0185               	clrf	5
+    84  04FC  0186               	clrf	6
+    85  04FD  0187               	clrf	7
+    86  04FE  0188               	clrf	8
+    87  04FF  0986               	comf	6,f
+    88  0500  0987               	comf	7,f
+    89  0501  0988               	comf	8,f
+    90  0502  1303 1683          	banksel	133	;SWITCH TO BANK 1
+    91  0504  30C0               	movlw	192
+    92  0505  0085               	movwf	133	;CONFIGURE PORTA
+    93  0506  307B               	movlw	123
+    94  0507  0086               	movwf	134	;CONFIGURE PORTB
+    95  0508  30D0               	movlw	208
+    96  0509  0087               	movwf	135	;CONFIGURE PORTC
+    97  050A  3000               	movlw	0
+    98  050B  0088               	movwf	136	;CONFIGURE PORTD
+    99  050C  30F8               	movlw	248
+   100  050D  0089               	movwf	137	;CONFIGURE PORTE
+   101  050E  3000               	movlw	0	;((SSPSTAT) and 07Fh), 7=0, ((SSPSTAT) and 07Fh), 6=0, DA=0, P=0, S=0, RW=0, ((SSPSTAT) and
       +                           07Fh), 1=0, ((SSPSTAT) and 07Fh), 0=0
-   102  0532  0094               	movwf	148	;CONFIGURE SPI
-   103  0533  300F               	movlw	15	;PCFG=1111
-   104  0534  009F               	movwf	159	;DISABLE ANALOG INPUTS
-   105  0535  3026               	movlw	38	;((TXSTA) and 07Fh), 7=0, ((TXSTA) and 07Fh), 6=0, ((TXSTA) and 07Fh), 5=1, ((TXSTA) and 0
+   102  050F  0094               	movwf	148	;CONFIGURE SPI
+   103  0510  300F               	movlw	15	;PCFG=1111
+   104  0511  009F               	movwf	159	;DISABLE ANALOG INPUTS
+   105  0512  3026               	movlw	38	;((TXSTA) and 07Fh), 7=0, ((TXSTA) and 07Fh), 6=0, ((TXSTA) and 07Fh), 5=1, ((TXSTA) and 0
       +                          7Fh), 4=0, UNIMPLEMENTED=0, ((TXSTA) and 07Fh), 2=1, ((TXSTA) and 07Fh), 1=1, ((TXSTA) and 07Fh), 0=
       +                          0
-   106  0536  0098               	movwf	152	;CONFIGURE UART
-   107  0537  3019               	movlw	25
-   108  0538  0099               	movwf	153	;CONFIGURE BAUD RATE
-   109  0539  30D8               	movlw	216	;RBPU = 1, ((OPTION_REG) and 07Fh), 6 = 1, ((OPTION_REG) and 07Fh), 5 = 0, ((OPTION_REG) 
+   106  0513  0098               	movwf	152	;CONFIGURE UART
+   107  0514  3019               	movlw	25
+   108  0515  0099               	movwf	153	;CONFIGURE BAUD RATE
+   109  0516  30D8               	movlw	216	;RBPU = 1, ((OPTION_REG) and 07Fh), 6 = 1, ((OPTION_REG) and 07Fh), 5 = 0, ((OPTION_REG) 
       +                          and 07Fh), 4 = 1, ((OPTION_REG) and 07Fh), 3 = 1, ((OPTION_REG) and 07Fh), 2 = 0, ((OPTION_REG) and 
       +                          07Fh), 1 = 0, ((OPTION_REG) and 07Fh), 0 = 0
-   110  053A  0081               	movwf	129	;CONFIGURE TIMER
-   111  053B  1303 1283          	banksel	20
-   112  053D  3030               	movlw	48	;((SSPCON) and 07Fh), 7=0, ((SSPCON) and 07Fh), 6=0, ((SSPCON) and 07Fh), 5=1, ((SSPCON) a
+   110  0517  0081               	movwf	129	;CONFIGURE TIMER
+   111  0518  1303 1283          	banksel	20
+   112  051A  3030               	movlw	48	;((SSPCON) and 07Fh), 7=0, ((SSPCON) and 07Fh), 6=0, ((SSPCON) and 07Fh), 5=1, ((SSPCON) a
       +                          nd 07Fh), 4=1, SSPM=0000
-   113  053E  0094               	movwf	20	;CONFIGURE SPI
-   114  053F  3090               	movlw	144	;((RCSTA) and 07Fh), 7=1, ((RCSTA) and 07Fh), 6=0,((RCSTA) and 07Fh), 5=0, ((RCSTA) and 0
+   113  051B  0094               	movwf	20	;CONFIGURE SPI
+   114  051C  3090               	movlw	144	;((RCSTA) and 07Fh), 7=1, ((RCSTA) and 07Fh), 6=0,((RCSTA) and 07Fh), 5=0, ((RCSTA) and 0
       +                          7Fh), 4=1, ((RCSTA) and 07Fh), 3=0, ((RCSTA) and 07Fh), 2=0, ((RCSTA) and 07Fh), 1=0, ((RCSTA) and 0
       +                          7Fh), 0=0
-   115  0540  0098               	movwf	24	;CONFIGURE UART
-   116  0541  3020               	movlw	32
-   117  0542  008B               	movwf	11	;ENABLE TIMER 0 INTERRUPT
-   118  0543  01C3               	clrf	_flag_reg
-   119  0544  01C8               	clrf	_s_reg_high
-   120  0545  01C7               	clrf	_s_reg_low
-   121  0546  3064               	movlw	100
-   122  0547  2669               	call	_delay_millis	;100 MS DELAY AT STARTUP
-   123  0548  1188               	bcf	8,3
-   124  0549  25C2               	call	RAM_CONFIG
-   125                           
-   126                           ;CLRF _ram_address_h
-   127                           ;CLRF _ram_address_l
-   128                           ;MOVLW 0x55
-   129                           ;CALL RAM_WRITE
-   130  054A  2550               	call	_mem_clear
-   131  054B  25EB               	call	FUNCTIONSET_LCD	;INITIALIZE DISPLAY
-   132  054C  25F4               	call	DISPLAYON	;POWER ON THE DISPLAY
-   133  054D  25FB               	call	CLEARDISPLAY	;CLEAR THE DISPLAY
-   134  054E  2602               	call	SETHOME_LCD	;SET CURSOR TO THE START OF LINE 1
-   135  054F  0008               	return
-   136  0550                     _mem_clear:	
-   137  0550  30FF               	movlw	255
-   138  0551  00DC               	movwf	_ram_address_l
-   139  0552  00DD               	movwf	_ram_address_h
-   140  0553                     MEM_CLEAR_LOOP:	
-   141                           
-   142                           ;BSF PORTD, 4
-   143  0553  30FF               	movlw	255
-   144  0554  259A               	call	RAM_WRITE_AUTO
-   145                           
-   146                           ;BCF PORTD, 4 ;PORTD 4 IS A DEBUG OUTPUT TO MEASURE THE DURATION OF RAM_WRITE
-   147  0555  085C               	movf	_ram_address_l,w
-   148  0556  3AFF               	xorlw	255
-   149  0557  1D03               	btfss	3,2
-   150  0558  2D53               	goto	MEM_CLEAR_LOOP
-   151  0559  085D               	movf	_ram_address_h,w
-   152  055A  3AFF               	xorlw	255
-   153  055B  1D03               	btfss	3,2
-   154  055C  2D53               	goto	MEM_CLEAR_LOOP
-   155  055D  0008               	return
-   156  055E                     _mem_dump:	
-   157  055E  30FF               	movlw	255
-   158  055F  00DC               	movwf	_ram_address_l
-   159  0560  00DD               	movwf	_ram_address_h
-   160  0561                     MEM_DUMP_LOOP:	
-   161  0561  2574               	call	RAM_READ_AUTO
-   162  0562  2570               	call	_uart_send
-   163  0563  085C               	movf	_ram_address_l,w
-   164  0564  3AFF               	xorlw	255
-   165  0565  1D03               	btfss	3,2
-   166  0566  2D61               	goto	MEM_DUMP_LOOP
-   167  0567  085D               	movf	_ram_address_h,w
-   168  0568  3AFF               	xorlw	255
-   169  0569  1D03               	btfss	3,2
-   170  056A  2D61               	goto	MEM_DUMP_LOOP
-   171  056B  0008               	return
-   172  056C                     _uart_read:	
-   173  056C  1E8C               	btfss	12,5	;CHECK IF UART RECEIVE BUFFER IS FULL
-   174  056D  2D6C               	goto	_uart_read	;IF NOT WAIT UNTIL ITS FULL
-   175  056E  081A               	movf	26,w	;COPY DATA TO W
-   176  056F  0008               	return
-   177  0570                     _uart_send:	
-   178  0570  1E0C               	btfss	12,4	;CHECK IF UART TRANSMIT BUFFER IS EMPTY
-   179  0571  2D70               	goto	_uart_send	;IF NOT WAIT UNTIL IT IS
-   180  0572  0099               	movwf	25	;COPY DATA TO TXREG
-   181  0573  0008               	return
-   182  0574                     RAM_READ_AUTO:	
-   183  0574  0FDC               	incfsz	_ram_address_l,f	;INCREMENT LOW ADDRESS
-   184  0575  03DD               	decf	_ram_address_h,f
-   185  0576  0ADD               	incf	_ram_address_h,f	;IF LOW ADDRESS IS ((STATUS) and 07Fh), 2 INCREMENT THE HIGH ADDRESS TOO
-   186  0577                     RAM_READ:	
-   187  0577  1386               	bcf	6,7	;CHIP ENABLE
-   188  0578  3003               	movlw	3	;PUT WRITE COMMAND IN W
-   189  0579  0093               	movwf	19	;SEND COMMAND
-   190  057A  085D               	movf	_ram_address_h,w	;COPY ADDRESS TO W
-   191  057B  1303 1683          	banksel	148
-   192  057D                     RAM_WAIT_AH:	
-   193  057D  1C14               	btfss	20,0	;IS THE TRANSMISSION READY
-   194  057E  2D7D               	goto	RAM_WAIT_AH	;IF NOT WAIT UNTIL IT IS
-   195  057F  1303 1283          	banksel	19
-   196  0581  0093               	movwf	19	;SEND ADDRESS HIGH BYTE
-   197  0582  085C               	movf	_ram_address_l,w	;COPY ADDRESS TO W
-   198  0583  1303 1683          	banksel	148
-   199  0585                     RAM_WAIT_AL:	
-   200  0585  1C14               	btfss	20,0
-   201  0586  2D85               	goto	RAM_WAIT_AL
-   202  0587  1303 1283          	banksel	19
-   203  0589  0093               	movwf	19	;SEND ADDRESS LOW BYTE
-   204  058A  1303 1683          	banksel	148
-   205  058C                     RAM_WAIT_D:	
-   206  058C  1C14               	btfss	20,0
-   207  058D  2D8C               	goto	RAM_WAIT_D
-   208  058E  1303 1283          	banksel	19
-   209  0590  0193               	clrf	19
-   210  0591  1303 1683          	banksel	148
-   211  0593                     RAM_WAIT_R:	
-   212  0593  1C14               	btfss	20,0
-   213  0594  2D93               	goto	RAM_WAIT_R
-   214  0595  1303 1283          	banksel	19
-   215  0597  0813               	movf	19,w	;COPY DATA TO W
-   216  0598  1786               	bsf	6,7
-   217  0599  0008               	return
-   218  059A                     RAM_WRITE_AUTO:	
-   219  059A  00DE               	movwf	_temp5
-   220  059B  0FDC               	incfsz	_ram_address_l,f	;INCREMENT LOW ADDRESS
-   221  059C  03DD               	decf	_ram_address_h,f
-   222  059D  0ADD               	incf	_ram_address_h,f	;IF LOW ADDRESS IS ((STATUS) and 07Fh), 2 INCREMENT THE HIGH ADDRESS TOO
-   223  059E                     RAM_WRITE:	
-   224  059E  1386               	bcf	6,7	;CHIP ENABLE
-   225  059F  3002               	movlw	2	;PUT WRITE COMMAND IN W
-   226  05A0  0093               	movwf	19	;SEND COMMAND
-   227  05A1  085D               	movf	_ram_address_h,w	;COPY ADDRESS TO W
-   228  05A2  1303 1683          	banksel	148
-   229  05A4                     RAM_WRITE_AH:	
-   230  05A4  1C14               	btfss	20,0	;IS THE TRANSMISSION READY
-   231  05A5  2DA4               	goto	RAM_WRITE_AH	;IF NOT WAIT UNTIL IT IS
-   232  05A6  1303 1283          	banksel	19
-   233  05A8  0093               	movwf	19	;SEND ADDRESS HIGH BYTE
-   234  05A9  085C               	movf	_ram_address_l,w	;COPY ADDRESS TO W
-   235  05AA  1303 1683          	banksel	148
-   236  05AC                     RAM_WRITE_AL:	
-   237  05AC  1C14               	btfss	20,0
-   238  05AD  2DAC               	goto	RAM_WRITE_AL
-   239  05AE  1303 1283          	banksel	19
-   240  05B0  0093               	movwf	19	;SEND ADDRESS LOW BYTE
-   241  05B1  085E               	movf	_temp5,w	;COPY DATA TO W
-   242  05B2  1303 1683          	banksel	148
-   243  05B4                     RAM_WRITE_D:	
-   244  05B4  1C14               	btfss	20,0
-   245  05B5  2DB4               	goto	RAM_WRITE_D
-   246  05B6  1303 1283          	banksel	19
-   247  05B8  0093               	movwf	19	;SEND DATA
-   248  05B9  1303 1683          	banksel	148
-   249  05BB                     RAM_WRITE_R:	
-   250  05BB  1C14               	btfss	20,0
-   251  05BC  2DBB               	goto	RAM_WRITE_R
-   252  05BD  1303 1283          	banksel	19
-   253  05BF  0813               	movf	19,w	;COPY DUMMY DATA TO W
-   254  05C0  1786               	bsf	6,7
-   255  05C1  0008               	return
-   256  05C2                     RAM_CONFIG:	
-   257  05C2  1386               	bcf	6,7	;CHIP ENABLE
-   258  05C3  3001               	movlw	1	;PUT WRITE COMMAND IN W
-   259  05C4  0093               	movwf	19	;SEND COMMAND
-   260  05C5  3000               	movlw	0	;CONFIGURE FOR BYTE MODE
-   261  05C6  1303 1683          	banksel	148
-   262  05C8                     RAM_CONFIG_C:	
-   263  05C8  1C14               	btfss	20,0	;IS THE TRANSMISSION READY
-   264  05C9  2DC8               	goto	RAM_CONFIG_C	;IF NOT WAIT UNTIL IT IS
-   265  05CA  1303 1283          	banksel	19
-   266  05CC  0093               	movwf	19	;SEND CONFIG DATA
-   267  05CD  1303 1683          	banksel	148
-   268  05CF                     RAM_CONFIG_D:	
-   269  05CF  1C14               	btfss	20,0
-   270  05D0  2DCF               	goto	RAM_CONFIG_D
-   271  05D1  1303 1283          	banksel	19
-   272  05D3  0813               	movf	19,w	;COPY DUMMY DATA TO W
-   273  05D4  1786               	bsf	6,7
-   274  05D5  0008               	return
-   275  05D6                     _lcd_putc:	
-   276  05D6  1585               	bsf	5,3	;RS LINE TO 1 (PORT A BIT 3)
-   277  05D7  25DC               	call	_lcd_send
-   278  05D8  262F               	call	_pulse_e
-   279  05D9  3002               	movlw	2
-   280  05DA  2669               	call	_delay_millis
-   281  05DB  0008               	return
-   282  05DC                     _lcd_send:	
-   283                           
-   284                           ;SENDS DATA OR COMMAND TO LCD SHIFT REGISTER
-   285  05DC  00E0               	movwf	_temp3	;COPY DATA TO TEMP VARIABLE
-   286  05DD  3008               	movlw	8
-   287  05DE  00D7               	movwf	_gen_count3	;COUNT 8 BITS
-   288  05DF                     LCD_SEND_LOOP:	
-   289  05DF  1BE0               	btfsc	_temp3,7
-   290  05E0  1788               	bsf	8,7
-   291  05E1  1FE0               	btfss	_temp3,7
-   292  05E2  1388               	bcf	8,7
-   293  05E3  0DE0               	rlf	_temp3,f
-   294  05E4  1708               	bsf	8,6
-   295  05E5  0000               	nop
-   296  05E6  0000               	nop
-   297  05E7  1308               	bcf	8,6
-   298  05E8  0BD7               	decfsz	_gen_count3,f
-   299  05E9  2DDF               	goto	LCD_SEND_LOOP
-   300  05EA  0008               	return
-   301  05EB                     FUNCTIONSET_LCD:	
-   302  05EB  1105               	bcf	5,2	;MAKE SURE THAT E STARTS LOW
-   303  05EC  1308               	bcf	8,6	;MAKE SURE DISPLAY CLOCK STARTS LOW
-   304  05ED  1185               	bcf	5,3	;RS LINE TO 0 (PORT A BIT 3)
-   305  05EE  3038               	movlw	56	;FUNCTION SET COMMAND
-   306  05EF  25DC               	call	_lcd_send
-   307  05F0  262F               	call	_pulse_e	;PULSE E LINE HIGH (PORT A BIT 2)
-   308  05F1  300A               	movlw	10
-   309  05F2  2669               	call	_delay_millis
-   310  05F3  0008               	return
-   311  05F4                     DISPLAYON:	
-   312  05F4  1185               	bcf	5,3	;RS LINE TO 0 (PORT A BIT 3)
-   313  05F5  300F               	movlw	15	;DISPLAY ON/OFF AND CURSOR COMMAND
-   314  05F6  25DC               	call	_lcd_send
-   315  05F7  262F               	call	_pulse_e
-   316  05F8  300A               	movlw	10
-   317  05F9  2669               	call	_delay_millis
-   318  05FA  0008               	return
-   319  05FB                     CLEARDISPLAY:	
-   320  05FB  1185               	bcf	5,3	;RS LINE LOW
-   321  05FC  3001               	movlw	1	;CLEAR DISPLAY COMMAND
-   322  05FD  25DC               	call	_lcd_send	;WRITE TO DATA LINES
-   323  05FE  262F               	call	_pulse_e
-   324  05FF  300A               	movlw	10
-   325  0600  2669               	call	_delay_millis
-   326  0601  0008               	return
-   327  0602                     SETHOME_LCD:	
-   328  0602  1185               	bcf	5,3	;RS LINE LOW
-   329  0603  3003               	movlw	3	;DISPLAY AND CURSOR HOME COMMAND
-   330  0604  25DC               	call	_lcd_send	;WRITE TO DATA LINES
-   331  0605  262F               	call	_pulse_e
-   332  0606  3005               	movlw	5
-   333  0607  2669               	call	_delay_millis
-   334  0608  0008               	return
-   335  0609                     _lcd_line2:	
-   336  0609  2602               	call	SETHOME_LCD
-   337  060A  3028               	movlw	40	;SET COUNTER TO 40
-   338  060B  00D8               	movwf	_gen_count2
-   339  060C  3010               	movlw	16	;CURSOR LEFT COMMAND
-   340  060D  25DC               	call	_lcd_send	;WRITE COMMAND TO DATA LINES
-   341  060E                     CLLOOP40:	
-   342  060E  1185               	bcf	5,3	;RS LINE LOW (COMMAND MODE)
-   343  060F  262F               	call	_pulse_e
-   344  0610  3002               	movlw	2
-   345  0611  2669               	call	_delay_millis
-   346  0612  0BD8               	decfsz	_gen_count2,f
-   347  0613  2E0E               	goto	CLLOOP40
-   348  0614  0008               	return
-   349  0615                     LCD_CLEAR1:	
-   350  0615  2602               	call	SETHOME_LCD
-   351  0616  3020               	movlw	32	;SPACE CHAR
-   352  0617  1585               	bsf	5,3	;RS LINE HIGH FOR DATA
-   353  0618  25DC               	call	_lcd_send	;PUT CHAR ON THE DATA LINES
-   354  0619  3014               	movlw	20	;COUNT 20 SPACE CHARS
-   355  061A  00D8               	movwf	_gen_count2
-   356  061B                     LCD_CLEAR12:	
-   357  061B  262F               	call	_pulse_e
-   358  061C  3002               	movlw	2
-   359  061D  2669               	call	_delay_millis
-   360  061E  0BD8               	decfsz	_gen_count2,f
-   361  061F  2E1B               	goto	LCD_CLEAR12
-   362  0620  2602               	call	SETHOME_LCD
-   363  0621  0008               	return
-   364  0622                     _lcd_clear2:	
-   365  0622  2609               	call	_lcd_line2
-   366  0623  3020               	movlw	32	;SPACE CHAR
-   367  0624  1585               	bsf	5,3	;RS LINE HIGH FOR DATA
-   368  0625  25DC               	call	_lcd_send	;PUT CHAR ON THE DATA LINES
-   369  0626  3014               	movlw	20	;COUNT 20 SPACE CHARS
-   370  0627  00D8               	movwf	_gen_count2
-   371  0628                     LCD_CLEAR22:	
-   372  0628  262F               	call	_pulse_e
-   373  0629  3002               	movlw	2
-   374  062A  2669               	call	_delay_millis
-   375  062B  0BD8               	decfsz	_gen_count2,f
-   376  062C  2E28               	goto	LCD_CLEAR22
-   377  062D  2609               	call	_lcd_line2
-   378  062E  0008               	return
-   379  062F                     _pulse_e:	
-   380  062F  1505               	bsf	5,2	;SET E LINE HIGH
-   381  0630  0000               	nop
-   382  0631  0000               	nop
-   383  0632  0000               	nop
-   384  0633  0000               	nop
-   385  0634  0000               	nop	;MODIFIED FOR 4MHZ CLOCK
-   386  0635  0000               	nop
-   387  0636  0000               	nop
-   388  0637  0000               	nop
-   389  0638  1105               	bcf	5,2	;SET E LINE LOW
-   390  0639  0008               	return
-   391  063A                     _print_name:	
-   392  063A  1383               	bcf	3,7	;SET BANK 0 AND 1
-   393  063B  3061               	movlw	_tape_name
-   394  063C  0084               	movwf	4
-   395  063D  3008               	movlw	8	;COUNT 8 CHARS
-   396  063E  00D8               	movwf	_gen_count2
-   397  063F  1585               	bsf	5,3	;RS LINE HIGH FOR DATA
-   398  0640                     PN_LOOP:	
-   399  0640  0800               	movf	0,w
-   400  0641  25DC               	call	_lcd_send
-   401  0642  262F               	call	_pulse_e
-   402  0643  3002               	movlw	2
-   403  0644  2669               	call	_delay_millis
-   404  0645  0A84               	incf	4,f
-   405  0646  0BD8               	decfsz	_gen_count2,f
-   406  0647  2E40               	goto	PN_LOOP
-   407  0648  0008               	return
-   408  0649                     SPI_TRANSFER:	
-   409                           ;PORTB, 1
-   410                           ; MOVLW H'FF'
-   411                           ; MOVWF RAM_ADDRESS_H
-   412                           ; MOVWF RAM_ADDRESS_L
-   413                           ; BSF FLAG_REG,1 ;DISSABLE RESET IF TRANSMISSION FAILS
-   414                           ; CALL GET_LEADER
-   415                           ; BCF FLAG_REG,1 ;ENABLE RESET IF TRANSMISSION FAILS
-   416                           ; CALL SAVE_FIRST_BLOCK
-   417                           ; INCFSZ RAM_ADDRESS_L, F ;INCREMENT LOW ADDRESS
-   418                           ; DECF RAM_ADDRESS_H, F
-   419                           ; INCF RAM_ADDRESS_H, F ;IF LOW ADDRESS IS ((STATUS) and 07Fh), 2 INCREMENT THE HIGH ADDRESS TOO
-   420                           ; MOVF RAM_ADDRESS_H, W
-   421                           ; MOVWF TAPE_SIZE_HIGH
-   422                           ; MOVF RAM_ADDRESS_L, W
-   423                           ; MOVWF TAPE_SIZE_LOW
-   424                           ; CLRF RAM_ADDRESS_H
-   425                           ; MOVLW H'03'
-   426                           ; MOVWF RAM_ADDRESS_L
-   427                           ; BCF STATUS, 7 ;SET BANKS 0 AND 1
-   428                           ; MOVLW TAPE_NAME
-   429                           ; MOVWF FSR
-   430                           ; MOVLW D'08'
-   431                           ; MOVWF GEN_COUNT
-   432                           ;NAME_COPY
-   433                           ; CALL RAM_READ_AUTO
-   434                           ; MOVF DREG, W
-   435                           ; MOVWF INDF
-   436                           ; INCF FSR, F
-   437                           ; DECFSZ GEN_COUNT, F
-   438                           ; GOTO NAME_COPY
-   439                           ; RETURN
-   440                           ;GET_LEADER
-   441                           ; MOVLW D'128' ;LENGTH OF LEADER
-   442                           ; MOVWF GEN_COUNT2
-   443                           ;LEADER_LOOP
-   444                           ; CALL BUILD_BYTE
-   445                           ; MOVF DREG,W
-   446                           ; XORLW H'55'
-   447                           ; BTFSS STATUS, Z
-   448                           ; GOTO GL_FIX
-   449                           ; DECFSZ GEN_COUNT2, F
-   450                           ; GOTO LEADER_LOOP
-   451                           ; RETURN
-   452                           ;GL_FIX
-   453                           ; DECFSZ GEN_COUNT2, F
-   454                           ; GOTO GL_FIX2
-   455                           ; GOTO BUILD_PANIC
-   456                           ;GL_FIX2
-   457                           ; CALL BUILD_ALIGN
-   458                           ; MOVF DREG,W
-   459                           ; XORLW H'55'
-   460                           ; BTFSS STATUS,Z
-   461                           ; GOTO BUILD_PANIC
-   462                           ; DECFSZ GEN_COUNT2, F
-   463                           ; GOTO LEADER_LOOP
-   464                           ; GOTO BUILD_PANIC
-   465                           ;SAVE_FIRST_BLOCK
-   466                           ; CALL BUILD_BYTE
-   467                           ; BTFSS DREG,0 ;CHECK IF BIT 0 IS SET (IF IT IS CLEARED THERE HAS BEEN AN ALIGNMENT ERROR)
-   468                           ; GOTO BUILD_PANIC
-   469                           ; CALL RAM_WRITE_AUTO ;SAVE LEADER BYTE
-   470                           ; CALL BUILD_BYTE
-   471                           ; CALL RAM_WRITE_AUTO ;SAVE ((TXSTA) and 07Fh), 4 BYTE
-   472                           ; CALL BUILD_BYTE
-   473                           ; CALL RAM_WRITE_AUTO ;SAVE BLOCK TYPE BYTE
-   474                           ; CALL BUILD_BYTE
-   475                           ; CALL RAM_WRITE_AUTO ;SAVE BLOCK LENGTH
-   476                           ; MOVF DREG, W
-   477                           ; MOVWF GEN_COUNT2
-   478                           ;FIRST_BLOCK_LOOP
-   479                           ; CALL BUILD_BYTE
-   480                           ; CALL RAM_WRITE_AUTO
-   481                           ; DECFSZ GEN_COUNT2, F
-   482                           ; GOTO FIRST_BLOCK_LOOP
-   483                           ; CALL BUILD_BYTE
-   484                           ; CALL RAM_WRITE_AUTO ;SAVE CHECKSUM
-   485                           ; CALL BUILD_BYTE
-   486                           ; CALL RAM_WRITE_AUTO ;SAVE LEADER BYTE
-   487                           ; CALL GET_LEADER ;GETS THE SECOND LEADER
-   488                           ;SAVE_BLOCKS
-   489                           ; CALL BUILD_BYTE
-   490                           ; CALL RAM_WRITE_AUTO ;SAVE LEADER BYTE
-   491                           ; CALL BUILD_BYTE
-   492                           ; CALL RAM_WRITE_AUTO ;SAVE ((TXSTA) and 07Fh), 4 BYTE
-   493                           ; CALL BUILD_BYTE
-   494                           ; INCFSZ DREG, W ;CHECK IF BLOCK IS END OF FILE
-   495                           ; GOTO NOT_EOF_BLOCK
-   496                           ; CALL RAM_WRITE_AUTO ;SAVE BLOCK TYPE
-   497                           ; CALL BUILD_BYTE
-   498                           ; CALL RAM_WRITE_AUTO ;SAVE BLOCK LENGTH
-   499                           ; CALL BUILD_BYTE
-   500                           ; CALL RAM_WRITE_AUTO ;SAVE CHECKSUM
-   501                           ; CALL BUILD_BYTE
-   502                           ; CALL RAM_WRITE_AUTO ;SAVE LEADER BYTE
-   503                           ; RETURN
-   504                           ;NOT_EOF_BLOCK
-   505                           ; CALL RAM_WRITE_AUTO ;SAVE BLOCK TYPE
-   506                           ; CALL BUILD_BYTE
-   507                           ; CALL RAM_WRITE_AUTO ;SAVE LENGTH BYTE
-   508                           ; MOVF DREG, W
-   509                           ; MOVWF GEN_COUNT2 ;COPY LENGTH TO GEN_COUNT2
-   510                           ;BLOCK_DATA_LOOP
-   511                           ; CALL BUILD_BYTE
-   512                           ; CALL RAM_WRITE_AUTO
-   513                           ; DECFSZ GEN_COUNT2, F
-   514                           ; GOTO BLOCK_DATA_LOOP
+   115  051D  0098               	movwf	24	;CONFIGURE UART
+   116  051E  3020               	movlw	32
+   117  051F  008B               	movwf	11	;ENABLE TIMER 0 INTERRUPT
+   118  0520  01A3               	clrf	_flag_reg
+   119  0521  01A8               	clrf	_s_reg_high
+   120  0522  01A7               	clrf	_s_reg_low
+   121  0523  1188               	bcf	8,3
+   122  0524  3032               	movlw	50
+   123  0525  2660               	call	_delay_millis	;100 MS DELAY AT STARTUP
+   124  0526  27AC               	call	_fifo_init
+   125  0527  25B8               	call	RAM_CONFIG
+   126  0528  01BD               	clrf	_ram_address_h
+   127  0529  01BC               	clrf	_ram_address_l
+   128  052A  3055               	movlw	85
+   129  052B  2593               	call	RAM_WRITE
+   130  052C  30AA               	movlw	170
+   131  052D  2590               	call	RAM_WRITE_AUTO
+   132                           
+   133                           ;CALL _mem_clear
+   134  052E  25E1               	call	FUNCTIONSET_LCD	;INITIALIZE DISPLAY
+   135  052F  25EA               	call	DISPLAYON	;POWER ON THE DISPLAY
+   136  0530  25F1               	call	CLEARDISPLAY	;CLEAR THE DISPLAY
+   137  0531  25F8               	call	SETHOME_LCD	;SET CURSOR TO THE START OF LINE 1
+   138  0532  0008               	return
+   139  0533                     _mem_clear:	
+   140  0533  30FF               	movlw	255
+   141  0534  00BC               	movwf	_ram_address_l
+   142  0535  00BD               	movwf	_ram_address_h
+   143  0536                     MEM_CLEAR_LOOP:	
+   144                           
+   145                           ;BSF PORTD, 4
+   146  0536  30FF               	movlw	255
+   147  0537  2590               	call	RAM_WRITE_AUTO
+   148                           
+   149                           ;BCF PORTD, 4 ;PORTD 4 IS A DEBUG OUTPUT TO MEASURE THE DURATION OF RAM_WRITE
+   150  0538  083C               	movf	_ram_address_l,w
+   151  0539  3AFF               	xorlw	255
+   152  053A  1D03               	btfss	3,2
+   153  053B  2D36               	goto	MEM_CLEAR_LOOP
+   154  053C  083D               	movf	_ram_address_h,w
+   155  053D  3AFF               	xorlw	255
+   156  053E  1D03               	btfss	3,2
+   157  053F  2D36               	goto	MEM_CLEAR_LOOP
+   158  0540  0008               	return
+   159  0541                     _mem_dump:	
+   160  0541  30FF               	movlw	255
+   161  0542  00BC               	movwf	_ram_address_l
+   162  0543  00BD               	movwf	_ram_address_h
+   163  0544                     MEM_DUMP_LOOP:	
+   164  0544  256A               	call	RAM_READ_AUTO
+   165  0545  2566               	call	_uart_send
+   166  0546  083C               	movf	_ram_address_l,w
+   167  0547  3AFF               	xorlw	255
+   168  0548  1D03               	btfss	3,2
+   169  0549  2D44               	goto	MEM_DUMP_LOOP
+   170  054A  083D               	movf	_ram_address_h,w
+   171  054B  3AFF               	xorlw	255
+   172  054C  1D03               	btfss	3,2
+   173  054D  2D44               	goto	MEM_DUMP_LOOP
+   174  054E  0008               	return
+   175  054F                     _file_dump:	
+   176  054F  0833               	movf	_usb_file_size_high,w
+   177  0550  0432               	iorwf	_usb_file_size_low,w
+   178  0551  1903               	btfsc	3,2
+   179  0552  0008               	return
+   180  0553  0833               	movf	_usb_file_size_high,w
+   181  0554  00B9               	movwf	_gen_count
+   182  0555  0832               	movf	_usb_file_size_low,w
+   183  0556  00B8               	movwf	_gen_count2
+   184  0557  30FF               	movlw	255
+   185  0558  00BC               	movwf	_ram_address_l
+   186  0559  00BD               	movwf	_ram_address_h
+   187  055A  0AB9               	incf	_gen_count,f
+   188  055B                     FD_INNER:	
+   189  055B  256A               	call	RAM_READ_AUTO
+   190  055C  2566               	call	_uart_send
+   191  055D  0BB8               	decfsz	_gen_count2,f
+   192  055E  2D5B               	goto	FD_INNER
+   193  055F  0BB9               	decfsz	_gen_count,f
+   194  0560  2D5B               	goto	FD_INNER
+   195  0561  0008               	return
+   196  0562                     _uart_read:	
+   197  0562  1E8C               	btfss	12,5	;CHECK IF UART RECEIVE BUFFER IS FULL
+   198  0563  2D62               	goto	_uart_read	;IF NOT WAIT UNTIL ITS FULL
+   199  0564  081A               	movf	26,w	;COPY DATA TO W
+   200  0565  0008               	return
+   201  0566                     _uart_send:	
+   202  0566  1E0C               	btfss	12,4	;CHECK IF UART TRANSMIT BUFFER IS EMPTY
+   203  0567  2D66               	goto	_uart_send	;IF NOT WAIT UNTIL IT IS
+   204  0568  0099               	movwf	25	;COPY DATA TO TXREG
+   205  0569  0008               	return
+   206  056A                     RAM_READ_AUTO:	
+   207  056A  0FBC               	incfsz	_ram_address_l,f	;INCREMENT LOW ADDRESS
+   208  056B  03BD               	decf	_ram_address_h,f
+   209  056C  0ABD               	incf	_ram_address_h,f	;IF LOW ADDRESS IS ((STATUS) and 07Fh), 2 INCREMENT THE HIGH ADDRESS TOO
+   210  056D                     RAM_READ:	
+   211  056D  1386               	bcf	6,7	;CHIP ENABLE
+   212  056E  3003               	movlw	3	;PUT WRITE COMMAND IN W
+   213  056F  0093               	movwf	19	;SEND COMMAND
+   214  0570  083D               	movf	_ram_address_h,w	;COPY ADDRESS TO W
+   215  0571  1303 1683          	banksel	148
+   216  0573                     RAM_WAIT_AH:	
+   217  0573  1C14               	btfss	20,0	;IS THE TRANSMISSION READY
+   218  0574  2D73               	goto	RAM_WAIT_AH	;IF NOT WAIT UNTIL IT IS
+   219  0575  1303 1283          	banksel	19
+   220  0577  0093               	movwf	19	;SEND ADDRESS HIGH BYTE
+   221  0578  083C               	movf	_ram_address_l,w	;COPY ADDRESS TO W
+   222  0579  1303 1683          	banksel	148
+   223  057B                     RAM_WAIT_AL:	
+   224  057B  1C14               	btfss	20,0
+   225  057C  2D7B               	goto	RAM_WAIT_AL
+   226  057D  1303 1283          	banksel	19
+   227  057F  0093               	movwf	19	;SEND ADDRESS LOW BYTE
+   228  0580  1303 1683          	banksel	148
+   229  0582                     RAM_WAIT_D:	
+   230  0582  1C14               	btfss	20,0
+   231  0583  2D82               	goto	RAM_WAIT_D
+   232  0584  1303 1283          	banksel	19
+   233  0586  0193               	clrf	19
+   234  0587  1303 1683          	banksel	148
+   235  0589                     RAM_WAIT_R:	
+   236  0589  1C14               	btfss	20,0
+   237  058A  2D89               	goto	RAM_WAIT_R
+   238  058B  1303 1283          	banksel	19
+   239  058D  0813               	movf	19,w	;COPY DATA TO W
+   240  058E  1786               	bsf	6,7
+   241  058F  0008               	return
+   242  0590                     RAM_WRITE_AUTO:	
+   243  0590  0FBC               	incfsz	_ram_address_l,f	;INCREMENT LOW ADDRESS
+   244  0591  03BD               	decf	_ram_address_h,f
+   245  0592  0ABD               	incf	_ram_address_h,f	;IF LOW ADDRESS IS ((STATUS) and 07Fh), 2 INCREMENT THE HIGH ADDRESS TOO
+   246  0593                     RAM_WRITE:	
+   247  0593  00BE               	movwf	_temp5
+   248  0594  1386               	bcf	6,7	;CHIP ENABLE
+   249  0595  3002               	movlw	2	;PUT WRITE COMMAND IN W
+   250  0596  0093               	movwf	19	;SEND COMMAND
+   251  0597  083D               	movf	_ram_address_h,w	;COPY ADDRESS TO W
+   252  0598  1303 1683          	banksel	148
+   253  059A                     RAM_WRITE_AH:	
+   254  059A  1C14               	btfss	20,0	;IS THE TRANSMISSION READY
+   255  059B  2D9A               	goto	RAM_WRITE_AH	;IF NOT WAIT UNTIL IT IS
+   256  059C  1303 1283          	banksel	19
+   257  059E  0093               	movwf	19	;SEND ADDRESS HIGH BYTE
+   258  059F  083C               	movf	_ram_address_l,w	;COPY ADDRESS TO W
+   259  05A0  1303 1683          	banksel	148
+   260  05A2                     RAM_WRITE_AL:	
+   261  05A2  1C14               	btfss	20,0
+   262  05A3  2DA2               	goto	RAM_WRITE_AL
+   263  05A4  1303 1283          	banksel	19
+   264  05A6  0093               	movwf	19	;SEND ADDRESS LOW BYTE
+   265  05A7  083E               	movf	_temp5,w	;COPY DATA TO W
+   266  05A8  1303 1683          	banksel	148
+   267  05AA                     RAM_WRITE_D:	
+   268  05AA  1C14               	btfss	20,0
+   269  05AB  2DAA               	goto	RAM_WRITE_D
+   270  05AC  1303 1283          	banksel	19
+   271  05AE  0093               	movwf	19	;SEND DATA
+   272  05AF  1303 1683          	banksel	148
+   273  05B1                     RAM_WRITE_R:	
+   274  05B1  1C14               	btfss	20,0
+   275  05B2  2DB1               	goto	RAM_WRITE_R
+   276  05B3  1303 1283          	banksel	19
+   277  05B5  0813               	movf	19,w	;COPY DUMMY DATA TO W
+   278  05B6  1786               	bsf	6,7
+   279  05B7  0008               	return
+   280  05B8                     RAM_CONFIG:	
+   281  05B8  1386               	bcf	6,7	;CHIP ENABLE
+   282  05B9  3001               	movlw	1	;PUT WRITE COMMAND IN W
+   283  05BA  0093               	movwf	19	;SEND COMMAND
+   284  05BB  3000               	movlw	0	;CONFIGURE FOR BYTE MODE
+   285  05BC  1303 1683          	banksel	148
+   286  05BE                     RAM_CONFIG_C:	
+   287  05BE  1C14               	btfss	20,0	;IS THE TRANSMISSION READY
+   288  05BF  2DBE               	goto	RAM_CONFIG_C	;IF NOT WAIT UNTIL IT IS
+   289  05C0  1303 1283          	banksel	19
+   290  05C2  0093               	movwf	19	;SEND CONFIG DATA
+   291  05C3  1303 1683          	banksel	148
+   292  05C5                     RAM_CONFIG_D:	
+   293  05C5  1C14               	btfss	20,0
+   294  05C6  2DC5               	goto	RAM_CONFIG_D
+   295  05C7  1303 1283          	banksel	19
+   296  05C9  0813               	movf	19,w	;COPY DUMMY DATA TO W
+   297  05CA  1786               	bsf	6,7
+   298  05CB  0008               	return
+   299  05CC                     _lcd_putc:	
+   300  05CC  1585               	bsf	5,3	;RS LINE TO 1 (PORT A BIT 3)
+   301  05CD  25D2               	call	_lcd_send
+   302  05CE  2625               	call	_pulse_e
+   303  05CF  3002               	movlw	2
+   304  05D0  2660               	call	_delay_millis
+   305  05D1  0008               	return
+   306  05D2                     _lcd_send:	
+   307                           
+   308                           ;SENDS DATA OR COMMAND TO LCD SHIFT REGISTER
+   309  05D2  00C0               	movwf	_temp3	;COPY DATA TO TEMP VARIABLE
+   310  05D3  3008               	movlw	8
+   311  05D4  00B7               	movwf	_gen_count3	;COUNT 8 BITS
+   312  05D5                     LCD_SEND_LOOP:	
+   313  05D5  1BC0               	btfsc	_temp3,7
+   314  05D6  1788               	bsf	8,7
+   315  05D7  1FC0               	btfss	_temp3,7
+   316  05D8  1388               	bcf	8,7
+   317  05D9  0DC0               	rlf	_temp3,f
+   318  05DA  1708               	bsf	8,6
+   319  05DB  0000               	nop
+   320  05DC  0000               	nop
+   321  05DD  1308               	bcf	8,6
+   322  05DE  0BB7               	decfsz	_gen_count3,f
+   323  05DF  2DD5               	goto	LCD_SEND_LOOP
+   324  05E0  0008               	return
+   325  05E1                     FUNCTIONSET_LCD:	
+   326  05E1  1105               	bcf	5,2	;MAKE SURE THAT E STARTS LOW
+   327  05E2  1308               	bcf	8,6	;MAKE SURE DISPLAY CLOCK STARTS LOW
+   328  05E3  1185               	bcf	5,3	;RS LINE TO 0 (PORT A BIT 3)
+   329  05E4  3038               	movlw	56	;FUNCTION SET COMMAND
+   330  05E5  25D2               	call	_lcd_send
+   331  05E6  2625               	call	_pulse_e	;PULSE E LINE HIGH (PORT A BIT 2)
+   332  05E7  300A               	movlw	10
+   333  05E8  2660               	call	_delay_millis
+   334  05E9  0008               	return
+   335  05EA                     DISPLAYON:	
+   336  05EA  1185               	bcf	5,3	;RS LINE TO 0 (PORT A BIT 3)
+   337  05EB  300F               	movlw	15	;DISPLAY ON/OFF AND CURSOR COMMAND
+   338  05EC  25D2               	call	_lcd_send
+   339  05ED  2625               	call	_pulse_e
+   340  05EE  300A               	movlw	10
+   341  05EF  2660               	call	_delay_millis
+   342  05F0  0008               	return
+   343  05F1                     CLEARDISPLAY:	
+   344  05F1  1185               	bcf	5,3	;RS LINE LOW
+   345  05F2  3001               	movlw	1	;CLEAR DISPLAY COMMAND
+   346  05F3  25D2               	call	_lcd_send	;WRITE TO DATA LINES
+   347  05F4  2625               	call	_pulse_e
+   348  05F5  300A               	movlw	10
+   349  05F6  2660               	call	_delay_millis
+   350  05F7  0008               	return
+   351  05F8                     SETHOME_LCD:	
+   352  05F8  1185               	bcf	5,3	;RS LINE LOW
+   353  05F9  3003               	movlw	3	;DISPLAY AND CURSOR HOME COMMAND
+   354  05FA  25D2               	call	_lcd_send	;WRITE TO DATA LINES
+   355  05FB  2625               	call	_pulse_e
+   356  05FC  3005               	movlw	5
+   357  05FD  2660               	call	_delay_millis
+   358  05FE  0008               	return
+   359  05FF                     _lcd_line2:	
+   360  05FF  25F8               	call	SETHOME_LCD
+   361  0600  3028               	movlw	40	;SET COUNTER TO 40
+   362  0601  00B8               	movwf	_gen_count2
+   363  0602  3010               	movlw	16	;CURSOR LEFT COMMAND
+   364  0603  25D2               	call	_lcd_send	;WRITE COMMAND TO DATA LINES
+   365  0604                     CLLOOP40:	
+   366  0604  1185               	bcf	5,3	;RS LINE LOW (COMMAND MODE)
+   367  0605  2625               	call	_pulse_e
+   368  0606  3002               	movlw	2
+   369  0607  2660               	call	_delay_millis
+   370  0608  0BB8               	decfsz	_gen_count2,f
+   371  0609  2E04               	goto	CLLOOP40
+   372  060A  0008               	return
+   373  060B                     LCD_CLEAR1:	
+   374  060B  25F8               	call	SETHOME_LCD
+   375  060C  3020               	movlw	32	;SPACE CHAR
+   376  060D  1585               	bsf	5,3	;RS LINE HIGH FOR DATA
+   377  060E  25D2               	call	_lcd_send	;PUT CHAR ON THE DATA LINES
+   378  060F  3014               	movlw	20	;COUNT 20 SPACE CHARS
+   379  0610  00B8               	movwf	_gen_count2
+   380  0611                     LCD_CLEAR12:	
+   381  0611  2625               	call	_pulse_e
+   382  0612  3002               	movlw	2
+   383  0613  2660               	call	_delay_millis
+   384  0614  0BB8               	decfsz	_gen_count2,f
+   385  0615  2E11               	goto	LCD_CLEAR12
+   386  0616  25F8               	call	SETHOME_LCD
+   387  0617  0008               	return
+   388  0618                     _lcd_clear2:	
+   389  0618  25FF               	call	_lcd_line2
+   390  0619  3020               	movlw	32	;SPACE CHAR
+   391  061A  1585               	bsf	5,3	;RS LINE HIGH FOR DATA
+   392  061B  25D2               	call	_lcd_send	;PUT CHAR ON THE DATA LINES
+   393  061C  3014               	movlw	20	;COUNT 20 SPACE CHARS
+   394  061D  00B8               	movwf	_gen_count2
+   395  061E                     LCD_CLEAR22:	
+   396  061E  2625               	call	_pulse_e
+   397  061F  3002               	movlw	2
+   398  0620  2660               	call	_delay_millis
+   399  0621  0BB8               	decfsz	_gen_count2,f
+   400  0622  2E1E               	goto	LCD_CLEAR22
+   401  0623  25FF               	call	_lcd_line2
+   402  0624  0008               	return
+   403  0625                     _pulse_e:	
+   404  0625  1505               	bsf	5,2	;SET E LINE HIGH
+   405  0626  0000               	nop
+   406  0627  0000               	nop
+   407  0628  0000               	nop
+   408  0629  0000               	nop
+   409  062A  0000               	nop	;MODIFIED FOR 4MHZ CLOCK
+   410  062B  0000               	nop
+   411  062C  0000               	nop
+   412  062D  0000               	nop
+   413  062E  1105               	bcf	5,2	;SET E LINE LOW
+   414  062F  0008               	return
+   415  0630                     _print_name:	
+   416  0630  1383               	bcf	3,7	;SET BANK 0 AND 1
+   417  0631  304C               	movlw	_tape_name
+   418  0632  0084               	movwf	4
+   419  0633  3008               	movlw	8	;COUNT 8 CHARS
+   420  0634  00B8               	movwf	_gen_count2
+   421  0635  1585               	bsf	5,3	;RS LINE HIGH FOR DATA
+   422  0636                     PN_LOOP:	
+   423  0636  0800               	movf	0,w
+   424  0637  25D2               	call	_lcd_send
+   425  0638  2625               	call	_pulse_e
+   426  0639  3002               	movlw	2
+   427  063A  2660               	call	_delay_millis
+   428  063B  0A84               	incf	4,f
+   429  063C  0BB8               	decfsz	_gen_count2,f
+   430  063D  2E36               	goto	PN_LOOP
+   431  063E  0008               	return
+   432  063F                     SPI_TRANSFER:	
+   433                           ;PORTB, 1
+   434                           ; MOVLW H'FF'
+   435                           ; MOVWF RAM_ADDRESS_H
+   436                           ; MOVWF RAM_ADDRESS_L
+   437                           ; BSF FLAG_REG,1 ;DISSABLE RESET IF TRANSMISSION FAILS
+   438                           ; CALL GET_LEADER
+   439                           ; BCF FLAG_REG,1 ;ENABLE RESET IF TRANSMISSION FAILS
+   440                           ; CALL SAVE_FIRST_BLOCK
+   441                           ; INCFSZ RAM_ADDRESS_L, F ;INCREMENT LOW ADDRESS
+   442                           ; DECF RAM_ADDRESS_H, F
+   443                           ; INCF RAM_ADDRESS_H, F ;IF LOW ADDRESS IS ((STATUS) and 07Fh), 2 INCREMENT THE HIGH ADDRESS TOO
+   444                           ; MOVF RAM_ADDRESS_H, W
+   445                           ; MOVWF TAPE_SIZE_HIGH
+   446                           ; MOVF RAM_ADDRESS_L, W
+   447                           ; MOVWF TAPE_SIZE_LOW
+   448                           ; CLRF RAM_ADDRESS_H
+   449                           ; MOVLW H'03'
+   450                           ; MOVWF RAM_ADDRESS_L
+   451                           ; BCF STATUS, 7 ;SET BANKS 0 AND 1
+   452                           ; MOVLW TAPE_NAME
+   453                           ; MOVWF FSR
+   454                           ; MOVLW D'08'
+   455                           ; MOVWF GEN_COUNT
+   456                           ;NAME_COPY
+   457                           ; CALL RAM_READ_AUTO
+   458                           ; MOVF DREG, W
+   459                           ; MOVWF INDF
+   460                           ; INCF FSR, F
+   461                           ; DECFSZ GEN_COUNT, F
+   462                           ; GOTO NAME_COPY
+   463                           ; RETURN
+   464                           ;GET_LEADER
+   465                           ; MOVLW D'128' ;LENGTH OF LEADER
+   466                           ; MOVWF GEN_COUNT2
+   467                           ;LEADER_LOOP
+   468                           ; CALL BUILD_BYTE
+   469                           ; MOVF DREG,W
+   470                           ; XORLW H'55'
+   471                           ; BTFSS STATUS, Z
+   472                           ; GOTO GL_FIX
+   473                           ; DECFSZ GEN_COUNT2, F
+   474                           ; GOTO LEADER_LOOP
+   475                           ; RETURN
+   476                           ;GL_FIX
+   477                           ; DECFSZ GEN_COUNT2, F
+   478                           ; GOTO GL_FIX2
+   479                           ; GOTO BUILD_PANIC
+   480                           ;GL_FIX2
+   481                           ; CALL BUILD_ALIGN
+   482                           ; MOVF DREG,W
+   483                           ; XORLW H'55'
+   484                           ; BTFSS STATUS,Z
+   485                           ; GOTO BUILD_PANIC
+   486                           ; DECFSZ GEN_COUNT2, F
+   487                           ; GOTO LEADER_LOOP
+   488                           ; GOTO BUILD_PANIC
+   489                           ;SAVE_FIRST_BLOCK
+   490                           ; CALL BUILD_BYTE
+   491                           ; BTFSS DREG,0 ;CHECK IF BIT 0 IS SET (IF IT IS CLEARED THERE HAS BEEN AN ALIGNMENT ERROR)
+   492                           ; GOTO BUILD_PANIC
+   493                           ; CALL RAM_WRITE_AUTO ;SAVE LEADER BYTE
+   494                           ; CALL BUILD_BYTE
+   495                           ; CALL RAM_WRITE_AUTO ;SAVE ((TXSTA) and 07Fh), 4 BYTE
+   496                           ; CALL BUILD_BYTE
+   497                           ; CALL RAM_WRITE_AUTO ;SAVE BLOCK TYPE BYTE
+   498                           ; CALL BUILD_BYTE
+   499                           ; CALL RAM_WRITE_AUTO ;SAVE BLOCK LENGTH
+   500                           ; MOVF DREG, W
+   501                           ; MOVWF GEN_COUNT2
+   502                           ;FIRST_BLOCK_LOOP
+   503                           ; CALL BUILD_BYTE
+   504                           ; CALL RAM_WRITE_AUTO
+   505                           ; DECFSZ GEN_COUNT2, F
+   506                           ; GOTO FIRST_BLOCK_LOOP
+   507                           ; CALL BUILD_BYTE
+   508                           ; CALL RAM_WRITE_AUTO ;SAVE CHECKSUM
+   509                           ; CALL BUILD_BYTE
+   510                           ; CALL RAM_WRITE_AUTO ;SAVE LEADER BYTE
+   511                           ; CALL GET_LEADER ;GETS THE SECOND LEADER
+   512                           ;SAVE_BLOCKS
+   513                           ; CALL BUILD_BYTE
+   514                           ; CALL RAM_WRITE_AUTO ;SAVE LEADER BYTE
    515                           ; CALL BUILD_BYTE
-   516                           ; CALL RAM_WRITE_AUTO ;SAVE CHECKSUM
+   516                           ; CALL RAM_WRITE_AUTO ;SAVE ((TXSTA) and 07Fh), 4 BYTE
    517                           ; CALL BUILD_BYTE
-   518                           ; CALL RAM_WRITE_AUTO ;SAVE LEADER BYTE
-   519                           ; GOTO SAVE_BLOCKS
-   520                           ;BUILD_ALIGN ;SKIPS INITIAL WAIT IN AN ATTEMPT TO FIX ALIGNMENT. BUILD_BYTE IS THE NORMAL ENTRY POIN
+   518                           ; INCFSZ DREG, W ;CHECK IF BLOCK IS END OF FILE
+   519                           ; GOTO NOT_EOF_BLOCK
+   520                           ; CALL RAM_WRITE_AUTO ;SAVE BLOCK TYPE
+   521                           ; CALL BUILD_BYTE
+   522                           ; CALL RAM_WRITE_AUTO ;SAVE BLOCK LENGTH
+   523                           ; CALL BUILD_BYTE
+   524                           ; CALL RAM_WRITE_AUTO ;SAVE CHECKSUM
+   525                           ; CALL BUILD_BYTE
+   526                           ; CALL RAM_WRITE_AUTO ;SAVE LEADER BYTE
+   527                           ; RETURN
+   528                           ;NOT_EOF_BLOCK
+   529                           ; CALL RAM_WRITE_AUTO ;SAVE BLOCK TYPE
+   530                           ; CALL BUILD_BYTE
+   531                           ; CALL RAM_WRITE_AUTO ;SAVE LENGTH BYTE
+   532                           ; MOVF DREG, W
+   533                           ; MOVWF GEN_COUNT2 ;COPY LENGTH TO GEN_COUNT2
+   534                           ;BLOCK_DATA_LOOP
+   535                           ; CALL BUILD_BYTE
+   536                           ; CALL RAM_WRITE_AUTO
+   537                           ; DECFSZ GEN_COUNT2, F
+   538                           ; GOTO BLOCK_DATA_LOOP
+   539                           ; CALL BUILD_BYTE
+   540                           ; CALL RAM_WRITE_AUTO ;SAVE CHECKSUM
+   541                           ; CALL BUILD_BYTE
+   542                           ; CALL RAM_WRITE_AUTO ;SAVE LEADER BYTE
+   543                           ; GOTO SAVE_BLOCKS
+   544                           ;BUILD_ALIGN ;SKIPS INITIAL WAIT IN AN ATTEMPT TO FIX ALIGNMENT. BUILD_BYTE IS THE NORMAL ENTRY POIN
       +                          T
-   521                           ; MOVLW H'08'
-   522                           ; MOVWF GEN_COUNT ;INITIALIZE COUNTER TO 8
-   523                           ; MOVF PORTB, W
-   524                           ; XORLW H'02' ;INVERT TAPE BIT
-   525                           ; MOVWF TEMP1 ;COPY PORTB TO TEMP1
-   526                           ; GOTO WAIT_STOP
-   527                           ;BUILD_BYTE
-   528                           ; MOVLW H'08'
-   529                           ; MOVWF GEN_COUNT ;INITIALIZE COUNTER TO 8
-   530                           ;BUILD_LOOP
-   531                           ; MOVF PORTB, W
-   532                           ; MOVWF TEMP1 ;COPY PORTB TO TEMP1
-   533                           ; CLRF PULSE_LENGTH
-   534                           ; RRF DREG, F
-   535                           ; BCF DREG, 7
-   536                           ;WAIT_START
-   537                           ; MOVF PORTB, W
-   538                           ; XORWF TEMP1, W ;COMPARE PORTB WITH PREVIOUS STATE
-   539                           ; MOVWF TEMP2 ;STORE RESULT IN TEMP2
-   540                           ; BTFSS TEMP2, 1
-   541                           ; GOTO WAIT_START ;IF STATE HAS NOT CHANGED KEEP WAITING
-   542                           ;WAIT_STOP
-   543                           ; CALL TAPE_DELAY
-   544                           ; INCF PULSE_LENGTH, F ;#1
-   545                           ; MOVF PULSE_LENGTH, W ;#2
-   546                           ; SUBLW D'22' ;#3
-   547                           ; BTFSC STATUS, C ;CHECK IF LENGTH IS GREATER THAN 22 #4
-   548                           ; GOTO BUILD_NO_ERROR ;IF NOT CONTINUE NORMALLY #6
-   549                           ;BUILD_ERROR
-   550                           ; BTFSS FLAG_REG, 1 ;IF ERROR IS IN FIRST BYTE TRY TO RECOVER
-   551                           ; GOTO BUILD_PANIC ;IF NOT RESET TO AVOID INFINITE LOOP
-   552                           ; ;MOVF GEN_COUNT, W
-   553                           ; ;SUBLW H'08'
-   554                           ; ;BTFSS STATUS, Z ;CHECK IF ERROR IS IN FIRST BIT
-   555                           ; ;GOTO BUILD_PANIC ; IF NOT RESET TO AVOID INFINITE LOOP
-   556                           ; GOTO BUILD_BYTE ;IF IT IS IN FIRST BIT OF FIRST BYTE RESTART SUBROUTINE
-   557                           ;BUILD_NO_ERROR
-   558                           ; MOVF PORTB, W ;#7
-   559                           ; XORWF TEMP1, W ;#8
-   560                           ; MOVWF TEMP2 ;#9
-   561                           ; BTFSC TEMP2, 1 ;#10
-   562                           ; GOTO WAIT_STOP ;WAIT UNTIL TAPE INPUT RETURNS TO ORIGINAL STATE #12
-   563                           ; MOVF PULSE_LENGTH, W
-   564                           ; SUBLW D'08'
-   565                           ; BTFSC STATUS, C ;CHECK IF LENGTH IS LESS THAN 8
-   566                           ; GOTO BUILD_ERROR ;IF IT IS ((ADCON0) and 07Fh), 2 TO LOCAL ERROR HANDLER
-   567                           ; MOVLW D'15'
-   568                           ; SUBWF PULSE_LENGTH, F ;SUBTRACT THRESHOLD FROM PULSE LENGTH
-   569                           ; BTFSC PULSE_LENGTH, 7 ;CHECK IF PULSE LENGHT IS NEGATIVE
-   570                           ; BSF DREG, 7 ;IF IT IS SET BIT IN DREG
-   571                           ; DECFSZ GEN_COUNT, F
-   572                           ; GOTO BUILD_LOOP
-   573                           ; RETLW H'00' ;RETURN ((STATUS) and 07Fh), 2 TO INDICATE SUCCESS
-   574                           ;BUILD_PANIC ;ENABLES THE WATCHDOG TO CAUSE A RESET
-   575                           ; BANKSEL WDTCON
-   576                           ; BSF WDTCON, ((WDTCON) and 07Fh), 0 ;ENABLE WATCHDOG
-   577                           ;BP_HALT
-   578                           ; GOTO BP_HALT ;WAIT FOR THE WATCHDOG TO DO THE THING
-   579                           ;TAPE_DELAY
-   580                           ; NOP
-   581                           ; NOP
-   582                           ; NOP
-   583                           ; NOP
-   584                           ; NOP ;5 CYCLE DELAY
-   585                           ; RETURN
-   586                           ;PORTB, 2
-   587                           ; CLRF TEMP1
-   588                           ; CLRF BIT_COUNT
-   589                           ; MOVLW H'FF'
-   590                           ; MOVWF RAM_ADDRESS_H
-   591                           ; MOVWF RAM_ADDRESS_L ;RAM READ FUNCTION WILL AUTO INCREMENT ADDRESS, SO IT SHOULD OVERFLOW WHEN IT 
+   545                           ; MOVLW H'08'
+   546                           ; MOVWF GEN_COUNT ;INITIALIZE COUNTER TO 8
+   547                           ; MOVF PORTB, W
+   548                           ; XORLW H'02' ;INVERT TAPE BIT
+   549                           ; MOVWF TEMP1 ;COPY PORTB TO TEMP1
+   550                           ; GOTO WAIT_STOP
+   551                           ;BUILD_BYTE
+   552                           ; MOVLW H'08'
+   553                           ; MOVWF GEN_COUNT ;INITIALIZE COUNTER TO 8
+   554                           ;BUILD_LOOP
+   555                           ; MOVF PORTB, W
+   556                           ; MOVWF TEMP1 ;COPY PORTB TO TEMP1
+   557                           ; CLRF PULSE_LENGTH
+   558                           ; RRF DREG, F
+   559                           ; BCF DREG, 7
+   560                           ;WAIT_START
+   561                           ; MOVF PORTB, W
+   562                           ; XORWF TEMP1, W ;COMPARE PORTB WITH PREVIOUS STATE
+   563                           ; MOVWF TEMP2 ;STORE RESULT IN TEMP2
+   564                           ; BTFSS TEMP2, 1
+   565                           ; GOTO WAIT_START ;IF STATE HAS NOT CHANGED KEEP WAITING
+   566                           ;WAIT_STOP
+   567                           ; CALL TAPE_DELAY
+   568                           ; INCF PULSE_LENGTH, F ;#1
+   569                           ; MOVF PULSE_LENGTH, W ;#2
+   570                           ; SUBLW D'22' ;#3
+   571                           ; BTFSC STATUS, C ;CHECK IF LENGTH IS GREATER THAN 22 #4
+   572                           ; GOTO BUILD_NO_ERROR ;IF NOT CONTINUE NORMALLY #6
+   573                           ;BUILD_ERROR
+   574                           ; BTFSS FLAG_REG, 1 ;IF ERROR IS IN FIRST BYTE TRY TO RECOVER
+   575                           ; GOTO BUILD_PANIC ;IF NOT RESET TO AVOID INFINITE LOOP
+   576                           ; ;MOVF GEN_COUNT, W
+   577                           ; ;SUBLW H'08'
+   578                           ; ;BTFSS STATUS, Z ;CHECK IF ERROR IS IN FIRST BIT
+   579                           ; ;GOTO BUILD_PANIC ; IF NOT RESET TO AVOID INFINITE LOOP
+   580                           ; GOTO BUILD_BYTE ;IF IT IS IN FIRST BIT OF FIRST BYTE RESTART SUBROUTINE
+   581                           ;BUILD_NO_ERROR
+   582                           ; MOVF PORTB, W ;#7
+   583                           ; XORWF TEMP1, W ;#8
+   584                           ; MOVWF TEMP2 ;#9
+   585                           ; BTFSC TEMP2, 1 ;#10
+   586                           ; GOTO WAIT_STOP ;WAIT UNTIL TAPE INPUT RETURNS TO ORIGINAL STATE #12
+   587                           ; MOVF PULSE_LENGTH, W
+   588                           ; SUBLW D'08'
+   589                           ; BTFSC STATUS, C ;CHECK IF LENGTH IS LESS THAN 8
+   590                           ; GOTO BUILD_ERROR ;IF IT IS ((ADCON0) and 07Fh), 2 TO LOCAL ERROR HANDLER
+   591                           ; MOVLW D'15'
+   592                           ; SUBWF PULSE_LENGTH, F ;SUBTRACT THRESHOLD FROM PULSE LENGTH
+   593                           ; BTFSC PULSE_LENGTH, 7 ;CHECK IF PULSE LENGHT IS NEGATIVE
+   594                           ; BSF DREG, 7 ;IF IT IS SET BIT IN DREG
+   595                           ; DECFSZ GEN_COUNT, F
+   596                           ; GOTO BUILD_LOOP
+   597                           ; RETLW H'00' ;RETURN ((STATUS) and 07Fh), 2 TO INDICATE SUCCESS
+   598                           ;BUILD_PANIC ;ENABLES THE WATCHDOG TO CAUSE A RESET
+   599                           ; BANKSEL WDTCON
+   600                           ; BSF WDTCON, ((WDTCON) and 07Fh), 0 ;ENABLE WATCHDOG
+   601                           ;BP_HALT
+   602                           ; GOTO BP_HALT ;WAIT FOR THE WATCHDOG TO DO THE THING
+   603                           ;TAPE_DELAY
+   604                           ; NOP
+   605                           ; NOP
+   606                           ; NOP
+   607                           ; NOP
+   608                           ; NOP ;5 CYCLE DELAY
+   609                           ; RETURN
+   610                           ;PORTB, 2
+   611                           ; CLRF TEMP1
+   612                           ; CLRF BIT_COUNT
+   613                           ; MOVLW H'FF'
+   614                           ; MOVWF RAM_ADDRESS_H
+   615                           ; MOVWF RAM_ADDRESS_L ;RAM READ FUNCTION WILL AUTO INCREMENT ADDRESS, SO IT SHOULD OVERFLOW WHEN IT 
       +                          IS FIRST CALLED
-   592                           ; MOVLW H'55'
-   593                           ; MOVWF DREG ;TAPE LEADER VALUE
-   594                           ; MOVLW D'127'
-   595                           ; MOVWF GEN_COUNT ;128 LEADER BYTES
-   596                           ; CLRF TMR0
-   597                           ; NOP
-   598                           ; BCF INTCON, ((INTCON) and 07Fh), 2
-   599                           ; BSF INTCON, ((INTCON) and 07Fh), 7 ;ENABLE INTERRUPT
-   600                           ;LEADER_OUT
-   601                           ; BTFSS BIT_COUNT, 2
-   602                           ; GOTO LEADER_OUT ;WAIT UNTIL BIT COUNT IS NOT ((STATUS) and 07Fh), 2
-   603                           ;LEADER_WAIT
-   604                           ; BTFSC BIT_COUNT, 2
-   605                           ; GOTO LEADER_WAIT ;WAIT UNTIL BIT_COUNT IS ((STATUS) and 07Fh), 2
-   606                           ; DECFSZ GEN_COUNT, F
-   607                           ; GOTO LEADER_OUT ;LOOP UNTIL 128 LEADER BYTES HAVE BEEN SENT
-   608                           ; MOVLW D'22'
-   609                           ; MOVWF GEN_COUNT ;ONE PAST THE END OF THE NAME FILE
-   610                           ;TAPE_NAMEBLOCK
-   611                           ; CALL RAM_READ_AUTO ;GET FIRST BYTE
-   612                           ;TAPE_W1
-   613                           ; BTFSS BIT_COUNT, 2
-   614                           ; GOTO TAPE_W1 ;WAIT UNTIL BIT COUNT IS NOT ((STATUS) and 07Fh), 2
-   615                           ;TAPE_W2
-   616                           ; BTFSC BIT_COUNT, 2
-   617                           ; GOTO TAPE_W2
-   618                           ; DECFSZ GEN_COUNT, F
-   619                           ; GOTO TAPE_NAMEBLOCK
-   620                           ; BCF INTCON, ((INTCON) and 07Fh), 7 ;STOP INTERRUPT
-   621                           ; CALL TAPE_PAUSE ;1/2 SECOND SILENCE
-   622                           ; MOVLW D'127'
-   623                           ; MOVWF GEN_COUNT ;128 LEADER BYTES
-   624                           ; CLRF TMR0
-   625                           ; CLRF TEMP1
-   626                           ; NOP
-   627                           ; BCF INTCON, ((INTCON) and 07Fh), 2
-   628                           ; BSF INTCON, ((INTCON) and 07Fh), 7 ;ENABLE INTERRUPT
-   629                           ;LEADER_OUT2
-   630                           ; BTFSS BIT_COUNT, 2
-   631                           ; GOTO LEADER_OUT2 ;WAIT UNTIL BIT COUNT IS NOT ((STATUS) and 07Fh), 2
-   632                           ;LEADER_WAIT2
-   633                           ; BTFSC BIT_COUNT, 2
-   634                           ; GOTO LEADER_WAIT2 ;WAIT UNTIL BIT_COUNT IS ((STATUS) and 07Fh), 2
-   635                           ; DECFSZ GEN_COUNT, F
-   636                           ; GOTO LEADER_OUT2 ;LOOP UNTIL 128 LEADER BYTES HAVE BEEN SENT
-   637                           ;TAPE_NE
-   638                           ; CALL RAM_READ_AUTO
-   639                           ;TAPE_W3
-   640                           ; BTFSS BIT_COUNT, 2
-   641                           ; GOTO TAPE_W3 ;WAIT UNTIL BIT_COUNT IS NOT ((STATUS) and 07Fh), 2
-   642                           ;TAPE_W4
-   643                           ; BTFSC BIT_COUNT, 2
-   644                           ; GOTO TAPE_W4
-   645                           ; MOVF TAPE_SIZE_HIGH, W
-   646                           ; XORWF RAM_ADDRESS_H, W
-   647                           ; MOVWF TEMP3 ;STORE RESULT IN TEMP3
-   648                           ; INCF TEMP3, F ;INCREMENT RESULT
-   649                           ; DECFSZ TEMP3, F
-   650                           ; GOTO TAPE_NE
-   651                           ; MOVF TAPE_SIZE_LOW, W
-   652                           ; XORWF RAM_ADDRESS_L, W
-   653                           ; MOVWF TEMP3 ;STORE RESULT IN TEMP3
-   654                           ; INCF TEMP3, F
-   655                           ; DECFSZ TEMP3, F
-   656                           ; GOTO TAPE_NE
-   657                           ; BCF INTCON, ((INTCON) and 07Fh), 7
-   658                           ; RETURN
-   659                           ;TAPE_INT
-   660                           ; MOVWF TEMP4 ;SAVE W REG
-   661                           ; BCF INTCON, ((INTCON) and 07Fh), 2
-   662                           ; MOVLW D'59' ;USED TO BE 58, CHANGED IT BECAUSE I ADDED THE SAVE W INSTRUCTION
-   663                           ; MOVWF TMR0 ;PRELOAD TIMER
-   664                           ; BTFSC TEMP1, 0 ;IDENTIFY PHASE
-   665                           ; GOTO PHASE1
-   666                           ; BTFSC TEMP1, 1
-   667                           ; GOTO PHASE2
-   668                           ; BTFSC TEMP1, 2
-   669                           ; GOTO PHASE3
-   670                           ; BTFSC TEMP1, 3
-   671                           ; GOTO PHASE4
-   672                           ; MOVLW B'00000100' ;DEFAULT PHASE - LOAD NEW DATA AND INITIALIZE VARIABLES
-   673                           ; XORWF PORTB, F ;TOGGLE TAPE OUT
-   674                           ; MOVF DREG, W
-   675                           ; MOVWF TEMP2 ;COPY NEW DATA TO BUFFER
-   676                           ; CLRF BIT_COUNT
-   677                           ; MOVLW H'01'
-   678                           ; MOVWF TEMP1 ;SET PHASE TO 1
-   679                           ; MOVF TEMP4, W ;RESTORE W
-   680                           ; RETFIE
-   681                           ;PHASE1 ;TOGGLE IF BIT IS 1
-   682                           ; MOVLW B'00000100' ;WILL USE THIS TO TOGGLE OUTPUT
-   683                           ; BTFSC TEMP2, 0 ;CHECK IF BIT IS 1 OR 0
-   684                           ; XORWF PORTB, F ;IF BIT IS 1 TOGGLE OUTPUT
-   685                           ; MOVLW H'02'
-   686                           ; MOVWF TEMP1 ;SET PHASE TO 2
-   687                           ; MOVF TEMP4, W ;RESTORE W
-   688                           ; RETFIE
-   689                           ;PHASE2 ;ALWAYS TOGGLE
-   690                           ; MOVLW B'00000100'
-   691                           ; XORWF PORTB, F ;TOGGLE OUTPUT
-   692                           ; BTFSC TEMP2, 0 ;CHECK IF BIT IS 1 OR 0
-   693                           ; GOTO PHASE2_NEXT ;IF BIT IS SET THEN LOAD NEXT BIT AND RESET PHASE
-   694                           ; MOVLW H'04'
-   695                           ; MOVWF TEMP1 ;SET PHASE TO 3
-   696                           ; MOVF TEMP4, W ;RESTORE W
-   697                           ; RETFIE
-   698                           ;PHASE3 ;NEVER TOGGLE
-   699                           ; MOVLW H'08'
-   700                           ; MOVWF TEMP1 ;SET PHASE TO 4
-   701                           ; MOVF TEMP4, W
-   702                           ; RETFIE
-   703                           ;PHASE4 ;ALWAYS TOGGLE
-   704                           ; MOVLW B'00000100'
-   705                           ; XORWF PORTB, F ;TOGGLE OUTPUT
-   706                           ;PHASE2_NEXT
-   707                           ; MOVLW H'01'
-   708                           ; MOVWF TEMP1 ;SET PHASE TO 1
-   709                           ; RRF TEMP2, F ;SHIFT TO NEXT BIT
-   710                           ; INCF BIT_COUNT, F ;NEXT BIT COUNT
-   711                           ; BTFSS BIT_COUNT, 3 ;CHECK IF BIT COUNT HAS REACHED 8
-   712                           ; GOTO PHASE_DONE ;IF NOT, RETURN
-   713                           ; CLRF BIT_COUNT ;CLEAR BIT COUNT
-   714                           ; MOVF DREG, W
-   715                           ; MOVWF TEMP2 ;COPY NEW DATA TO BUFFER
-   716                           ;PHASE_DONE
-   717                           ; MOVF TEMP4, W
-   718                           ; RETFIE
-   719                           ;TAPE_PAUSE
-   720                           ; MOVLW D'32'
-   721                           ; MOVWF GEN_COUNT
-   722                           ;TP1
-   723                           ; MOVLW D'54'
-   724                           ; MOVWF GEN_COUNT2
-   725                           ;TP2
-   726                           ; MOVLW D'95'
-   727                           ; MOVWF LDEL_COUNT
-   728                           ;TP3
-   729                           ; DECFSZ LDEL_COUNT, F
-   730                           ; GOTO TP3
-   731                           ; DECFSZ GEN_COUNT2, F
-   732                           ; GOTO TP2
-   733                           ; DECFSZ GEN_COUNT, F
-   734                           ; GOTO TP1
-   735                           ; RETURN
-   736                           
-   737  0649  0093               	movwf	19	;SEND DATA
-   738  064A  1303 1683          	banksel	148
-   739  064C                     SPI_WAIT:	
-   740  064C  1C14               	btfss	20,0	;IS THE TRANSMISSION READY
-   741  064D  2E4C               	goto	SPI_WAIT	;IF NOT WAIT UNTIL IT IS
-   742  064E  1303 1283          	banksel	19
-   743  0650  0813               	movf	19,w	;COPY DATA TO W
-   744  0651  0008               	return
-   745  0652                     BUILD_WORD:	
-   746                           
-   747                           ;GENERATES PSEUDO-RANDOM TEST DATA
-   748  0652  3010               	movlw	16
-   749  0653  00D6               	movwf	_gen_count4
-   750  0654                     BUILD_WORD_LOOP:	
-   751                           
-   752                           ;GET WORD HERE
-   753  0654  01E0               	clrf	_temp3	;THIS WILL CONTAIN BIT 7 OF S_REG_LOW
-   754  0655  1BC7               	btfsc	_s_reg_low,7
-   755  0656  1460               	bsf	_temp3,0
-   756  0657  0847               	movf	_s_reg_low,w
-   757  0658  3901               	andlw	1	;GET BIT 0
-   758  0659  06E0               	xorwf	_temp3,f	;TEMP3 NOW CONTAINS BIT0 AND BIT7 XORED TOGETHER
-   759  065A  0CE0               	rrf	_temp3,f
-   760  065B  0CC8               	rrf	_s_reg_high,f
-   761  065C  0CC7               	rrf	_s_reg_low,f
-   762  065D  0BD6               	decfsz	_gen_count4,f
-   763  065E  2E54               	goto	BUILD_WORD_LOOP
-   764  065F  0008               	return
-   765  0660                     GET_TEST_BYTE:	
-   766                           
-   767                           ;SPLITS PSEUDO-RANDOM TEST DATA INTO SINGLE BYTES
-   768  0660  1C43               	btfss	_flag_reg,0
-   769  0661  2E65               	goto	GTB_UPDATE
-   770  0662  0847               	movf	_s_reg_low,w
-   771  0663  1043               	bcf	_flag_reg,0
-   772  0664  0008               	return
-   773  0665                     GTB_UPDATE:	
-   774  0665  2652               	call	BUILD_WORD
-   775  0666  1443               	bsf	_flag_reg,0
-   776  0667  0848               	movf	_s_reg_high,w
-   777  0668  0008               	return
-   778  0669                     _delay_millis:	
-   779                           
-   780                           ;DESIGNED FOR 4MHZ CLOCK
-   781  0669  00C4               	movwf	_delay_counter
-   782  066A                     DM_MILLIS:	
-   783  066A  3014               	movlw	20
-   784  066B  00DA               	movwf	_ldel_count
-   785  066C                     DM_OUTER:	
-   786  066C  3010               	movlw	16
-   787  066D  00DB               	movwf	_sdel_count
-   788  066E                     DM_INNER:	
-   789  066E  0BDB               	decfsz	_sdel_count,f
-   790  066F  2E6E               	goto	DM_INNER
-   791  0670  0BDA               	decfsz	_ldel_count,f
-   792  0671  2E6C               	goto	DM_OUTER
-   793  0672  0BC4               	decfsz	_delay_counter,f
-   794  0673  2E6A               	goto	DM_MILLIS
-   795  0674  0008               	return
-   796  0675                     _print_test_data:	
-   797  0675  01D9               	clrf	_gen_count
-   798  0676                     PTD_OUTER:	
-   799  0676  01D8               	clrf	_gen_count2
-   800  0677                     PTD_INNER:	
-   801  0677  0858               	movf	_gen_count2,w
-   802  0678  390F               	andlw	15
-   803  0679  1D03               	btfss	3,2	;EVERY 16 WORDS PRINT A NEWLINE
-   804  067A  2E7D               	goto	PTD_NO_NEWLINE
-   805  067B  300A               	movlw	10	;NEWLINE CHAR
-   806  067C  2570               	call	_uart_send
-   807  067D                     PTD_NO_NEWLINE:	
-   808  067D  2660               	call	GET_TEST_BYTE	;GET MSB
-   809  067E  21F0               	call	_byte_to_hex
-   810  067F  0876               	movf	_hex_char_high,w
-   811  0680  2570               	call	_uart_send	;HIGH NIBBLE HIGH BYTE
-   812  0681  0875               	movf	_hex_char_low,w
-   813  0682  2570               	call	_uart_send	;LOW NIBBLE HIGH BYTE
-   814  0683  2660               	call	GET_TEST_BYTE	;GET LSB
-   815  0684  21F0               	call	_byte_to_hex
-   816  0685  0876               	movf	_hex_char_high,w
-   817  0686  2570               	call	_uart_send	;HIGH NIBBLE LOW BYTE
-   818  0687  0875               	movf	_hex_char_low,w
-   819  0688  2570               	call	_uart_send	;LOW NIBBLE LOW BYTE
-   820  0689  0BD8               	decfsz	_gen_count2,f
-   821  068A  2E77               	goto	PTD_INNER
-   822  068B  0BD9               	decfsz	_gen_count,f
-   823  068C  2E76               	goto	PTD_OUTER
-   824  068D  0008               	return
-   825  068E                     _usb_reset_all:	
-   826                           ;CHECK_FREE_SPACE
-   827                           ; BCF FLAG_REG, 3
-   828                           ; BCF FLAG_REG, 4
-   829                           ; MOVF USB_FREE_SPACE3, F
-   830                           ; BTFSS STATUS, Z
-   831                           ; GOTO CFS2
-   832                           ; BSF FLAG_REG, 3
-   833                           ; BSF FLAG_REG, 4
-   834                           ; RETURN
-   835                           ;CFS2
-   836                           ; MOVF USB_FREE_SPACE2, W
-   837                           ; SUBLW H'02'
-   838                           ; BTFSS STATUS, C
-   839                           ; GOTO CFS3
-   840                           ; BSF FLAG_REG, 3
-   841                           ; BSF FLAG_REG, 4
-   842                           ; RETURN
-   843                           ;CFS3
-   844                           ; MOVF USB_FREE_SPACE1, W
-   845                           ; XORWF TAPE_SIZE_HIGH, W
-   846                           ; BTFSC STATUS, Z
-   847                           ; GOTO CFS4
-   848                           ; MOVF TAPE_SIZE_HIGH, W
-   849                           ; SUBWF USB_FREE_SPACE1, W
-   850                           ; BTFSC STATUS, C
-   851                           ; BSF FLAG_REG, 3
-   852                           ; RETURN
-   853                           ;CFS4
-   854                           ; MOVF TAPE_SIZE_LOW, F
-   855                           ; BTFSC STATUS, Z
-   856                           ; BSF FLAG_REG, 3
-   857                           ; RETURN
-   858                           
-   859  068E  1108               	bcf	8,2	;CH376 CE LINE LOW
-   860  068F  3005               	movlw	5	;RESET ALL COMMAND
-   861  0690  2649               	call	SPI_TRANSFER
-   862  0691  1508               	bsf	8,2	;CH376S CE LINE HIGH
-   863  0692  0008               	return
-   864  0693                     _usb_set_file_name:	
-   865  0693  1383               	bcf	3,7
-   866  0694  3061               	movlw	_tape_name	;NAME ADDRESS
-   867  0695  0084               	movwf	4
-   868  0696  3008               	movlw	8	;NAME LENGTH
-   869  0697  00D6               	movwf	_gen_count4
-   870  0698  1108               	bcf	8,2
-   871  0699  302F               	movlw	47	;SET FILE NAME COMMAND
-   872  069A  2649               	call	SPI_TRANSFER
-   873  069B  302F               	movlw	47	;'\' CHAR NEEDED AT START OF NAME
-   874  069C  2649               	call	SPI_TRANSFER
-   875  069D                     USFN_LOOP:	
-   876  069D  0800               	movf	0,w
-   877  069E  2649               	call	SPI_TRANSFER
-   878  069F  0A84               	incf	4,f
-   879  06A0  0BD6               	decfsz	_gen_count4,f
-   880  06A1  2E9D               	goto	USFN_LOOP
-   881  06A2  0100               	clrw	;NULL CHAR AT END OF NAME
-   882  06A3  2649               	call	SPI_TRANSFER
-   883  06A4  1508               	bsf	8,2	;CE LINE HIGH
-   884  06A5  0008               	return
-   885  06A6                     _usb_file_open:	
-   886  06A6  1108               	bcf	8,2
-   887  06A7  3032               	movlw	50	;FILE OPEN COMMAND
-   888  06A8  2649               	call	SPI_TRANSFER
-   889  06A9  1508               	bsf	8,2
-   890  06AA  0008               	return
-   891  06AB                     _usb_file_close:	
-   892  06AB  1108               	bcf	8,2
-   893  06AC  3036               	movlw	54	;FILE CLOSE COMMAND
-   894  06AD  2649               	call	SPI_TRANSFER
-   895  06AE  3001               	movlw	1	;UPDATE FILE LENGTH
-   896  06AF  2649               	call	SPI_TRANSFER
-   897  06B0  1508               	bsf	8,2
-   898  06B1  0008               	return
-   899  06B2                     USB_BYTE_READ:	
-   900  06B2  1108               	bcf	8,2
-   901  06B3  303A               	movlw	58	;BYTE READ COMMAND
-   902  06B4  2649               	call	SPI_TRANSFER
-   903  06B5  0852               	movf	_usb_file_size_low,w
-   904  06B6  2649               	call	SPI_TRANSFER
-   905  06B7  0853               	movf	_usb_file_size_high,w
-   906  06B8  2649               	call	SPI_TRANSFER
-   907  06B9  1508               	bsf	8,2
-   908  06BA  0008               	return
-   909  06BB                     USB_BYTE_READ_GO:	
-   910  06BB  1108               	bcf	8,2
-   911  06BC  303B               	movlw	59	;BYTE READ ((ADCON0) and 07Fh), 2 COMMAND
-   912  06BD  2649               	call	SPI_TRANSFER
-   913  06BE  1508               	bsf	8,2
-   914  06BF  0008               	return
-   915  06C0                     USB_READ_DATA0:	
-   916  06C0  1108               	bcf	8,2
-   917  06C1  3027               	movlw	39	;READ DATA0 COMMAND
-   918  06C2  2649               	call	SPI_TRANSFER
-   919  06C3  0100               	clrw
-   920  06C4  2649               	call	SPI_TRANSFER	;GET NUMBER OF BYTES TO READ
-   921  06C5  07D0               	addwf	_usb_bytes_read_low,f
-   922  06C6  1803               	btfsc	3,0
-   923  06C7  0AD1               	incf	_usb_bytes_read_high,f
-   924  06C8  00D6               	movwf	_gen_count4
-   925  06C9                     URD_LOOP:	
-   926  06C9  0100               	clrw
-   927  06CA  2649               	call	SPI_TRANSFER
-   928                           
-   929                           ;CALL RAM_WRITE_AUTO ;this is a problem, two active spi devices
-   930  06CB  2298               	call	_fifo_push
-   931  06CC  0BD6               	decfsz	_gen_count4,f
-   932  06CD  2EC9               	goto	URD_LOOP
-   933  06CE  1508               	bsf	8,2
-   934  06CF  27B2               	call	_fifo_tf_to_mem
-   935  06D0  0008               	return
-   936  06D1                     _usb_get_file_size:	
-   937  06D1  1108               	bcf	8,2
-   938  06D2  300C               	movlw	12	;GET FILE SIZE COMMAND
-   939  06D3  2649               	call	SPI_TRANSFER
-   940  06D4  3068               	movlw	104	;COMMAND DATA
-   941  06D5  2649               	call	SPI_TRANSFER
-   942  06D6  0100               	clrw
-   943  06D7  2649               	call	SPI_TRANSFER
-   944  06D8  00D2               	movwf	_usb_file_size_low
-   945  06D9  0100               	clrw
-   946  06DA  2649               	call	SPI_TRANSFER
-   947  06DB  00D3               	movwf	_usb_file_size_high
-   948  06DC  0100               	clrw
-   949  06DD  2649               	call	SPI_TRANSFER
-   950  06DE  0100               	clrw
-   951  06DF  2649               	call	SPI_TRANSFER	;DISCARD UPPER BYTES OF FILE SIZE
-   952  06E0  1508               	bsf	8,2
-   953  06E1  0008               	return
-   954  06E2                     _usb_check_exists:	
-   955  06E2  1108               	bcf	8,2
-   956  06E3  00DF               	movwf	_temp4
-   957  06E4  3006               	movlw	6
-   958  06E5  2649               	call	SPI_TRANSFER	;SEND CHECK_EXISTS COMMAND
-   959  06E6  085F               	movf	_temp4,w
-   960  06E7  2649               	call	SPI_TRANSFER	;SEND TEST DATA
-   961  06E8  0100               	clrw
-   962  06E9  2649               	call	SPI_TRANSFER	;GET RESULT
-   963  06EA  1508               	bsf	8,2
-   964  06EB  0008               	return
-   965  06EC                     _usb_file_create:	
-   966  06EC  1108               	bcf	8,2
-   967  06ED  3034               	movlw	52
-   968  06EE  2649               	call	SPI_TRANSFER
-   969  06EF  1508               	bsf	8,2
-   970  06F0  0008               	return
-   971  06F1                     USB_BYTE_WRITE:	
-   972  06F1  1108               	bcf	8,2
-   973  06F2  303C               	movlw	60
-   974  06F3  2649               	call	SPI_TRANSFER
-   975  06F4  0852               	movf	_usb_file_size_low,w
-   976  06F5  2649               	call	SPI_TRANSFER
-   977  06F6  0853               	movf	_usb_file_size_high,w
-   978  06F7  2649               	call	SPI_TRANSFER
-   979  06F8  1508               	bsf	8,2
-   980  06F9  0008               	return
-   981  06FA                     USB_BYTE_WR_GO:	
-   982  06FA  1108               	bcf	8,2
-   983  06FB  303D               	movlw	61
-   984  06FC  2649               	call	SPI_TRANSFER
-   985  06FD  1508               	bsf	8,2
-   986  06FE  0008               	return
-   987  06FF                     _usb_get_status:	
-   988  06FF  1108               	bcf	8,2
-   989  0700  3022               	movlw	34
-   990  0701  2649               	call	SPI_TRANSFER
-   991  0702  0100               	clrw
-   992  0703  2649               	call	SPI_TRANSFER
-   993  0704  1508               	bsf	8,2
-   994  0705  0008               	return
-   995  0706                     _usb_disk_mount:	
-   996  0706  1108               	bcf	8,2
-   997  0707  3031               	movlw	49
-   998  0708  2649               	call	SPI_TRANSFER
-   999  0709  1508               	bsf	8,2
-  1000  070A  0008               	return
-  1001  070B                     _usb_disk_connect:	
-  1002  070B  1108               	bcf	8,2
-  1003  070C  3030               	movlw	48
-  1004  070D  2649               	call	SPI_TRANSFER
-  1005  070E  1508               	bsf	8,2
-  1006  070F  0008               	return
-  1007  0710                     _usb_set_mode:	
-  1008  0710  00DE               	movwf	_temp5
-  1009  0711  1108               	bcf	8,2
-  1010  0712  3015               	movlw	21
-  1011  0713  2649               	call	SPI_TRANSFER
-  1012  0714  085E               	movf	_temp5,w
-  1013  0715  2649               	call	SPI_TRANSFER
-  1014  0716  1508               	bsf	8,2
-  1015  0717  0008               	return
-  1016  0718                     _usb_get_version:	
-  1017  0718  1108               	bcf	8,2
-  1018  0719  3001               	movlw	1
-  1019  071A  2649               	call	SPI_TRANSFER
-  1020  071B  0100               	clrw
-  1021  071C  2649               	call	SPI_TRANSFER
-  1022  071D  1508               	bsf	8,2
-  1023  071E  0008               	return
-  1024  071F                     USB_WAIT_STATUS:	
-  1025  071F  0AC6               	incf	_timeout_high,f
-  1026  0720  0AC5               	incf	_timeout_low,f
-  1027  0721                     UWS_LOOP:	
-  1028  0721  3001               	movlw	1
-  1029  0722  2669               	call	_delay_millis	;DELAY 1 MILLISECOND
-  1030  0723  26FF               	call	_usb_get_status
-  1031  0724  0649               	xorwf	_usb_target_status,w
-  1032  0725  1903               	btfsc	3,2
-  1033  0726  0008               	return
-  1034  0727  0BC5               	decfsz	_timeout_low,f
-  1035  0728  2F21               	goto	UWS_LOOP
-  1036  0729  0BC6               	decfsz	_timeout_high,f
-  1037  072A  2F21               	goto	UWS_LOOP
-  1038  072B  1543               	bsf	_flag_reg,2	;SET FLAG TO INDICATE A TIMEOUT
-  1039  072C  0008               	return
-  1040  072D                     _usb_disk_capacity:	
-  1041  072D  1108               	bcf	8,2
-  1042  072E  303E               	movlw	62
-  1043  072F  2649               	call	SPI_TRANSFER	;SEND DISK CAPACITY COMMAND
-  1044  0730  1508               	bsf	8,2
-  1045  0731  3014               	movlw	20
-  1046  0732  00C9               	movwf	_usb_target_status	;SET TARGET STATUS TO 14 (DEVICE READY)
-  1047  0733  01C6               	clrf	_timeout_high
-  1048  0734  3064               	movlw	100
-  1049  0735  00C5               	movwf	_timeout_low	;SET TIMEOUT TO 16 MILLISECONDS
-  1050  0736  271F               	call	USB_WAIT_STATUS
-  1051  0737  1108               	bcf	8,2
-  1052  0738  3027               	movlw	39
-  1053  0739  2649               	call	SPI_TRANSFER	;SEND READ DATA0 COMMAND
-  1054  073A  0100               	clrw
-  1055  073B  2649               	call	SPI_TRANSFER	;GET NUMBER OF BYTES TO READ (ALWAYS 4)
-  1056  073C  0100               	clrw
-  1057  073D  2649               	call	SPI_TRANSFER	;GET LSB OF DISK SIZE
-  1058                           
-  1059                           ;THE DISK SIZE IS GIVEN IN SECTORS, SO TO GET THE NUMBER OF BYTES WE MULTIPLY BY 512 WHICH IS THE SA
+   616                           ; MOVLW H'55'
+   617                           ; MOVWF DREG ;TAPE LEADER VALUE
+   618                           ; MOVLW D'127'
+   619                           ; MOVWF GEN_COUNT ;128 LEADER BYTES
+   620                           ; CLRF TMR0
+   621                           ; NOP
+   622                           ; BCF INTCON, ((INTCON) and 07Fh), 2
+   623                           ; BSF INTCON, ((INTCON) and 07Fh), 7 ;ENABLE INTERRUPT
+   624                           ;LEADER_OUT
+   625                           ; BTFSS BIT_COUNT, 2
+   626                           ; GOTO LEADER_OUT ;WAIT UNTIL BIT COUNT IS NOT ((STATUS) and 07Fh), 2
+   627                           ;LEADER_WAIT
+   628                           ; BTFSC BIT_COUNT, 2
+   629                           ; GOTO LEADER_WAIT ;WAIT UNTIL BIT_COUNT IS ((STATUS) and 07Fh), 2
+   630                           ; DECFSZ GEN_COUNT, F
+   631                           ; GOTO LEADER_OUT ;LOOP UNTIL 128 LEADER BYTES HAVE BEEN SENT
+   632                           ; MOVLW D'22'
+   633                           ; MOVWF GEN_COUNT ;ONE PAST THE END OF THE NAME FILE
+   634                           ;TAPE_NAMEBLOCK
+   635                           ; CALL RAM_READ_AUTO ;GET FIRST BYTE
+   636                           ;TAPE_W1
+   637                           ; BTFSS BIT_COUNT, 2
+   638                           ; GOTO TAPE_W1 ;WAIT UNTIL BIT COUNT IS NOT ((STATUS) and 07Fh), 2
+   639                           ;TAPE_W2
+   640                           ; BTFSC BIT_COUNT, 2
+   641                           ; GOTO TAPE_W2
+   642                           ; DECFSZ GEN_COUNT, F
+   643                           ; GOTO TAPE_NAMEBLOCK
+   644                           ; BCF INTCON, ((INTCON) and 07Fh), 7 ;STOP INTERRUPT
+   645                           ; CALL TAPE_PAUSE ;1/2 SECOND SILENCE
+   646                           ; MOVLW D'127'
+   647                           ; MOVWF GEN_COUNT ;128 LEADER BYTES
+   648                           ; CLRF TMR0
+   649                           ; CLRF TEMP1
+   650                           ; NOP
+   651                           ; BCF INTCON, ((INTCON) and 07Fh), 2
+   652                           ; BSF INTCON, ((INTCON) and 07Fh), 7 ;ENABLE INTERRUPT
+   653                           ;LEADER_OUT2
+   654                           ; BTFSS BIT_COUNT, 2
+   655                           ; GOTO LEADER_OUT2 ;WAIT UNTIL BIT COUNT IS NOT ((STATUS) and 07Fh), 2
+   656                           ;LEADER_WAIT2
+   657                           ; BTFSC BIT_COUNT, 2
+   658                           ; GOTO LEADER_WAIT2 ;WAIT UNTIL BIT_COUNT IS ((STATUS) and 07Fh), 2
+   659                           ; DECFSZ GEN_COUNT, F
+   660                           ; GOTO LEADER_OUT2 ;LOOP UNTIL 128 LEADER BYTES HAVE BEEN SENT
+   661                           ;TAPE_NE
+   662                           ; CALL RAM_READ_AUTO
+   663                           ;TAPE_W3
+   664                           ; BTFSS BIT_COUNT, 2
+   665                           ; GOTO TAPE_W3 ;WAIT UNTIL BIT_COUNT IS NOT ((STATUS) and 07Fh), 2
+   666                           ;TAPE_W4
+   667                           ; BTFSC BIT_COUNT, 2
+   668                           ; GOTO TAPE_W4
+   669                           ; MOVF TAPE_SIZE_HIGH, W
+   670                           ; XORWF RAM_ADDRESS_H, W
+   671                           ; MOVWF TEMP3 ;STORE RESULT IN TEMP3
+   672                           ; INCF TEMP3, F ;INCREMENT RESULT
+   673                           ; DECFSZ TEMP3, F
+   674                           ; GOTO TAPE_NE
+   675                           ; MOVF TAPE_SIZE_LOW, W
+   676                           ; XORWF RAM_ADDRESS_L, W
+   677                           ; MOVWF TEMP3 ;STORE RESULT IN TEMP3
+   678                           ; INCF TEMP3, F
+   679                           ; DECFSZ TEMP3, F
+   680                           ; GOTO TAPE_NE
+   681                           ; BCF INTCON, ((INTCON) and 07Fh), 7
+   682                           ; RETURN
+   683                           ;TAPE_INT
+   684                           ; MOVWF TEMP4 ;SAVE W REG
+   685                           ; BCF INTCON, ((INTCON) and 07Fh), 2
+   686                           ; MOVLW D'59' ;USED TO BE 58, CHANGED IT BECAUSE I ADDED THE SAVE W INSTRUCTION
+   687                           ; MOVWF TMR0 ;PRELOAD TIMER
+   688                           ; BTFSC TEMP1, 0 ;IDENTIFY PHASE
+   689                           ; GOTO PHASE1
+   690                           ; BTFSC TEMP1, 1
+   691                           ; GOTO PHASE2
+   692                           ; BTFSC TEMP1, 2
+   693                           ; GOTO PHASE3
+   694                           ; BTFSC TEMP1, 3
+   695                           ; GOTO PHASE4
+   696                           ; MOVLW B'00000100' ;DEFAULT PHASE - LOAD NEW DATA AND INITIALIZE VARIABLES
+   697                           ; XORWF PORTB, F ;TOGGLE TAPE OUT
+   698                           ; MOVF DREG, W
+   699                           ; MOVWF TEMP2 ;COPY NEW DATA TO BUFFER
+   700                           ; CLRF BIT_COUNT
+   701                           ; MOVLW H'01'
+   702                           ; MOVWF TEMP1 ;SET PHASE TO 1
+   703                           ; MOVF TEMP4, W ;RESTORE W
+   704                           ; RETFIE
+   705                           ;PHASE1 ;TOGGLE IF BIT IS 1
+   706                           ; MOVLW B'00000100' ;WILL USE THIS TO TOGGLE OUTPUT
+   707                           ; BTFSC TEMP2, 0 ;CHECK IF BIT IS 1 OR 0
+   708                           ; XORWF PORTB, F ;IF BIT IS 1 TOGGLE OUTPUT
+   709                           ; MOVLW H'02'
+   710                           ; MOVWF TEMP1 ;SET PHASE TO 2
+   711                           ; MOVF TEMP4, W ;RESTORE W
+   712                           ; RETFIE
+   713                           ;PHASE2 ;ALWAYS TOGGLE
+   714                           ; MOVLW B'00000100'
+   715                           ; XORWF PORTB, F ;TOGGLE OUTPUT
+   716                           ; BTFSC TEMP2, 0 ;CHECK IF BIT IS 1 OR 0
+   717                           ; GOTO PHASE2_NEXT ;IF BIT IS SET THEN LOAD NEXT BIT AND RESET PHASE
+   718                           ; MOVLW H'04'
+   719                           ; MOVWF TEMP1 ;SET PHASE TO 3
+   720                           ; MOVF TEMP4, W ;RESTORE W
+   721                           ; RETFIE
+   722                           ;PHASE3 ;NEVER TOGGLE
+   723                           ; MOVLW H'08'
+   724                           ; MOVWF TEMP1 ;SET PHASE TO 4
+   725                           ; MOVF TEMP4, W
+   726                           ; RETFIE
+   727                           ;PHASE4 ;ALWAYS TOGGLE
+   728                           ; MOVLW B'00000100'
+   729                           ; XORWF PORTB, F ;TOGGLE OUTPUT
+   730                           ;PHASE2_NEXT
+   731                           ; MOVLW H'01'
+   732                           ; MOVWF TEMP1 ;SET PHASE TO 1
+   733                           ; RRF TEMP2, F ;SHIFT TO NEXT BIT
+   734                           ; INCF BIT_COUNT, F ;NEXT BIT COUNT
+   735                           ; BTFSS BIT_COUNT, 3 ;CHECK IF BIT COUNT HAS REACHED 8
+   736                           ; GOTO PHASE_DONE ;IF NOT, RETURN
+   737                           ; CLRF BIT_COUNT ;CLEAR BIT COUNT
+   738                           ; MOVF DREG, W
+   739                           ; MOVWF TEMP2 ;COPY NEW DATA TO BUFFER
+   740                           ;PHASE_DONE
+   741                           ; MOVF TEMP4, W
+   742                           ; RETFIE
+   743                           ;TAPE_PAUSE
+   744                           ; MOVLW D'32'
+   745                           ; MOVWF GEN_COUNT
+   746                           ;TP1
+   747                           ; MOVLW D'54'
+   748                           ; MOVWF GEN_COUNT2
+   749                           ;TP2
+   750                           ; MOVLW D'95'
+   751                           ; MOVWF LDEL_COUNT
+   752                           ;TP3
+   753                           ; DECFSZ LDEL_COUNT, F
+   754                           ; GOTO TP3
+   755                           ; DECFSZ GEN_COUNT2, F
+   756                           ; GOTO TP2
+   757                           ; DECFSZ GEN_COUNT, F
+   758                           ; GOTO TP1
+   759                           ; RETURN
+   760                           
+   761  063F  0093               	movwf	19	;SEND DATA
+   762  0640  1303 1683          	banksel	148
+   763  0642                     SPI_WAIT:	
+   764  0642  1C14               	btfss	20,0	;IS THE TRANSMISSION READY
+   765  0643  2E42               	goto	SPI_WAIT	;IF NOT WAIT UNTIL IT IS
+   766  0644  1303 1283          	banksel	19
+   767  0646  0813               	movf	19,w	;COPY DATA TO W
+   768  0647  0008               	return
+   769  0648                     BUILD_WORD:	
+   770                           
+   771                           ;GENERATES PSEUDO-RANDOM TEST DATA
+   772  0648  3010               	movlw	16
+   773  0649  00B6               	movwf	_gen_count4
+   774  064A                     BUILD_WORD_LOOP:	
+   775                           
+   776                           ;GET WORD HERE
+   777  064A  01C0               	clrf	_temp3	;THIS WILL CONTAIN BIT 7 OF S_REG_LOW
+   778  064B  1BA7               	btfsc	_s_reg_low,7
+   779  064C  1440               	bsf	_temp3,0
+   780  064D  0827               	movf	_s_reg_low,w
+   781  064E  3901               	andlw	1	;GET BIT 0
+   782  064F  3A01               	xorlw	1	;FLIP BIT 0
+   783  0650  06C0               	xorwf	_temp3,f	;TEMP3 NOW CONTAINS BIT0 ^ BIT7 ^ 1
+   784  0651  0CC0               	rrf	_temp3,f
+   785  0652  0CA8               	rrf	_s_reg_high,f
+   786  0653  0CA7               	rrf	_s_reg_low,f
+   787  0654  0BB6               	decfsz	_gen_count4,f
+   788  0655  2E4A               	goto	BUILD_WORD_LOOP
+   789  0656  0008               	return
+   790  0657                     GET_TEST_BYTE:	
+   791                           
+   792                           ;SPLITS PSEUDO-RANDOM TEST DATA INTO SINGLE BYTES
+   793  0657  1C23               	btfss	_flag_reg,0
+   794  0658  2E5C               	goto	GTB_UPDATE
+   795  0659  0827               	movf	_s_reg_low,w
+   796  065A  1023               	bcf	_flag_reg,0
+   797  065B  0008               	return
+   798  065C                     GTB_UPDATE:	
+   799  065C  2648               	call	BUILD_WORD
+   800  065D  1423               	bsf	_flag_reg,0
+   801  065E  0828               	movf	_s_reg_high,w
+   802  065F  0008               	return
+   803  0660                     _delay_millis:	
+   804                           
+   805                           ;DESIGNED FOR 4MHZ CLOCK
+   806  0660  00A4               	movwf	_delay_counter
+   807  0661                     DM_MILLIS:	
+   808  0661  3014               	movlw	20
+   809  0662  00BA               	movwf	_ldel_count
+   810  0663                     DM_OUTER:	
+   811  0663  3010               	movlw	16
+   812  0664  00BB               	movwf	_sdel_count
+   813  0665                     DM_INNER:	
+   814  0665  0BBB               	decfsz	_sdel_count,f
+   815  0666  2E65               	goto	DM_INNER
+   816  0667  0BBA               	decfsz	_ldel_count,f
+   817  0668  2E63               	goto	DM_OUTER
+   818  0669  0BA4               	decfsz	_delay_counter,f
+   819  066A  2E61               	goto	DM_MILLIS
+   820  066B  0008               	return
+   821  066C                     _print_test_data:	
+   822  066C  01B9               	clrf	_gen_count
+   823  066D                     PTD_OUTER:	
+   824  066D  01B8               	clrf	_gen_count2
+   825  066E                     PTD_INNER:	
+   826  066E  0838               	movf	_gen_count2,w
+   827  066F  390F               	andlw	15
+   828  0670  1D03               	btfss	3,2	;EVERY 16 WORDS PRINT A NEWLINE
+   829  0671  2E74               	goto	PTD_NO_NEWLINE
+   830  0672  300A               	movlw	10	;NEWLINE CHAR
+   831  0673  2566               	call	_uart_send
+   832  0674                     PTD_NO_NEWLINE:	
+   833  0674  2657               	call	GET_TEST_BYTE	;GET MSB
+   834  0675  21EF               	call	_byte_to_hex
+   835  0676  0876               	movf	_hex_char_high,w
+   836  0677  2566               	call	_uart_send	;HIGH NIBBLE HIGH BYTE
+   837  0678  0875               	movf	_hex_char_low,w
+   838  0679  2566               	call	_uart_send	;LOW NIBBLE HIGH BYTE
+   839  067A  2657               	call	GET_TEST_BYTE	;GET LSB
+   840  067B  21EF               	call	_byte_to_hex
+   841  067C  0876               	movf	_hex_char_high,w
+   842  067D  2566               	call	_uart_send	;HIGH NIBBLE LOW BYTE
+   843  067E  0875               	movf	_hex_char_low,w
+   844  067F  2566               	call	_uart_send	;LOW NIBBLE LOW BYTE
+   845  0680  0BB8               	decfsz	_gen_count2,f
+   846  0681  2E6E               	goto	PTD_INNER
+   847  0682  0BB9               	decfsz	_gen_count,f
+   848  0683  2E6D               	goto	PTD_OUTER
+   849  0684  0008               	return
+   850  0685                     _usb_reset_all:	
+   851                           ;CHECK_FREE_SPACE
+   852                           ; BCF FLAG_REG, 3
+   853                           ; BCF FLAG_REG, 4
+   854                           ; MOVF USB_FREE_SPACE3, F
+   855                           ; BTFSS STATUS, Z
+   856                           ; GOTO CFS2
+   857                           ; BSF FLAG_REG, 3
+   858                           ; BSF FLAG_REG, 4
+   859                           ; RETURN
+   860                           ;CFS2
+   861                           ; MOVF USB_FREE_SPACE2, W
+   862                           ; SUBLW H'02'
+   863                           ; BTFSS STATUS, C
+   864                           ; GOTO CFS3
+   865                           ; BSF FLAG_REG, 3
+   866                           ; BSF FLAG_REG, 4
+   867                           ; RETURN
+   868                           ;CFS3
+   869                           ; MOVF USB_FREE_SPACE1, W
+   870                           ; XORWF TAPE_SIZE_HIGH, W
+   871                           ; BTFSC STATUS, Z
+   872                           ; GOTO CFS4
+   873                           ; MOVF TAPE_SIZE_HIGH, W
+   874                           ; SUBWF USB_FREE_SPACE1, W
+   875                           ; BTFSC STATUS, C
+   876                           ; BSF FLAG_REG, 3
+   877                           ; RETURN
+   878                           ;CFS4
+   879                           ; MOVF TAPE_SIZE_LOW, F
+   880                           ; BTFSC STATUS, Z
+   881                           ; BSF FLAG_REG, 3
+   882                           ; RETURN
+   883                           
+   884  0685  1108               	bcf	8,2	;CH376 CE LINE LOW
+   885  0686  3005               	movlw	5	;RESET ALL COMMAND
+   886  0687  263F               	call	SPI_TRANSFER
+   887  0688  1508               	bsf	8,2	;CH376S CE LINE HIGH
+   888  0689  0008               	return
+   889  068A                     _usb_set_file_name:	
+   890  068A  1383               	bcf	3,7
+   891  068B  304C               	movlw	_tape_name	;NAME ADDRESS
+   892  068C  0084               	movwf	4
+   893  068D  3008               	movlw	8	;NAME LENGTH
+   894  068E  00B6               	movwf	_gen_count4
+   895  068F  1108               	bcf	8,2
+   896  0690  302F               	movlw	47	;SET FILE NAME COMMAND
+   897  0691  263F               	call	SPI_TRANSFER
+   898  0692  302F               	movlw	47	;'\' CHAR NEEDED AT START OF NAME
+   899  0693  263F               	call	SPI_TRANSFER
+   900  0694                     USFN_LOOP:	
+   901  0694  0800               	movf	0,w
+   902  0695  263F               	call	SPI_TRANSFER
+   903  0696  0A84               	incf	4,f
+   904  0697  0BB6               	decfsz	_gen_count4,f
+   905  0698  2E94               	goto	USFN_LOOP
+   906  0699  0100               	clrw	;NULL CHAR AT END OF NAME
+   907  069A  263F               	call	SPI_TRANSFER
+   908  069B  1508               	bsf	8,2	;CE LINE HIGH
+   909  069C  0008               	return
+   910  069D                     _usb_file_open:	
+   911  069D  1108               	bcf	8,2
+   912  069E  3032               	movlw	50	;FILE OPEN COMMAND
+   913  069F  263F               	call	SPI_TRANSFER
+   914  06A0  1508               	bsf	8,2
+   915  06A1  0008               	return
+   916  06A2                     _usb_file_close:	
+   917  06A2  1108               	bcf	8,2
+   918  06A3  3036               	movlw	54	;FILE CLOSE COMMAND
+   919  06A4  263F               	call	SPI_TRANSFER
+   920  06A5  3001               	movlw	1	;UPDATE FILE LENGTH
+   921  06A6  263F               	call	SPI_TRANSFER
+   922  06A7  1508               	bsf	8,2
+   923  06A8  0008               	return
+   924  06A9                     USB_BYTE_READ:	
+   925  06A9  1108               	bcf	8,2
+   926  06AA  303A               	movlw	58	;BYTE READ COMMAND
+   927  06AB  263F               	call	SPI_TRANSFER
+   928  06AC  0832               	movf	_usb_file_size_low,w
+   929  06AD  263F               	call	SPI_TRANSFER
+   930  06AE  0833               	movf	_usb_file_size_high,w
+   931  06AF  263F               	call	SPI_TRANSFER
+   932  06B0  1508               	bsf	8,2
+   933  06B1  0008               	return
+   934  06B2                     USB_BYTE_READ_GO:	
+   935  06B2  1108               	bcf	8,2
+   936  06B3  303B               	movlw	59	;BYTE READ ((ADCON0) and 07Fh), 2 COMMAND
+   937  06B4  263F               	call	SPI_TRANSFER
+   938  06B5  1508               	bsf	8,2
+   939  06B6  0008               	return
+   940  06B7                     USB_READ_DATA0:	
+   941  06B7  1108               	bcf	8,2
+   942  06B8  3027               	movlw	39	;READ DATA0 COMMAND
+   943  06B9  263F               	call	SPI_TRANSFER
+   944  06BA  0100               	clrw
+   945  06BB  263F               	call	SPI_TRANSFER	;GET NUMBER OF BYTES TO READ
+   946  06BC  07B0               	addwf	_usb_bytes_read_low,f
+   947  06BD  1803               	btfsc	3,0
+   948  06BE  0AB1               	incf	_usb_bytes_read_high,f
+   949  06BF  00B6               	movwf	_gen_count4
+   950  06C0                     URD_LOOP:	
+   951  06C0  0100               	clrw
+   952  06C1  263F               	call	SPI_TRANSFER
+   953                           
+   954                           ;CALL RAM_WRITE_AUTO ;this is a problem, two active spi devices
+   955  06C2  2288               	call	_fifo_push
+   956  06C3  0BB6               	decfsz	_gen_count4,f
+   957  06C4  2EC0               	goto	URD_LOOP
+   958  06C5  1508               	bsf	8,2
+   959  06C6  27B2               	call	_fifo_tf_to_mem
+   960  06C7  0008               	return
+   961  06C8                     _usb_get_file_size:	
+   962  06C8  1108               	bcf	8,2
+   963  06C9  300C               	movlw	12	;GET FILE SIZE COMMAND
+   964  06CA  263F               	call	SPI_TRANSFER
+   965  06CB  3068               	movlw	104	;COMMAND DATA
+   966  06CC  263F               	call	SPI_TRANSFER
+   967  06CD  0100               	clrw
+   968  06CE  263F               	call	SPI_TRANSFER
+   969  06CF  00B2               	movwf	_usb_file_size_low
+   970  06D0  0100               	clrw
+   971  06D1  263F               	call	SPI_TRANSFER
+   972  06D2  00B3               	movwf	_usb_file_size_high
+   973  06D3  0100               	clrw
+   974  06D4  263F               	call	SPI_TRANSFER
+   975  06D5  0100               	clrw
+   976  06D6  263F               	call	SPI_TRANSFER	;DISCARD UPPER BYTES OF FILE SIZE
+   977  06D7  1508               	bsf	8,2
+   978  06D8  0008               	return
+   979  06D9                     _usb_check_exists:	
+   980  06D9  1108               	bcf	8,2
+   981  06DA  00BF               	movwf	_temp4
+   982  06DB  3006               	movlw	6
+   983  06DC  263F               	call	SPI_TRANSFER	;SEND CHECK_EXISTS COMMAND
+   984  06DD  083F               	movf	_temp4,w
+   985  06DE  263F               	call	SPI_TRANSFER	;SEND TEST DATA
+   986  06DF  0100               	clrw
+   987  06E0  263F               	call	SPI_TRANSFER	;GET RESULT
+   988  06E1  1508               	bsf	8,2
+   989  06E2  0008               	return
+   990  06E3                     _usb_file_create:	
+   991  06E3  1108               	bcf	8,2
+   992  06E4  3034               	movlw	52
+   993  06E5  263F               	call	SPI_TRANSFER
+   994  06E6  1508               	bsf	8,2
+   995  06E7  0008               	return
+   996  06E8                     USB_BYTE_WRITE:	
+   997  06E8  1108               	bcf	8,2
+   998  06E9  303C               	movlw	60
+   999  06EA  263F               	call	SPI_TRANSFER
+  1000  06EB  0832               	movf	_usb_file_size_low,w
+  1001  06EC  263F               	call	SPI_TRANSFER
+  1002  06ED  0833               	movf	_usb_file_size_high,w
+  1003  06EE  263F               	call	SPI_TRANSFER
+  1004  06EF  1508               	bsf	8,2
+  1005  06F0  0008               	return
+  1006  06F1                     USB_BYTE_WR_GO:	
+  1007  06F1  1108               	bcf	8,2
+  1008  06F2  303D               	movlw	61
+  1009  06F3  263F               	call	SPI_TRANSFER
+  1010  06F4  1508               	bsf	8,2
+  1011  06F5  0008               	return
+  1012  06F6                     _usb_get_status:	
+  1013  06F6  1108               	bcf	8,2
+  1014  06F7  3022               	movlw	34
+  1015  06F8  263F               	call	SPI_TRANSFER
+  1016  06F9  0100               	clrw
+  1017  06FA  263F               	call	SPI_TRANSFER
+  1018  06FB  1508               	bsf	8,2
+  1019  06FC  0008               	return
+  1020  06FD                     _usb_disk_mount:	
+  1021  06FD  1108               	bcf	8,2
+  1022  06FE  3031               	movlw	49
+  1023  06FF  263F               	call	SPI_TRANSFER
+  1024  0700  1508               	bsf	8,2
+  1025  0701  0008               	return
+  1026  0702                     _usb_disk_connect:	
+  1027  0702  1108               	bcf	8,2
+  1028  0703  3030               	movlw	48
+  1029  0704  263F               	call	SPI_TRANSFER
+  1030  0705  1508               	bsf	8,2
+  1031  0706  0008               	return
+  1032  0707                     _usb_set_mode:	
+  1033  0707  00BE               	movwf	_temp5
+  1034  0708  1108               	bcf	8,2
+  1035  0709  3015               	movlw	21
+  1036  070A  263F               	call	SPI_TRANSFER
+  1037  070B  083E               	movf	_temp5,w
+  1038  070C  263F               	call	SPI_TRANSFER
+  1039  070D  1508               	bsf	8,2
+  1040  070E  0008               	return
+  1041  070F                     _usb_get_version:	
+  1042  070F  1108               	bcf	8,2
+  1043  0710  3001               	movlw	1
+  1044  0711  263F               	call	SPI_TRANSFER
+  1045  0712  0100               	clrw
+  1046  0713  263F               	call	SPI_TRANSFER
+  1047  0714  1508               	bsf	8,2
+  1048  0715  0008               	return
+  1049  0716                     USB_WAIT_STATUS:	
+  1050  0716  1123               	bcf	_flag_reg,2
+  1051  0717  0AA6               	incf	_timeout_high,f
+  1052  0718  0AA5               	incf	_timeout_low,f
+  1053  0719                     UWS_LOOP:	
+  1054  0719  3001               	movlw	1
+  1055  071A  2660               	call	_delay_millis	;DELAY 1 MILLISECOND
+  1056  071B  26F6               	call	_usb_get_status
+  1057  071C  00BE               	movwf	_temp5
+  1058  071D  0629               	xorwf	_usb_target_status,w
+  1059  071E  1903               	btfsc	3,2
+  1060  071F  3400               	retlw	0
+  1061  0720  0BA5               	decfsz	_timeout_low,f
+  1062  0721  2F19               	goto	UWS_LOOP
+  1063  0722  0BA6               	decfsz	_timeout_high,f
+  1064  0723  2F19               	goto	UWS_LOOP
+  1065  0724  1523               	bsf	_flag_reg,2	;SET FLAG TO INDICATE A TIMEOUT
+  1066  0725  083E               	movf	_temp5,w
+  1067  0726  0008               	return
+  1068  0727                     _usb_disk_capacity:	
+  1069  0727  1108               	bcf	8,2
+  1070  0728  303E               	movlw	62
+  1071  0729  263F               	call	SPI_TRANSFER	;SEND DISK CAPACITY COMMAND
+  1072  072A  1508               	bsf	8,2
+  1073  072B  3014               	movlw	20
+  1074  072C  00A9               	movwf	_usb_target_status	;SET TARGET STATUS TO 14 (DEVICE READY)
+  1075  072D  01A6               	clrf	_timeout_high
+  1076  072E  3064               	movlw	100
+  1077  072F  00A5               	movwf	_timeout_low	;SET TIMEOUT TO 16 MILLISECONDS
+  1078  0730  2716               	call	USB_WAIT_STATUS
+  1079  0731  1923               	btfsc	_flag_reg,2	;CHECK TIMEOUT FLAG
+  1080  0732  0008               	return
+  1081  0733  1108               	bcf	8,2
+  1082  0734  3027               	movlw	39
+  1083  0735  263F               	call	SPI_TRANSFER	;SEND READ DATA0 COMMAND
+  1084  0736  0100               	clrw
+  1085  0737  263F               	call	SPI_TRANSFER	;GET NUMBER OF BYTES TO READ (ALWAYS 4)
+  1086  0738  0100               	clrw
+  1087  0739  263F               	call	SPI_TRANSFER	;GET LSB OF DISK SIZE
+  1088                           
+  1089                           ;THE DISK SIZE IS GIVEN IN SECTORS, SO TO GET THE NUMBER OF BYTES WE MULTIPLY BY 512 WHICH IS THE SA
       +                          ME AS SHIFTING BY 9
-  1060                           ;THIS MEANS THE LSB IS ALWAYS ((STATUS) and 07Fh), 2 AND THERE IS NO NEED TO HAVE A REGISTER FOR IT.
-  1061                           ;INSTEAD WE PUT THE LSB IN USB_DRIVE_SIZE1 WHICH CORRESPONDS TO SHIFTING BY 8.
-  1062  073E  00F4               	movwf	_usb_drive_size1
-  1063  073F  0100               	clrw
-  1064  0740  2649               	call	SPI_TRANSFER
-  1065  0741  00F3               	movwf	_usb_drive_size2
-  1066  0742  0100               	clrw
-  1067  0743  2649               	call	SPI_TRANSFER
-  1068  0744  00F2               	movwf	_usb_drive_size3
-  1069  0745  0100               	clrw
-  1070  0746  2649               	call	SPI_TRANSFER
-  1071  0747  1508               	bsf	8,2
-  1072  0748  1003               	bcf	3,0	;CLEAR ((STATUS) and 07Fh), 0 FLAG
-  1073  0749  0DF4               	rlf	_usb_drive_size1,f
-  1074  074A  0DF3               	rlf	_usb_drive_size2,f
-  1075  074B  0DF2               	rlf	_usb_drive_size3,f
-  1076  074C  0008               	return
-  1077  074D                     _usb_disk_query:	
-  1078  074D  1108               	bcf	8,2
-  1079  074E  303F               	movlw	63
-  1080  074F  2649               	call	SPI_TRANSFER	;SEND DISK QUERY COMMAND
-  1081  0750  1508               	bsf	8,2
-  1082  0751  3014               	movlw	20
-  1083  0752  00C9               	movwf	_usb_target_status	;SET TARGET STATUS TO 14 (DEVICE READY)
-  1084  0753  01C6               	clrf	_timeout_high
-  1085  0754  3064               	movlw	100
-  1086  0755  00C5               	movwf	_timeout_low	;SET TIMEOUT TO 16 MILLISECONDS
-  1087  0756  271F               	call	USB_WAIT_STATUS
-  1088  0757  1108               	bcf	8,2
-  1089  0758  3027               	movlw	39
-  1090  0759  2649               	call	SPI_TRANSFER	;SEND READ DATA0 COMMAND
-  1091  075A  0100               	clrw
-  1092  075B  2649               	call	SPI_TRANSFER	;GET NUMBER OF BYTES TO READ (ALWAYS 8)
-  1093  075C  0100               	clrw
-  1094  075D  2649               	call	SPI_TRANSFER	;GET LSB OF LOGICAL BYTES
-  1095  075E  00CC               	movwf	_usb_logical_bytes1
-  1096  075F  0100               	clrw
-  1097  0760  2649               	call	SPI_TRANSFER
-  1098  0761  00CB               	movwf	_usb_logical_bytes2
-  1099  0762  0100               	clrw
-  1100  0763  2649               	call	SPI_TRANSFER
-  1101  0764  00CA               	movwf	_usb_logical_bytes3
-  1102  0765  0100               	clrw
-  1103  0766  2649               	call	SPI_TRANSFER	;DISCARD MSB OF LOGICAL BYTES
-  1104  0767  0100               	clrw
-  1105  0768  2649               	call	SPI_TRANSFER	;GET LSB OF FREE SPACE
-  1106  0769  00CF               	movwf	_usb_free_space1
-  1107  076A  0100               	clrw
-  1108  076B  2649               	call	SPI_TRANSFER
-  1109  076C  00CE               	movwf	_usb_free_space2
-  1110  076D  0100               	clrw
-  1111  076E  2649               	call	SPI_TRANSFER
-  1112  076F  00CD               	movwf	_usb_free_space3
-  1113  0770  0100               	clrw
-  1114  0771  2649               	call	SPI_TRANSFER	;DISCARD MSB OF FREE SPACE
-  1115  0772  1508               	bsf	8,2
-  1116  0773  1003               	bcf	3,0
-  1117  0774  0DCC               	rlf	_usb_logical_bytes1,f
-  1118  0775  0DCB               	rlf	_usb_logical_bytes2,f
-  1119  0776  0DCA               	rlf	_usb_logical_bytes3,f
-  1120  0777  1003               	bcf	3,0
-  1121  0778  0DCF               	rlf	_usb_free_space1,f
-  1122  0779  0DCE               	rlf	_usb_free_space2,f
-  1123  077A  0DCD               	rlf	_usb_free_space3,f
-  1124  077B  0008               	return
-  1125  077C                     _usb_file_read:	
-  1126                           ;USB_WRITE_TEST_DATA
-  1127                           ; CLRF S_REG_LOW
-  1128                           ; CLRF S_REG_HIGH
-  1129                           ; BCF FLAG_REG, 0 ;INITIALIZE PSUEDO-RANDOM DATA GENERATOR
-  1130                           ; CALL USB_FILE_CREATE
-  1131                           ; MOVLW H'B8'
-  1132                           ; MOVWF TIMEOUT_LOW
-  1133                           ; MOVLW H'0B'
-  1134                           ; MOVWF TIMEOUT_HIGH ;SET TIMEOUT TO 3 SECONDS
-  1135                           ; MOVLW H'14'
-  1136                           ; MOVWF USB_TARGET_STATUS ;SET TARGET STATUS TO 0x14
-  1137                           ; CALL USB_WAIT_STATUS
-  1138                           ; MOVLW H'04'
-  1139                           ; MOVWF GEN_COUNT6
-  1140                           ;UWTD_L4
-  1141                           ; CLRF USB_BYTES_SENT_HIGH
-  1142                           ; CLRF USB_BYTES_SENT_LOW
-  1143                           ; MOVLW H'80'
-  1144                           ; MOVWF USB_FILE_SIZE_HIGH
-  1145                           ; CLRF USB_FILE_SIZE_LOW
-  1146                           ; CALL USB_BYTE_WRITE
-  1147                           ; MOVLW H'0B'
-  1148                           ; MOVWF TIMEOUT_HIGH
-  1149                           ; MOVLW H'B8'
-  1150                           ; MOVWF TIMEOUT_LOW
-  1151                           ; MOVLW H'1E'
-  1152                           ; MOVWF USB_TARGET_STATUS
-  1153                           ; CALL USB_WAIT_STATUS
-  1154                           ;UWTD_ND_LOOP
-  1155                           ; BCF PORTD, 2
-  1156                           ; MOVLW H'2D'
-  1157                           ; MOVWF DREG
-  1158                           ; CALL SPI_TRANSFER ;SEND WR_REQ_DATA
-  1159                           ; CLRF DREG
-  1160                           ; CALL SPI_TRANSFER ;GET NUMBER OF BYTES TO SEND
-  1161                           ; MOVF DREG, W
-  1162                           ; MOVWF GEN_COUNT5
-  1163                           ;UWTD_WR_LOOP
-  1164                           ; CALL GET_TEST_BYTE
-  1165                           ; CALL SPI_TRANSFER
-  1166                           ; INCFSZ USB_BYTES_SENT_LOW, F
-  1167                           ; DECF USB_BYTES_SENT_HIGH, F
-  1168                           ; INCF USB_BYTES_SENT_HIGH, F
-  1169                           ; MOVF USB_BYTES_SENT_HIGH, W
-  1170                           ; XORWF USB_FILE_SIZE_HIGH, W
-  1171                           ; BTFSS STATUS, Z
-  1172                           ; GOTO UWTD_NB
-  1173                           ; MOVF USB_BYTES_SENT_LOW, W
-  1174                           ; XORWF USB_FILE_SIZE_LOW, W
-  1175                           ; BTFSC STATUS, Z
-  1176                           ; GOTO UWTD_BREAK
-  1177                           ;UWTD_NB
-  1178                           ; DECFSZ GEN_COUNT5, F
-  1179                           ; GOTO UWTD_WR_LOOP
-  1180                           ;UWTD_BREAK
-  1181                           ; BSF PORTD, 2
-  1182                           ; MOVLW H'0B'
-  1183                           ; MOVWF TIMEOUT_HIGH
-  1184                           ; MOVLW H'B8'
-  1185                           ; MOVWF TIMEOUT_LOW
-  1186                           ; MOVLW H'1E'
-  1187                           ; MOVWF USB_TARGET_STATUS
-  1188                           ; CALL USB_WAIT_STATUS
-  1189                           ; MOVF USB_BYTES_SENT_HIGH, W
-  1190                           ; XORWF USB_FILE_SIZE_HIGH, W
-  1191                           ; BTFSS STATUS, Z
-  1192                           ; GOTO UWTD_NE
-  1193                           ; MOVF USB_BYTES_SENT_LOW, W
-  1194                           ; XORWF USB_FILE_SIZE_LOW, W
-  1195                           ; BTFSC STATUS, Z
-  1196                           ; GOTO UWTD_EQUAL
-  1197                           ;UWTD_NE
-  1198                           ; CALL USB_BYTE_WR_GO
-  1199                           ; MOVLW H'0B'
-  1200                           ; MOVWF TIMEOUT_HIGH
-  1201                           ; MOVLW H'B8'
-  1202                           ; MOVWF TIMEOUT_LOW
-  1203                           ; MOVLW H'1E'
-  1204                           ; MOVWF USB_TARGET_STATUS
-  1205                           ; CALL USB_WAIT_STATUS
-  1206                           ; GOTO UWTD_ND_LOOP
-  1207                           ;UWTD_EQUAL
-  1208                           ; CALL USB_BYTE_WR_GO
-  1209                           ; MOVLW H'0B'
-  1210                           ; MOVWF TIMEOUT_HIGH
-  1211                           ; MOVLW H'B8'
-  1212                           ; MOVWF TIMEOUT_LOW
-  1213                           ; MOVLW H'14'
-  1214                           ; MOVWF USB_TARGET_STATUS
-  1215                           ; CALL USB_WAIT_STATUS
-  1216                           ; DECFSZ GEN_COUNT6, F
-  1217                           ; GOTO UWTD_L4
-  1218                           ; CALL USB_FILE_CLOSE
-  1219                           ; MOVLW H'0B'
-  1220                           ; MOVWF TIMEOUT_HIGH
-  1221                           ; MOVLW H'B8'
-  1222                           ; MOVWF TIMEOUT_LOW
-  1223                           ; MOVLW H'14'
-  1224                           ; MOVWF USB_TARGET_STATUS
-  1225                           ; CALL USB_WAIT_STATUS
-  1226                           ; RETURN
-  1227                           ;USB_FILE_WRITE
-  1228                           ; CALL USB_SET_FILE_NAME
-  1229                           ; MOVLW H'10'
-  1230                           ; MOVWF TIMEOUT_LOW
-  1231                           ; CLRF TIMEOUT_HIGH
-  1232                           ; MOVLW H'14'
-  1233                           ; MOVWF USB_TARGET_STATUS
-  1234                           ; CALL USB_WAIT_STATUS
-  1235                           ; CALL USB_FILE_CREATE
-  1236                           ; MOVLW H'B8'
-  1237                           ; MOVWF TIMEOUT_LOW
-  1238                           ; MOVLW H'0B'
-  1239                           ; MOVWF TIMEOUT_HIGH ;SET TIMEOUT TO 3 SECONDS
-  1240                           ; MOVLW H'14'
-  1241                           ; MOVWF USB_TARGET_STATUS ;SET TARGET STATUS TO 0x14
-  1242                           ; CALL USB_WAIT_STATUS
-  1243                           ; CLRF USB_BYTES_SENT_HIGH
-  1244                           ; CLRF USB_BYTES_SENT_LOW
-  1245                           ; MOVF TAPE_SIZE_HIGH, W
-  1246                           ; MOVWF USB_FILE_SIZE_HIGH
-  1247                           ; MOVF TAPE_SIZE_LOW, W
-  1248                           ; MOVWF USB_FILE_SIZE_LOW
-  1249                           ; CALL USB_BYTE_WRITE
-  1250                           ; MOVLW H'0B'
-  1251                           ; MOVWF TIMEOUT_HIGH
-  1252                           ; MOVLW H'B8'
-  1253                           ; MOVWF TIMEOUT_LOW
-  1254                           ; MOVLW H'1E'
-  1255                           ; MOVWF USB_TARGET_STATUS
-  1256                           ; CALL USB_WAIT_STATUS
-  1257                           ;UFW_ND_LOOP
-  1258                           ; CALL BUFF_INIT
-  1259                           ; MOVF USB_BYTES_SENT_LOW, W
-  1260                           ; MOVWF RAM_ADDRESS_L
-  1261                           ; MOVF USB_BYTES_SENT_HIGH, W
-  1262                           ; MOVWF RAM_ADDRESS_H
-  1263                           ; DECF RAM_ADDRESS_L, F
-  1264                           ; BTFSS STATUS, C
-  1265                           ; DECF RAM_ADDRESS_H, F
-  1266                           ; CALL BUFF_FILL
-  1267                           ; BCF PORTD, 2
-  1268                           ; MOVLW H'2D'
-  1269                           ; MOVWF DREG
-  1270                           ; CALL SPI_TRANSFER ;SEND WR_REQ_DATA
-  1271                           ; CLRF DREG
-  1272                           ; CALL SPI_TRANSFER ;GET NUMBER OF BYTES TO SEND
-  1273                           ; MOVF DREG, W
-  1274                           ; MOVWF GEN_COUNT5
-  1275                           ;UFW_WR_LOOP
-  1276                           ; CALL BUFF_READ_AUTO
-  1277                           ; CALL SPI_TRANSFER
-  1278                           ; INCFSZ USB_BYTES_SENT_LOW, F
-  1279                           ; DECF USB_BYTES_SENT_HIGH, F
-  1280                           ; INCF USB_BYTES_SENT_HIGH, F
-  1281                           ; MOVF USB_BYTES_SENT_HIGH, W
-  1282                           ; XORWF USB_FILE_SIZE_HIGH, W
-  1283                           ; BTFSS STATUS, Z
-  1284                           ; GOTO UFW_NB
-  1285                           ; MOVF USB_BYTES_SENT_LOW, W
-  1286                           ; XORWF USB_FILE_SIZE_LOW, W
-  1287                           ; BTFSC STATUS, Z
-  1288                           ; GOTO UFW_BREAK
-  1289                           ;UFW_NB
-  1290                           ; DECFSZ GEN_COUNT5, F
-  1291                           ; GOTO UFW_WR_LOOP
-  1292                           ;UFW_BREAK
-  1293                           ; BSF PORTD, 2
-  1294                           ; MOVLW H'0B'
-  1295                           ; MOVWF TIMEOUT_HIGH
-  1296                           ; MOVLW H'B8'
-  1297                           ; MOVWF TIMEOUT_LOW
-  1298                           ; MOVLW H'1E'
-  1299                           ; MOVWF USB_TARGET_STATUS
-  1300                           ; CALL USB_WAIT_STATUS
-  1301                           ; MOVF USB_BYTES_SENT_HIGH, W
-  1302                           ; XORWF USB_FILE_SIZE_HIGH, W
-  1303                           ; BTFSS STATUS, Z
-  1304                           ; GOTO UFW_NE
-  1305                           ; MOVF USB_BYTES_SENT_LOW, W
-  1306                           ; XORWF USB_FILE_SIZE_LOW, W
-  1307                           ; BTFSC STATUS, Z
-  1308                           ; GOTO UFW_EQUAL
-  1309                           ;UFW_NE
-  1310                           ; CALL USB_BYTE_WR_GO
-  1311                           ; MOVLW H'0B'
-  1312                           ; MOVWF TIMEOUT_HIGH
-  1313                           ; MOVLW H'B8'
-  1314                           ; MOVWF TIMEOUT_LOW
-  1315                           ; MOVLW H'1E'
-  1316                           ; MOVWF USB_TARGET_STATUS
-  1317                           ; CALL USB_WAIT_STATUS
-  1318                           ; GOTO UFW_ND_LOOP
-  1319                           ;UFW_EQUAL
-  1320                           ; CALL USB_BYTE_WR_GO
-  1321                           ; MOVLW H'0B'
-  1322                           ; MOVWF TIMEOUT_HIGH
-  1323                           ; MOVLW H'B8'
-  1324                           ; MOVWF TIMEOUT_LOW
-  1325                           ; MOVLW H'14'
-  1326                           ; MOVWF USB_TARGET_STATUS
-  1327                           ; CALL USB_WAIT_STATUS
-  1328                           ; CALL USB_FILE_CLOSE
-  1329                           ; MOVLW H'0B'
-  1330                           ; MOVWF TIMEOUT_HIGH
-  1331                           ; MOVLW H'B8'
-  1332                           ; MOVWF TIMEOUT_LOW
-  1333                           ; MOVLW H'14'
-  1334                           ; MOVWF USB_TARGET_STATUS
-  1335                           ; CALL USB_WAIT_STATUS
-  1336                           ; RETURN
-  1337                           
-  1338  077C  30FF               	movlw	255
-  1339  077D  00DD               	movwf	_ram_address_h
-  1340  077E  00DC               	movwf	_ram_address_l	;RAM ADDRESS WILL OVERFLOW BEFORE FIRST WRITE
-  1341  077F  26B2               	call	USB_BYTE_READ
-  1342  0780  01C6               	clrf	_timeout_high
-  1343  0781  3080               	movlw	128
-  1344  0782  00C5               	movwf	_timeout_low
-  1345  0783  301D               	movlw	29
-  1346  0784  00C9               	movwf	_usb_target_status
-  1347  0785  271F               	call	USB_WAIT_STATUS
-  1348  0786  1D43               	btfss	_flag_reg,2	;CHECK TIMEOUT FLAG
-  1349                           
-  1350                           ;GOTO _timeout_error
-  1351  0787  0008               	return
-  1352  0788                     UFR_LOOP:	
-  1353  0788  26C0               	call	USB_READ_DATA0
-  1354  0789  3001               	movlw	1
-  1355  078A  2669               	call	_delay_millis
-  1356  078B  0852               	movf	_usb_file_size_low,w
-  1357  078C  0650               	xorwf	_usb_bytes_read_low,w
-  1358  078D  1D03               	btfss	3,2
-  1359  078E  2F93               	goto	UFR_GO
-  1360  078F  0853               	movf	_usb_file_size_high,w
-  1361  0790  0651               	xorwf	_usb_bytes_read_high,w
-  1362  0791  1903               	btfsc	3,2
-  1363  0792  2F9B               	goto	UFR_DONE
-  1364  0793                     UFR_GO:	
-  1365  0793  26BB               	call	USB_BYTE_READ_GO
-  1366  0794  01C6               	clrf	_timeout_high
-  1367  0795  30FF               	movlw	255
-  1368  0796  00C5               	movwf	_timeout_low
-  1369  0797  301D               	movlw	29
-  1370  0798  00C9               	movwf	_usb_target_status
-  1371  0799  271F               	call	USB_WAIT_STATUS
-  1372  079A  2F88               	goto	UFR_LOOP
-  1373  079B                     UFR_DONE:	
-  1374  079B  0852               	movf	_usb_file_size_low,w
-  1375  079C  00D4               	movwf	_tape_size_low
-  1376  079D  0853               	movf	_usb_file_size_high,w
-  1377  079E  00D5               	movwf	_tape_size_high
-  1378  079F  1108               	bcf	8,2
-  1379  07A0  3036               	movlw	54
-  1380  07A1  2649               	call	SPI_TRANSFER	;SEND FILE CLOSE COMMAND
-  1381  07A2  0100               	clrw
-  1382  07A3  2649               	call	SPI_TRANSFER	;FILE CLOSE PARAMETER IS 0 (DO NOT UPDATE FILE SIZE)
-  1383  07A4  1508               	bsf	8,2
-  1384  07A5  01C6               	clrf	_timeout_high
-  1385  07A6  3080               	movlw	128
-  1386  07A7  00C5               	movwf	_timeout_low
-  1387  07A8  3014               	movlw	20
-  1388  07A9  00C9               	movwf	_usb_target_status
-  1389  07AA  271F               	call	USB_WAIT_STATUS
-  1390  07AB  0008               	return
-  1391  07AC                     _fifo_init:	
-  1392  07AC  01F0               	clrf	_fifo_write_idx
-  1393  07AD  01C1               	clrf	_fifo_write_bank
-  1394  07AE  01F1               	clrf	_fifo_read_idx
-  1395  07AF  01C2               	clrf	_fifo_read_bank
-  1396  07B0  01C0               	clrf	_fifo_num_bytes
-  1397  07B1  0008               	return
-  1398  07B2                     _fifo_tf_to_mem:	
-  1399  07B2  08C0               	movf	_fifo_num_bytes,f
-  1400  07B3  1903               	btfsc	3,2
-  1401  07B4  0008               	return
-  1402  07B5  224B               	call	_fifo_pop
-  1403  07B6  259A               	call	RAM_WRITE_AUTO
-  1404  07B7  2FB2               	goto	_fifo_tf_to_mem
-  1405  07B8                     _fifo_tf_from_mem:	
-  1406  07B8  0940               	comf	_fifo_num_bytes,w
-  1407  07B9  1903               	btfsc	3,2
-  1408  07BA  0008               	return
-  1409  07BB  2574               	call	RAM_READ_AUTO
-  1410  07BC  2298               	call	_fifo_push
-  1411  07BD  2FB8               	goto	_fifo_tf_from_mem
+  1090                           ;THIS MEANS THE LSB IS ALWAYS ((STATUS) and 07Fh), 2 AND THERE IS NO NEED TO HAVE A REGISTER FOR IT.
+  1091                           ;INSTEAD WE PUT THE LSB IN USB_DRIVE_SIZE1 WHICH CORRESPONDS TO SHIFTING BY 8.
+  1092  073A  00F4               	movwf	_usb_drive_size1
+  1093  073B  0100               	clrw
+  1094  073C  263F               	call	SPI_TRANSFER
+  1095  073D  00F3               	movwf	_usb_drive_size2
+  1096  073E  0100               	clrw
+  1097  073F  263F               	call	SPI_TRANSFER
+  1098  0740  00F2               	movwf	_usb_drive_size3
+  1099  0741  0100               	clrw
+  1100  0742  263F               	call	SPI_TRANSFER
+  1101  0743  1508               	bsf	8,2
+  1102  0744  1003               	bcf	3,0	;CLEAR ((STATUS) and 07Fh), 0 FLAG
+  1103  0745  0DF4               	rlf	_usb_drive_size1,f
+  1104  0746  0DF3               	rlf	_usb_drive_size2,f
+  1105  0747  0DF2               	rlf	_usb_drive_size3,f
+  1106  0748  0008               	return
+  1107  0749                     _usb_disk_query:	
+  1108  0749  1108               	bcf	8,2
+  1109  074A  303F               	movlw	63
+  1110  074B  263F               	call	SPI_TRANSFER	;SEND DISK QUERY COMMAND
+  1111  074C  1508               	bsf	8,2
+  1112  074D  3014               	movlw	20
+  1113  074E  00A9               	movwf	_usb_target_status	;SET TARGET STATUS TO 14 (DEVICE READY)
+  1114  074F  01A6               	clrf	_timeout_high
+  1115  0750  3064               	movlw	100
+  1116  0751  00A5               	movwf	_timeout_low	;SET TIMEOUT TO 16 MILLISECONDS
+  1117  0752  2716               	call	USB_WAIT_STATUS
+  1118  0753  1923               	btfsc	_flag_reg,2	;CHECK TIMEOUT FLAG
+  1119  0754  0008               	return
+  1120  0755  1108               	bcf	8,2
+  1121  0756  3027               	movlw	39
+  1122  0757  263F               	call	SPI_TRANSFER	;SEND READ DATA0 COMMAND
+  1123  0758  0100               	clrw
+  1124  0759  263F               	call	SPI_TRANSFER	;GET NUMBER OF BYTES TO READ (ALWAYS 8)
+  1125  075A  0100               	clrw
+  1126  075B  263F               	call	SPI_TRANSFER	;GET LSB OF LOGICAL BYTES
+  1127  075C  00AC               	movwf	_usb_logical_bytes1
+  1128  075D  0100               	clrw
+  1129  075E  263F               	call	SPI_TRANSFER
+  1130  075F  00AB               	movwf	_usb_logical_bytes2
+  1131  0760  0100               	clrw
+  1132  0761  263F               	call	SPI_TRANSFER
+  1133  0762  00AA               	movwf	_usb_logical_bytes3
+  1134  0763  0100               	clrw
+  1135  0764  263F               	call	SPI_TRANSFER	;DISCARD MSB OF LOGICAL BYTES
+  1136  0765  0100               	clrw
+  1137  0766  263F               	call	SPI_TRANSFER	;GET LSB OF FREE SPACE
+  1138  0767  00AF               	movwf	_usb_free_space1
+  1139  0768  0100               	clrw
+  1140  0769  263F               	call	SPI_TRANSFER
+  1141  076A  00AE               	movwf	_usb_free_space2
+  1142  076B  0100               	clrw
+  1143  076C  263F               	call	SPI_TRANSFER
+  1144  076D  00AD               	movwf	_usb_free_space3
+  1145  076E  0100               	clrw
+  1146  076F  263F               	call	SPI_TRANSFER	;DISCARD MSB OF FREE SPACE
+  1147  0770  1508               	bsf	8,2
+  1148  0771  1003               	bcf	3,0
+  1149  0772  0DAC               	rlf	_usb_logical_bytes1,f
+  1150  0773  0DAB               	rlf	_usb_logical_bytes2,f
+  1151  0774  0DAA               	rlf	_usb_logical_bytes3,f
+  1152  0775  1003               	bcf	3,0
+  1153  0776  0DAF               	rlf	_usb_free_space1,f
+  1154  0777  0DAE               	rlf	_usb_free_space2,f
+  1155  0778  0DAD               	rlf	_usb_free_space3,f
+  1156  0779  0008               	return
+  1157  077A                     _usb_file_read:	
+  1158                           ;USB_WRITE_TEST_DATA
+  1159                           ; CLRF S_REG_LOW
+  1160                           ; CLRF S_REG_HIGH
+  1161                           ; BCF FLAG_REG, 0 ;INITIALIZE PSUEDO-RANDOM DATA GENERATOR
+  1162                           ; CALL USB_FILE_CREATE
+  1163                           ; MOVLW H'B8'
+  1164                           ; MOVWF TIMEOUT_LOW
+  1165                           ; MOVLW H'0B'
+  1166                           ; MOVWF TIMEOUT_HIGH ;SET TIMEOUT TO 3 SECONDS
+  1167                           ; MOVLW H'14'
+  1168                           ; MOVWF USB_TARGET_STATUS ;SET TARGET STATUS TO 0x14
+  1169                           ; CALL USB_WAIT_STATUS
+  1170                           ; MOVLW H'04'
+  1171                           ; MOVWF GEN_COUNT6
+  1172                           ;UWTD_L4
+  1173                           ; CLRF USB_BYTES_SENT_HIGH
+  1174                           ; CLRF USB_BYTES_SENT_LOW
+  1175                           ; MOVLW H'80'
+  1176                           ; MOVWF USB_FILE_SIZE_HIGH
+  1177                           ; CLRF USB_FILE_SIZE_LOW
+  1178                           ; CALL USB_BYTE_WRITE
+  1179                           ; MOVLW H'0B'
+  1180                           ; MOVWF TIMEOUT_HIGH
+  1181                           ; MOVLW H'B8'
+  1182                           ; MOVWF TIMEOUT_LOW
+  1183                           ; MOVLW H'1E'
+  1184                           ; MOVWF USB_TARGET_STATUS
+  1185                           ; CALL USB_WAIT_STATUS
+  1186                           ;UWTD_ND_LOOP
+  1187                           ; BCF PORTD, 2
+  1188                           ; MOVLW H'2D'
+  1189                           ; MOVWF DREG
+  1190                           ; CALL SPI_TRANSFER ;SEND WR_REQ_DATA
+  1191                           ; CLRF DREG
+  1192                           ; CALL SPI_TRANSFER ;GET NUMBER OF BYTES TO SEND
+  1193                           ; MOVF DREG, W
+  1194                           ; MOVWF GEN_COUNT5
+  1195                           ;UWTD_WR_LOOP
+  1196                           ; CALL GET_TEST_BYTE
+  1197                           ; CALL SPI_TRANSFER
+  1198                           ; INCFSZ USB_BYTES_SENT_LOW, F
+  1199                           ; DECF USB_BYTES_SENT_HIGH, F
+  1200                           ; INCF USB_BYTES_SENT_HIGH, F
+  1201                           ; MOVF USB_BYTES_SENT_HIGH, W
+  1202                           ; XORWF USB_FILE_SIZE_HIGH, W
+  1203                           ; BTFSS STATUS, Z
+  1204                           ; GOTO UWTD_NB
+  1205                           ; MOVF USB_BYTES_SENT_LOW, W
+  1206                           ; XORWF USB_FILE_SIZE_LOW, W
+  1207                           ; BTFSC STATUS, Z
+  1208                           ; GOTO UWTD_BREAK
+  1209                           ;UWTD_NB
+  1210                           ; DECFSZ GEN_COUNT5, F
+  1211                           ; GOTO UWTD_WR_LOOP
+  1212                           ;UWTD_BREAK
+  1213                           ; BSF PORTD, 2
+  1214                           ; MOVLW H'0B'
+  1215                           ; MOVWF TIMEOUT_HIGH
+  1216                           ; MOVLW H'B8'
+  1217                           ; MOVWF TIMEOUT_LOW
+  1218                           ; MOVLW H'1E'
+  1219                           ; MOVWF USB_TARGET_STATUS
+  1220                           ; CALL USB_WAIT_STATUS
+  1221                           ; MOVF USB_BYTES_SENT_HIGH, W
+  1222                           ; XORWF USB_FILE_SIZE_HIGH, W
+  1223                           ; BTFSS STATUS, Z
+  1224                           ; GOTO UWTD_NE
+  1225                           ; MOVF USB_BYTES_SENT_LOW, W
+  1226                           ; XORWF USB_FILE_SIZE_LOW, W
+  1227                           ; BTFSC STATUS, Z
+  1228                           ; GOTO UWTD_EQUAL
+  1229                           ;UWTD_NE
+  1230                           ; CALL USB_BYTE_WR_GO
+  1231                           ; MOVLW H'0B'
+  1232                           ; MOVWF TIMEOUT_HIGH
+  1233                           ; MOVLW H'B8'
+  1234                           ; MOVWF TIMEOUT_LOW
+  1235                           ; MOVLW H'1E'
+  1236                           ; MOVWF USB_TARGET_STATUS
+  1237                           ; CALL USB_WAIT_STATUS
+  1238                           ; GOTO UWTD_ND_LOOP
+  1239                           ;UWTD_EQUAL
+  1240                           ; CALL USB_BYTE_WR_GO
+  1241                           ; MOVLW H'0B'
+  1242                           ; MOVWF TIMEOUT_HIGH
+  1243                           ; MOVLW H'B8'
+  1244                           ; MOVWF TIMEOUT_LOW
+  1245                           ; MOVLW H'14'
+  1246                           ; MOVWF USB_TARGET_STATUS
+  1247                           ; CALL USB_WAIT_STATUS
+  1248                           ; DECFSZ GEN_COUNT6, F
+  1249                           ; GOTO UWTD_L4
+  1250                           ; CALL USB_FILE_CLOSE
+  1251                           ; MOVLW H'0B'
+  1252                           ; MOVWF TIMEOUT_HIGH
+  1253                           ; MOVLW H'B8'
+  1254                           ; MOVWF TIMEOUT_LOW
+  1255                           ; MOVLW H'14'
+  1256                           ; MOVWF USB_TARGET_STATUS
+  1257                           ; CALL USB_WAIT_STATUS
+  1258                           ; RETURN
+  1259                           ;USB_FILE_WRITE
+  1260                           ; CALL USB_SET_FILE_NAME
+  1261                           ; MOVLW H'10'
+  1262                           ; MOVWF TIMEOUT_LOW
+  1263                           ; CLRF TIMEOUT_HIGH
+  1264                           ; MOVLW H'14'
+  1265                           ; MOVWF USB_TARGET_STATUS
+  1266                           ; CALL USB_WAIT_STATUS
+  1267                           ; CALL USB_FILE_CREATE
+  1268                           ; MOVLW H'B8'
+  1269                           ; MOVWF TIMEOUT_LOW
+  1270                           ; MOVLW H'0B'
+  1271                           ; MOVWF TIMEOUT_HIGH ;SET TIMEOUT TO 3 SECONDS
+  1272                           ; MOVLW H'14'
+  1273                           ; MOVWF USB_TARGET_STATUS ;SET TARGET STATUS TO 0x14
+  1274                           ; CALL USB_WAIT_STATUS
+  1275                           ; CLRF USB_BYTES_SENT_HIGH
+  1276                           ; CLRF USB_BYTES_SENT_LOW
+  1277                           ; MOVF TAPE_SIZE_HIGH, W
+  1278                           ; MOVWF USB_FILE_SIZE_HIGH
+  1279                           ; MOVF TAPE_SIZE_LOW, W
+  1280                           ; MOVWF USB_FILE_SIZE_LOW
+  1281                           ; CALL USB_BYTE_WRITE
+  1282                           ; MOVLW H'0B'
+  1283                           ; MOVWF TIMEOUT_HIGH
+  1284                           ; MOVLW H'B8'
+  1285                           ; MOVWF TIMEOUT_LOW
+  1286                           ; MOVLW H'1E'
+  1287                           ; MOVWF USB_TARGET_STATUS
+  1288                           ; CALL USB_WAIT_STATUS
+  1289                           ;UFW_ND_LOOP
+  1290                           ; CALL BUFF_INIT
+  1291                           ; MOVF USB_BYTES_SENT_LOW, W
+  1292                           ; MOVWF RAM_ADDRESS_L
+  1293                           ; MOVF USB_BYTES_SENT_HIGH, W
+  1294                           ; MOVWF RAM_ADDRESS_H
+  1295                           ; DECF RAM_ADDRESS_L, F
+  1296                           ; BTFSS STATUS, C
+  1297                           ; DECF RAM_ADDRESS_H, F
+  1298                           ; CALL BUFF_FILL
+  1299                           ; BCF PORTD, 2
+  1300                           ; MOVLW H'2D'
+  1301                           ; MOVWF DREG
+  1302                           ; CALL SPI_TRANSFER ;SEND WR_REQ_DATA
+  1303                           ; CLRF DREG
+  1304                           ; CALL SPI_TRANSFER ;GET NUMBER OF BYTES TO SEND
+  1305                           ; MOVF DREG, W
+  1306                           ; MOVWF GEN_COUNT5
+  1307                           ;UFW_WR_LOOP
+  1308                           ; CALL BUFF_READ_AUTO
+  1309                           ; CALL SPI_TRANSFER
+  1310                           ; INCFSZ USB_BYTES_SENT_LOW, F
+  1311                           ; DECF USB_BYTES_SENT_HIGH, F
+  1312                           ; INCF USB_BYTES_SENT_HIGH, F
+  1313                           ; MOVF USB_BYTES_SENT_HIGH, W
+  1314                           ; XORWF USB_FILE_SIZE_HIGH, W
+  1315                           ; BTFSS STATUS, Z
+  1316                           ; GOTO UFW_NB
+  1317                           ; MOVF USB_BYTES_SENT_LOW, W
+  1318                           ; XORWF USB_FILE_SIZE_LOW, W
+  1319                           ; BTFSC STATUS, Z
+  1320                           ; GOTO UFW_BREAK
+  1321                           ;UFW_NB
+  1322                           ; DECFSZ GEN_COUNT5, F
+  1323                           ; GOTO UFW_WR_LOOP
+  1324                           ;UFW_BREAK
+  1325                           ; BSF PORTD, 2
+  1326                           ; MOVLW H'0B'
+  1327                           ; MOVWF TIMEOUT_HIGH
+  1328                           ; MOVLW H'B8'
+  1329                           ; MOVWF TIMEOUT_LOW
+  1330                           ; MOVLW H'1E'
+  1331                           ; MOVWF USB_TARGET_STATUS
+  1332                           ; CALL USB_WAIT_STATUS
+  1333                           ; MOVF USB_BYTES_SENT_HIGH, W
+  1334                           ; XORWF USB_FILE_SIZE_HIGH, W
+  1335                           ; BTFSS STATUS, Z
+  1336                           ; GOTO UFW_NE
+  1337                           ; MOVF USB_BYTES_SENT_LOW, W
+  1338                           ; XORWF USB_FILE_SIZE_LOW, W
+  1339                           ; BTFSC STATUS, Z
+  1340                           ; GOTO UFW_EQUAL
+  1341                           ;UFW_NE
+  1342                           ; CALL USB_BYTE_WR_GO
+  1343                           ; MOVLW H'0B'
+  1344                           ; MOVWF TIMEOUT_HIGH
+  1345                           ; MOVLW H'B8'
+  1346                           ; MOVWF TIMEOUT_LOW
+  1347                           ; MOVLW H'1E'
+  1348                           ; MOVWF USB_TARGET_STATUS
+  1349                           ; CALL USB_WAIT_STATUS
+  1350                           ; GOTO UFW_ND_LOOP
+  1351                           ;UFW_EQUAL
+  1352                           ; CALL USB_BYTE_WR_GO
+  1353                           ; MOVLW H'0B'
+  1354                           ; MOVWF TIMEOUT_HIGH
+  1355                           ; MOVLW H'B8'
+  1356                           ; MOVWF TIMEOUT_LOW
+  1357                           ; MOVLW H'14'
+  1358                           ; MOVWF USB_TARGET_STATUS
+  1359                           ; CALL USB_WAIT_STATUS
+  1360                           ; CALL USB_FILE_CLOSE
+  1361                           ; MOVLW H'0B'
+  1362                           ; MOVWF TIMEOUT_HIGH
+  1363                           ; MOVLW H'B8'
+  1364                           ; MOVWF TIMEOUT_LOW
+  1365                           ; MOVLW H'14'
+  1366                           ; MOVWF USB_TARGET_STATUS
+  1367                           ; CALL USB_WAIT_STATUS
+  1368                           ; RETURN
+  1369                           
+  1370  077A  30FF               	movlw	255
+  1371  077B  00BD               	movwf	_ram_address_h
+  1372  077C  00BC               	movwf	_ram_address_l	;RAM ADDRESS WILL OVERFLOW BEFORE FIRST WRITE
+  1373  077D  26A9               	call	USB_BYTE_READ
+  1374  077E  01A6               	clrf	_timeout_high
+  1375  077F  3080               	movlw	128
+  1376  0780  00A5               	movwf	_timeout_low
+  1377  0781  301D               	movlw	29
+  1378  0782  00A9               	movwf	_usb_target_status
+  1379  0783  2716               	call	USB_WAIT_STATUS
+  1380  0784  1923               	btfsc	_flag_reg,2	;CHECK TIMEOUT FLAG
+  1381  0785  0008               	return
+  1382  0786                     UFR_LOOP:	
+  1383  0786  26B7               	call	USB_READ_DATA0
+  1384  0787  3001               	movlw	1
+  1385  0788  2660               	call	_delay_millis
+  1386  0789  0832               	movf	_usb_file_size_low,w
+  1387  078A  0630               	xorwf	_usb_bytes_read_low,w
+  1388  078B  1D03               	btfss	3,2
+  1389  078C  2F91               	goto	UFR_GO
+  1390  078D  0833               	movf	_usb_file_size_high,w
+  1391  078E  0631               	xorwf	_usb_bytes_read_high,w
+  1392  078F  1903               	btfsc	3,2
+  1393  0790  2F9B               	goto	UFR_DONE
+  1394  0791                     UFR_GO:	
+  1395  0791  26B2               	call	USB_BYTE_READ_GO
+  1396  0792  01A6               	clrf	_timeout_high
+  1397  0793  30FF               	movlw	255
+  1398  0794  00A5               	movwf	_timeout_low
+  1399  0795  301D               	movlw	29
+  1400  0796  00A9               	movwf	_usb_target_status
+  1401  0797  2716               	call	USB_WAIT_STATUS
+  1402  0798  1923               	btfsc	_flag_reg,2	;CHECK TIMEOUT FLAG
+  1403  0799  0008               	return
+  1404  079A  2F86               	goto	UFR_LOOP
+  1405  079B                     UFR_DONE:	
+  1406  079B  0832               	movf	_usb_file_size_low,w
+  1407  079C  00B4               	movwf	_tape_size_low
+  1408  079D  0833               	movf	_usb_file_size_high,w
+  1409  079E  00B5               	movwf	_tape_size_high
+  1410  079F  1108               	bcf	8,2
+  1411  07A0  3036               	movlw	54
+  1412  07A1  263F               	call	SPI_TRANSFER	;SEND FILE CLOSE COMMAND
+  1413  07A2  0100               	clrw
+  1414  07A3  263F               	call	SPI_TRANSFER	;FILE CLOSE PARAMETER IS 0 (DO NOT UPDATE FILE SIZE)
+  1415  07A4  1508               	bsf	8,2
+  1416  07A5  01A6               	clrf	_timeout_high
+  1417  07A6  3080               	movlw	128
+  1418  07A7  00A5               	movwf	_timeout_low
+  1419  07A8  3014               	movlw	20
+  1420  07A9  00A9               	movwf	_usb_target_status
+  1421  07AA  2716               	call	USB_WAIT_STATUS
+  1422  07AB  0008               	return
+  1423  07AC                     _fifo_init:	
+  1424  07AC  01F0               	clrf	_fifo_write_idx
+  1425  07AD  01A1               	clrf	_fifo_write_bank
+  1426  07AE  01F1               	clrf	_fifo_read_idx
+  1427  07AF  01A2               	clrf	_fifo_read_bank
+  1428  07B0  01A0               	clrf	_fifo_num_bytes
+  1429  07B1  0008               	return
+  1430  07B2                     _fifo_tf_to_mem:	
+  1431  07B2  08A0               	movf	_fifo_num_bytes,f
+  1432  07B3  1903               	btfsc	3,2
+  1433  07B4  0008               	return
+  1434  07B5  224A               	call	_fifo_pop
+  1435  07B6  2590               	call	RAM_WRITE_AUTO
+  1436  07B7  2FB2               	goto	_fifo_tf_to_mem
+  1437  07B8                     _fifo_tf_from_mem:	
+  1438  07B8  0920               	comf	_fifo_num_bytes,w
+  1439  07B9  1903               	btfsc	3,2
+  1440  07BA  0008               	return
+  1441  07BB  256A               	call	RAM_READ_AUTO
+  1442  07BC  2288               	call	_fifo_push
+  1443  07BD  2FB8               	goto	_fifo_tf_from_mem
 
 
 Microchip Technology PIC Macro Assembler V2.05 build -831301201 
-Symbol Table                                                                                               Sun May 28 20:16:09 2023
+Symbol Table                                                                                               Mon May 29 14:49:11 2023
 
-                          FSR 0004                 _hex_char_high 0076                 _usb_file_read 077C  
-               _usb_file_open 06A6                           INDF 0000                           PIR1 000C  
-                LCD_SEND_LOOP 05DF           _usb_bytes_read_high 0051                _usb_file_close 06AB  
-                _usb_set_mode 0710                          RCREG 001A                          RCSTA 0018  
+                          FSR 0004                 _hex_char_high 0076                 _usb_file_read 077A  
+               _usb_file_open 069D                           INDF 0000                           PIR1 000C  
+                LCD_SEND_LOOP 05D5           _usb_bytes_read_high 0031                _usb_file_close 06A2  
+                _usb_set_mode 0707                          RCREG 001A                          RCSTA 0018  
                         SPBRG 0099                          PORTA 0005                          PORTB 0006  
-                        PORTC 0007                          PORTD 0008                _usb_disk_mount 0706  
+                        PORTC 0007                          PORTD 0008                _usb_disk_mount 06FD  
                         TRISA 0085                          TRISB 0086                          TRISC 0087  
-                        TRISD 0088                          TRISE 0089                _usb_disk_query 074D  
-                        TXREG 0019                          TXSTA 0098                  GET_TEST_BYTE 0660  
-              _usb_get_status 06FF               _usb_file_create 06EC                 _usb_reset_all 068E  
-                       ADCON1 009F                         INTCON 000B                         UFR_GO 0793  
+                        TRISD 0088                          TRISE 0089                _usb_disk_query 0749  
+                        TXREG 0019                          TXSTA 0098                  GET_TEST_BYTE 0657  
+              _usb_get_status 06F6               _usb_file_create 06E3                 _usb_reset_all 0685  
+                       ADCON1 009F                         INTCON 000B                         UFR_GO 0791  
                        STATUS 0003                         SSPCON 0014                         SSPBUF 0013  
-             _usb_get_version 0718                         _temp3 0060                         _temp4 005F  
-                       _temp5 005E               _usb_free_space1 004F               _usb_free_space2 004E  
-             _usb_free_space3 004D                  USB_BYTE_READ 06B2             _usb_target_status 0049  
-               RAM_WRITE_AUTO 059A               _usb_drive_size1 0074               _usb_drive_size2 0073  
-             _usb_drive_size3 0072             _usb_set_file_name 0693              _usb_disk_connect 070B  
-                      PN_LOOP 0640                        SSPSTAT 0094                   RAM_CONFIG_C 05C8  
-                 RAM_CONFIG_D 05CF                     BUILD_WORD 0652                     LCD_CLEAR1 0615  
-               USB_BYTE_WRITE 06F1                 USB_BYTE_WR_GO 06FA                 USB_READ_DATA0 06C0  
-              _tape_size_high 0055                     GTB_UPDATE 0665                   RAM_WRITE_AH 05A4  
-                 RAM_WRITE_AL 05AC                  MEM_DUMP_LOOP 0561             _usb_disk_capacity 072D  
-                     CLLOOP40 060E                     RAM_CONFIG 05C2             _usb_file_size_low 0052  
-                     DM_INNER 066E                     RAM_WAIT_D 058C                     RAM_WAIT_R 0593  
-                     DM_OUTER 066C                  _delay_millis 0669                       RAM_READ 0577  
-           _usb_get_file_size 06D1                       UFR_DONE 079B                       UFR_LOOP 0788  
-                     SPI_WAIT 064C                     OPTION_REG 0081                       URD_LOOP 06C9  
-                  _gen_count2 0058                    _gen_count3 0057                    _gen_count4 0056  
-                  _lcd_clear2 0622                 _ram_address_h 005D                 _ram_address_l 005C  
-                     UWS_LOOP 0721                    _ldel_count 005A                    _initialize 051C  
-                     _pulse_e 062F                    _s_reg_high 0048                    _sdel_count 005B  
-                  LCD_CLEAR12 061B                    LCD_CLEAR22 0628                    _print_name 063A  
-                RAM_READ_AUTO 0574                 MEM_CLEAR_LOOP 0553                  _hex_char_low 0075  
-             _fifo_write_bank 0041            _usb_bytes_read_low 0050                   SPI_TRANSFER 0649  
-              BUILD_WORD_LOOP 0654                      DISPLAYON 05F4            _usb_file_size_high 0053  
-               _tape_size_low 0054                      DM_MILLIS 066A                    RAM_WAIT_AH 057D  
-                  RAM_WAIT_AL 0585                 _delay_counter 0044                    RAM_WRITE_D 05B4  
-                  RAM_WRITE_R 05BB                USB_WAIT_STATUS 071F                      RAM_WRITE 059E  
-                  SETHOME_LCD 0602                     _gen_count 0059                     _fifo_init 07AC  
-                    PTD_INNER 0677                     _fifo_push 0298                      PTD_OUTER 0676  
-                   _lcd_line2 0609            _usb_logical_bytes1 004C            _usb_logical_bytes2 004B  
-          _usb_logical_bytes3 004A                _fifo_read_bank 0042                      USFN_LOOP 069D  
-                   _mem_clear 0550                _fifo_tf_to_mem 07B2                     _s_reg_low 0047  
-              _fifo_num_bytes 0040                     _tape_name 0061                FUNCTIONSET_LCD 05EB  
-                   _uart_read 056C                     _uart_send 0570                   CLEARDISPLAY 05FB  
-              _fifo_write_idx 0070               _print_test_data 0675                 PTD_NO_NEWLINE 067D  
-                 _byte_to_hex 01F0              _fifo_tf_from_mem 07B8                      _flag_reg 0043  
-                    _fifo_pop 024B                      _lcd_send 05DC                      _lcd_putc 05D6  
-               _fifo_read_idx 0071                      _mem_dump 055E                  _timeout_high 0046  
-            _usb_check_exists 06E2                   _timeout_low 0045               USB_BYTE_READ_GO 06BB  
+             _usb_get_version 070F                         _temp3 0040                         _temp4 003F  
+                       _temp5 003E               _usb_free_space1 002F               _usb_free_space2 002E  
+             _usb_free_space3 002D                  USB_BYTE_READ 06A9             _usb_target_status 0029  
+               RAM_WRITE_AUTO 0590               _usb_drive_size1 0074               _usb_drive_size2 0073  
+             _usb_drive_size3 0072             _usb_set_file_name 068A              _usb_disk_connect 0702  
+                      PN_LOOP 0636                        SSPSTAT 0094                   RAM_CONFIG_C 05BE  
+                 RAM_CONFIG_D 05C5                     BUILD_WORD 0648                     LCD_CLEAR1 060B  
+               USB_BYTE_WRITE 06E8                 USB_BYTE_WR_GO 06F1                 USB_READ_DATA0 06B7  
+              _tape_size_high 0035                     GTB_UPDATE 065C                   RAM_WRITE_AH 059A  
+                 RAM_WRITE_AL 05A2                  MEM_DUMP_LOOP 0544             _usb_disk_capacity 0727  
+                     CLLOOP40 0604                     RAM_CONFIG 05B8                       FD_INNER 055B  
+           _usb_file_size_low 0032                       DM_INNER 0665                     RAM_WAIT_D 0582  
+                   RAM_WAIT_R 0589                       DM_OUTER 0663                  _delay_millis 0660  
+                     RAM_READ 056D             _usb_get_file_size 06C8                       UFR_DONE 079B  
+                     UFR_LOOP 0786                       SPI_WAIT 0642                     OPTION_REG 0081  
+                     URD_LOOP 06C0                    _gen_count2 0038                    _gen_count3 0037  
+                  _gen_count4 0036                    _lcd_clear2 0618                 _ram_address_h 003D  
+               _ram_address_l 003C                       UWS_LOOP 0719                    _ldel_count 003A  
+                  _initialize 04F9                       _pulse_e 0625                    _s_reg_high 0028  
+                  _sdel_count 003B                    LCD_CLEAR12 0611                    LCD_CLEAR22 061E  
+                  _print_name 0630                  RAM_READ_AUTO 056A                 MEM_CLEAR_LOOP 0536  
+                _hex_char_low 0075               _fifo_write_bank 0021            _usb_bytes_read_low 0030  
+                 SPI_TRANSFER 063F                BUILD_WORD_LOOP 064A                      DISPLAYON 05EA  
+          _usb_file_size_high 0033                 _tape_size_low 0034                      DM_MILLIS 0661  
+                  RAM_WAIT_AH 0573                    RAM_WAIT_AL 057B                 _delay_counter 0024  
+                  RAM_WRITE_D 05AA                    RAM_WRITE_R 05B1                USB_WAIT_STATUS 0716  
+                    RAM_WRITE 0593                    SETHOME_LCD 05F8                     _gen_count 0039  
+                   _fifo_init 07AC                      PTD_INNER 066E                     _file_dump 054F  
+                   _fifo_push 0288                      PTD_OUTER 066D                     _lcd_line2 05FF  
+          _usb_logical_bytes1 002C            _usb_logical_bytes2 002B            _usb_logical_bytes3 002A  
+              _fifo_read_bank 0022                      USFN_LOOP 0694                     _mem_clear 0533  
+              _fifo_tf_to_mem 07B2                     _s_reg_low 0027                _fifo_num_bytes 0020  
+                   _tape_name 004C                FUNCTIONSET_LCD 05E1                     _uart_read 0562  
+                   _uart_send 0566                   CLEARDISPLAY 05F1                _fifo_write_idx 0070  
+             _print_test_data 066C                 PTD_NO_NEWLINE 0674                   _byte_to_hex 01EF  
+            _fifo_tf_from_mem 07B8                      _flag_reg 0023                      _fifo_pop 024A  
+                    _lcd_send 05D2                      _lcd_putc 05CC                 _fifo_read_idx 0071  
+                    _mem_dump 0541                  _timeout_high 0026              _usb_check_exists 06D9  
+                 _timeout_low 0025               USB_BYTE_READ_GO 06B2  

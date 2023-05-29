@@ -1871,7 +1871,7 @@ stk_offset SET 0
 auto_size SET 0
 ENDM
 
-# 19 "core.asm"
+# 24 "core.asm"
 ;PIN USAGE:
 ; PORTA,0 UNUSED OUTPUT
 ; PORTA,1 UNUSED OUTPUT
@@ -2025,15 +2025,18 @@ MOVWF INTCON ;ENABLE TIMER 0 INTERRUPT
 CLRF _flag_reg
 CLRF _s_reg_high
 CLRF _s_reg_low
-MOVLW 100
-CALL _delay_millis ;100 MS DELAY AT STARTUP
 BCF PORTD, 3
+MOVLW 50
+CALL _delay_millis ;100 MS DELAY AT STARTUP
+CALL _fifo_init
 CALL RAM_CONFIG
-;CLRF _ram_address_h
-;CLRF _ram_address_l
-;MOVLW 0x55
-;CALL RAM_WRITE
-CALL _mem_clear
+CLRF _ram_address_h
+CLRF _ram_address_l
+MOVLW 0x55
+CALL RAM_WRITE
+MOVLW 0xAA
+CALL RAM_WRITE_AUTO
+;CALL _mem_clear
 CALL FUNCTIONSET_LCD ;INITIALIZE DISPLAY
 CALL DISPLAYON ;POWER ON THE DISPLAY
 CALL CLEARDISPLAY ;CLEAR THE DISPLAY
@@ -2076,6 +2079,29 @@ MOVF _ram_address_h, W
 XORLW 0xFF
 BTFSS ((STATUS) and 07Fh), 2
 GOTO MEM_DUMP_LOOP
+RETURN
+
+global _file_dump
+_file_dump
+MOVF _usb_file_size_high, W
+IORWF _usb_file_size_low, W
+BTFSC ((STATUS) and 07Fh), 2
+RETURN
+MOVF _usb_file_size_high, W
+MOVWF _gen_count
+MOVF _usb_file_size_low, W
+MOVWF _gen_count2
+MOVLW 0xFF
+MOVWF _ram_address_l
+MOVWF _ram_address_h
+INCF _gen_count, F
+FD_INNER
+CALL RAM_READ_AUTO
+CALL _uart_send
+DECFSZ _gen_count2, F
+GOTO FD_INNER
+DECFSZ _gen_count, F
+GOTO FD_INNER
 RETURN
 
 global _uart_read
@@ -2130,11 +2156,11 @@ BSF PORTB, 7
 RETURN
 
 RAM_WRITE_AUTO
-MOVWF _temp5
 INCFSZ _ram_address_l, F ;INCREMENT LOW ADDRESS
 DECF _ram_address_h, F
 INCF _ram_address_h, F ;IF LOW ADDRESS IS ((STATUS) and 07Fh), 2 INCREMENT THE HIGH ADDRESS TOO
 RAM_WRITE
+MOVWF _temp5
 BCF PORTB, 7 ;CHIP ENABLE
 MOVLW 0x02 ;PUT WRITE COMMAND IN W
 MOVWF SSPBUF ;SEND COMMAND
@@ -2692,7 +2718,8 @@ BTFSC _s_reg_low, 7
 BSF _temp3, 0
 MOVF _s_reg_low, W
 ANDLW 0x01 ;GET BIT 0
-XORWF _temp3, F ;TEMP3 NOW CONTAINS BIT0 AND BIT7 XORED TOGETHER
+XORLW 0x01 ;FLIP BIT 0
+XORWF _temp3, F ;TEMP3 NOW CONTAINS BIT0 ^ BIT7 ^ 1
 RRF _temp3, F
 RRF _s_reg_high, F
 RRF _s_reg_low, F
@@ -2989,20 +3016,23 @@ BSF PORTD, 2
 RETURN
 
 USB_WAIT_STATUS
+BCF _flag_reg, 2
 INCF _timeout_high, F
 INCF _timeout_low, F
 UWS_LOOP
 MOVLW 0x01
 CALL _delay_millis ;DELAY 1 MILLISECOND
 CALL _usb_get_status
+MOVWF _temp5
 XORWF _usb_target_status, W
 BTFSC ((STATUS) and 07Fh), 2
-RETURN
+RETLW 0x00
 DECFSZ _timeout_low, F
 GOTO UWS_LOOP
 DECFSZ _timeout_high, F
 GOTO UWS_LOOP
 BSF _flag_reg, 2 ;SET FLAG TO INDICATE A TIMEOUT
+MOVF _temp5, W
 RETURN
 
 global _usb_disk_capacity
@@ -3017,6 +3047,8 @@ CLRF _timeout_high
 MOVLW 100
 MOVWF _timeout_low ;SET TIMEOUT TO 16 MILLISECONDS
 CALL USB_WAIT_STATUS
+BTFSC _flag_reg, 2 ;CHECK TIMEOUT FLAG
+RETURN
 BCF PORTD, 2
 MOVLW 0x27
 CALL SPI_TRANSFER ;SEND READ DATA0 COMMAND
@@ -3055,6 +3087,8 @@ CLRF _timeout_high
 MOVLW 100
 MOVWF _timeout_low ;SET TIMEOUT TO 16 MILLISECONDS
 CALL USB_WAIT_STATUS
+BTFSC _flag_reg, 2 ;CHECK TIMEOUT FLAG
+RETURN
 BCF PORTD, 2
 MOVLW 0x27
 CALL SPI_TRANSFER ;SEND READ DATA0 COMMAND
@@ -3318,8 +3352,7 @@ MOVWF _timeout_low
 MOVLW 0x1D
 MOVWF _usb_target_status
 CALL USB_WAIT_STATUS
-BTFSS _flag_reg, 2 ;CHECK TIMEOUT FLAG
-;GOTO _timeout_error
+BTFSC _flag_reg, 2 ;CHECK TIMEOUT FLAG
 RETURN
 UFR_LOOP
 CALL USB_READ_DATA0
@@ -3341,6 +3374,8 @@ MOVWF _timeout_low
 MOVLW 0x1D
 MOVWF _usb_target_status
 CALL USB_WAIT_STATUS
+BTFSC _flag_reg, 2 ;CHECK TIMEOUT FLAG
+RETURN
 GOTO UFR_LOOP
 UFR_DONE
 MOVF _usb_file_size_low, W

@@ -1,56 +1,58 @@
 Version 3.2 HI-TECH Software Intermediate Code
-"79 main.c
+"80 main.c
 [v _lcd_putc `(v ~T0 @X0 0 ef1`uc ]
-"78
+"79
 [v _uart_send `(v ~T0 @X0 0 ef1`uc ]
-"97
-[v _usb_disk_capacity `(v ~T0 @X0 0 ef ]
 "98
+[v _usb_disk_capacity `(v ~T0 @X0 0 ef ]
+"99
 [v _usb_disk_query `(v ~T0 @X0 0 ef ]
-"90
+"91
 [v _usb_check_exists `(uc ~T0 @X0 0 ef1`uc ]
-"96
+"97
 [v _usb_get_version `(uc ~T0 @X0 0 ef ]
-"95
+"96
 [v _usb_set_mode `(v ~T0 @X0 0 ef1`uc ]
-"83
+"84
 [v _delay_millis `(v ~T0 @X0 0 ef1`uc ]
-"94
+"95
 [v _usb_disk_connect `(v ~T0 @X0 0 ef ]
-"93
+"94
 [v _usb_disk_mount `(v ~T0 @X0 0 ef ]
-"92
+"93
 [v _usb_get_status `(uc ~T0 @X0 0 ef ]
 [p mainexit ]
 "74
 [v _initialize `(v ~T0 @X0 0 ef ]
-"85
-[v _usb_reset_all `(v ~T0 @X0 0 ef ]
-"80
+"81
 [v _lcd_line2 `(v ~T0 @X0 0 ef ]
-"77
+"78
 [v _uart_read `(uc ~T0 @X0 0 ef ]
 "86
-[v _usb_set_file_name `(v ~T0 @X0 0 ef ]
-"82
-[v _print_name `(v ~T0 @X0 0 ef ]
+[v _usb_reset_all `(v ~T0 @X0 0 ef ]
 "87
-[v _usb_file_open `(v ~T0 @X0 0 ef ]
+[v _usb_set_file_name `(v ~T0 @X0 0 ef ]
+"83
+[v _print_name `(v ~T0 @X0 0 ef ]
 "88
-[v _usb_file_close `(v ~T0 @X0 0 ef ]
+[v _usb_file_open `(v ~T0 @X0 0 ef ]
 "89
+[v _usb_file_close `(v ~T0 @X0 0 ef ]
+"90
 [v _usb_get_file_size `(v ~T0 @X0 0 ef ]
-"101
-[v _usb_file_read `(v ~T0 @X0 0 ef ]
-"91
+"102
+[v _usb_file_read `(uc ~T0 @X0 0 ef ]
+"92
 [v _usb_file_create `(v ~T0 @X0 0 ef ]
 "75
 [v _mem_clear `(v ~T0 @X0 0 ef ]
 "76
 [v _mem_dump `(v ~T0 @X0 0 ef ]
-"84
+"77
+[v _file_dump `(v ~T0 @X0 0 ef ]
+"85
 [v _print_test_data `(v ~T0 @X0 0 ef ]
-"81
+"82
 [v _lcd_clear2 `(v ~T0 @X0 0 ef ]
 "8 main.c
 [p x FOSC=XT ]
@@ -1413,48 +1415,40 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;main.c: 74: void initialize();
 [; ;main.c: 75: void mem_clear();
 [; ;main.c: 76: void mem_dump();
-[; ;main.c: 77: unsigned char uart_read();
-[; ;main.c: 78: void uart_send(unsigned char);
-[; ;main.c: 79: void lcd_putc(unsigned char);
-[; ;main.c: 80: void lcd_line2();
-[; ;main.c: 81: void lcd_clear2();
-[; ;main.c: 82: void print_name();
-[; ;main.c: 83: void delay_millis(unsigned char);
-[; ;main.c: 84: void print_test_data();
-[; ;main.c: 85: void usb_reset_all();
-[; ;main.c: 86: void usb_set_file_name();
-[; ;main.c: 87: void usb_file_open();
-[; ;main.c: 88: void usb_file_close();
-[; ;main.c: 89: void usb_get_file_size();
-[; ;main.c: 90: unsigned char usb_check_exists(unsigned char);
-[; ;main.c: 91: void usb_file_create();
-[; ;main.c: 92: unsigned char usb_get_status();
-[; ;main.c: 93: void usb_disk_mount();
-[; ;main.c: 94: void usb_disk_connect();
-[; ;main.c: 95: void usb_set_mode(unsigned char);
-[; ;main.c: 96: unsigned char usb_get_version();
-[; ;main.c: 97: void usb_disk_capacity();
-[; ;main.c: 98: void usb_disk_query();
-[; ;main.c: 101: void usb_file_read();
-"104
-[v _fifo_bank_A `uc ~T0 @X0 -> 64 `i e ]
-[; ;main.c: 104: unsigned char fifo_bank_A[64];
+[; ;main.c: 77: void file_dump();
+[; ;main.c: 78: unsigned char uart_read();
+[; ;main.c: 79: void uart_send(unsigned char);
+[; ;main.c: 80: void lcd_putc(unsigned char);
+[; ;main.c: 81: void lcd_line2();
+[; ;main.c: 82: void lcd_clear2();
+[; ;main.c: 83: void print_name();
+[; ;main.c: 84: void delay_millis(unsigned char);
+[; ;main.c: 85: void print_test_data();
+[; ;main.c: 86: void usb_reset_all();
+[; ;main.c: 87: void usb_set_file_name();
+[; ;main.c: 88: void usb_file_open();
+[; ;main.c: 89: void usb_file_close();
+[; ;main.c: 90: void usb_get_file_size();
+[; ;main.c: 91: unsigned char usb_check_exists(unsigned char);
+[; ;main.c: 92: void usb_file_create();
+[; ;main.c: 93: unsigned char usb_get_status();
+[; ;main.c: 94: void usb_disk_mount();
+[; ;main.c: 95: void usb_disk_connect();
+[; ;main.c: 96: void usb_set_mode(unsigned char);
+[; ;main.c: 97: unsigned char usb_get_version();
+[; ;main.c: 98: void usb_disk_capacity();
+[; ;main.c: 99: void usb_disk_query();
+[; ;main.c: 102: unsigned char usb_file_read();
 "105
-[v _fifo_bank_B `uc ~T0 @X0 -> 64 `i e ]
-[; ;main.c: 105: unsigned char fifo_bank_B[64];
+[v _fifo_bank_A `uc ~T0 @X0 -> 64 `i e ]
+[; ;main.c: 105: unsigned char fifo_bank_A[64];
 "106
-[v _fifo_bank_C `uc ~T0 @X0 -> 32 `i e ]
-[; ;main.c: 106: unsigned char fifo_bank_C[32];
+[v _fifo_bank_B `uc ~T0 @X0 -> 96 `i e ]
+[; ;main.c: 106: unsigned char fifo_bank_B[96];
 "107
-[v _fifo_bank_D `uc ~T0 @X0 -> 32 `i e ]
-[; ;main.c: 107: unsigned char fifo_bank_D[32];
-"108
-[v _fifo_bank_E `uc ~T0 @X0 -> 32 `i e ]
-[; ;main.c: 108: unsigned char fifo_bank_E[32];
+[v _fifo_bank_C `uc ~T0 @X0 -> 96 `i e ]
+[; ;main.c: 107: unsigned char fifo_bank_C[96];
 "109
-[v _fifo_bank_F `uc ~T0 @X0 -> 32 `i e ]
-[; ;main.c: 109: unsigned char fifo_bank_F[32];
-"111
 [v _str_timeout `Cuc ~T0 @X0 -> 0 `x e ]
 [i _str_timeout
 :U ..
@@ -1470,8 +1464,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 -> 0 `c
 ..
 ]
-[; ;main.c: 111: const char str_timeout[] = "Timeout: ";
-"112
+[; ;main.c: 109: const char str_timeout[] = "Timeout: ";
+"110
 [v _str_cmd_mode `Cuc ~T0 @X0 -> 0 `x e ]
 [i _str_cmd_mode
 :U ..
@@ -1491,8 +1485,8 @@ Version 3.2 HI-TECH Software Intermediate Code
 -> 0 `c
 ..
 ]
-[; ;main.c: 112: const char str_cmd_mode[] = "Command mode\n";
-"114
+[; ;main.c: 110: const char str_cmd_mode[] = "Command mode\n";
+"112
 [v _hex_table `Cuc ~T0 @X0 -> 16 `i e ]
 [i _hex_table
 :U ..
@@ -1514,89 +1508,71 @@ Version 3.2 HI-TECH Software Intermediate Code
 -> -> 70 `ui `uc
 ..
 ]
-[; ;main.c: 114: const unsigned char hex_table[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-"117
+[; ;main.c: 112: const unsigned char hex_table[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+"115
 [v _fifo_push `(uc ~T0 @X0 1 ef1`uc ]
-"118
+"116
 {
-[; ;main.c: 117: unsigned char fifo_push(unsigned char data)
-[; ;main.c: 118: {
+[; ;main.c: 115: unsigned char fifo_push(unsigned char data)
+[; ;main.c: 116: {
 [e :U _fifo_push ]
-"117
+"115
 [v _data `uc ~T0 @X0 1 r1 ]
-"118
+"116
 [f ]
-[; ;main.c: 119: switch(fifo_write_bank)
-"119
+[; ;main.c: 117: switch(fifo_write_bank)
+"117
 [e $U 119  ]
-[; ;main.c: 120: {
-"120
+[; ;main.c: 118: {
+"118
 {
-[; ;main.c: 121: case 0:
-"121
-[e :U 120 ]
-"122
-[e :U 121 ]
-[; ;main.c: 122: case 1:
-[; ;main.c: 123: fifo_bank_A[fifo_write_idx & 0x3F] = data;
-"123
-[e = *U + &U _fifo_bank_A * -> -> & -> _fifo_write_idx `i -> 63 `i `ui `ux -> -> # *U &U _fifo_bank_A `ui `ux _data ]
-[; ;main.c: 124: break;
-"124
-[e $U 118  ]
-[; ;main.c: 125: case 2:
-"125
-[e :U 122 ]
-"126
-[e :U 123 ]
-[; ;main.c: 126: case 3:
-[; ;main.c: 127: fifo_bank_B[fifo_write_idx & 0x3F] = data;
-"127
-[e = *U + &U _fifo_bank_B * -> -> & -> _fifo_write_idx `i -> 63 `i `ui `ux -> -> # *U &U _fifo_bank_B `ui `ux _data ]
-[; ;main.c: 128: break;
-"128
-[e $U 118  ]
-[; ;main.c: 129: case 4:
-"129
-[e :U 124 ]
-[; ;main.c: 130: fifo_bank_C[fifo_write_idx & 0x1F] = data;
-"130
-[e = *U + &U _fifo_bank_C * -> -> & -> _fifo_write_idx `i -> 31 `i `ui `ux -> -> # *U &U _fifo_bank_C `ui `ux _data ]
-[; ;main.c: 131: break;
-"131
-[e $U 118  ]
-[; ;main.c: 132: case 5:
-"132
-[e :U 125 ]
-[; ;main.c: 133: fifo_bank_D[fifo_write_idx & 0x1F] = data;
-"133
-[e = *U + &U _fifo_bank_D * -> -> & -> _fifo_write_idx `i -> 31 `i `ui `ux -> -> # *U &U _fifo_bank_D `ui `ux _data ]
-[; ;main.c: 134: break;
-"134
-[e $U 118  ]
-[; ;main.c: 135: case 6:
-"135
-[e :U 126 ]
-[; ;main.c: 136: fifo_bank_E[fifo_write_idx & 0x1F] = data;
-"136
-[e = *U + &U _fifo_bank_E * -> -> & -> _fifo_write_idx `i -> 31 `i `ui `ux -> -> # *U &U _fifo_bank_E `ui `ux _data ]
-[; ;main.c: 137: break;
-"137
-[e $U 118  ]
-[; ;main.c: 138: case 7:
-"138
-[e :U 127 ]
-[; ;main.c: 139: fifo_bank_F[fifo_write_idx & 0x1F] = data;
-"139
-[e = *U + &U _fifo_bank_F * -> -> & -> _fifo_write_idx `i -> 31 `i `ui `ux -> -> # *U &U _fifo_bank_F `ui `ux _data ]
-[; ;main.c: 140: break;
-"140
-[e $U 118  ]
-"141
-}
-[; ;main.c: 141: }
-[e $U 118  ]
+[; ;main.c: 119: case 0:
 "119
+[e :U 120 ]
+"120
+[e :U 121 ]
+[; ;main.c: 120: case 1:
+[; ;main.c: 121: fifo_bank_A[fifo_write_idx] = data;
+"121
+[e = *U + &U _fifo_bank_A * -> _fifo_write_idx `ux -> -> # *U &U _fifo_bank_A `ui `ux _data ]
+[; ;main.c: 122: break;
+"122
+[e $U 118  ]
+[; ;main.c: 123: case 2:
+"123
+[e :U 122 ]
+"124
+[e :U 123 ]
+"125
+[e :U 124 ]
+[; ;main.c: 124: case 3:
+[; ;main.c: 125: case 4:
+[; ;main.c: 126: fifo_bank_B[fifo_write_idx - 64] = data;
+"126
+[e = *U + &U _fifo_bank_B * -> -> - -> _fifo_write_idx `i -> 64 `i `ui `ux -> -> # *U &U _fifo_bank_B `ui `ux _data ]
+[; ;main.c: 127: break;
+"127
+[e $U 118  ]
+[; ;main.c: 128: case 5:
+"128
+[e :U 125 ]
+"129
+[e :U 126 ]
+"130
+[e :U 127 ]
+[; ;main.c: 129: case 6:
+[; ;main.c: 130: case 7:
+[; ;main.c: 131: fifo_bank_C[fifo_write_idx - (64 + 96)] = data;
+"131
+[e = *U + &U _fifo_bank_C * -> -> - -> _fifo_write_idx `i + -> 64 `i -> 96 `i `ui `ux -> -> # *U &U _fifo_bank_C `ui `ux _data ]
+[; ;main.c: 132: break;
+"132
+[e $U 118  ]
+"133
+}
+[; ;main.c: 133: }
+[e $U 118  ]
+"117
 [e :U 119 ]
 [e [\ _fifo_write_bank , $ -> -> 0 `i `uc 120
  , $ -> -> 1 `i `uc 121
@@ -1607,117 +1583,99 @@ Version 3.2 HI-TECH Software Intermediate Code
  , $ -> -> 6 `i `uc 126
  , $ -> -> 7 `i `uc 127
  118 ]
-"141
+"133
 [e :U 118 ]
-[; ;main.c: 142: ++fifo_write_idx;
-"142
+[; ;main.c: 134: ++fifo_write_idx;
+"134
 [e =+ _fifo_write_idx -> -> 1 `i `uc ]
-[; ;main.c: 143: if(!(fifo_write_idx & 0x1F))
-"143
+[; ;main.c: 135: if(!(fifo_write_idx & 0x1F))
+"135
 [e $ ! ! != & -> _fifo_write_idx `i -> 31 `i -> 0 `i 128  ]
-[; ;main.c: 144: {
-"144
+[; ;main.c: 136: {
+"136
 {
-[; ;main.c: 145: ++fifo_write_bank;
-"145
+[; ;main.c: 137: ++fifo_write_bank;
+"137
 [e =+ _fifo_write_bank -> -> 1 `i `uc ]
-"146
+"138
 }
 [e :U 128 ]
-[; ;main.c: 146: }
-[; ;main.c: 147: ++fifo_num_bytes;
-"147
+[; ;main.c: 138: }
+[; ;main.c: 139: ++fifo_num_bytes;
+"139
 [e =+ _fifo_num_bytes -> -> 1 `i `uc ]
-[; ;main.c: 148: return fifo_num_bytes;
-"148
+[; ;main.c: 140: return fifo_num_bytes;
+"140
 [e ) _fifo_num_bytes ]
 [e $UE 117  ]
-[; ;main.c: 149: }
-"149
+[; ;main.c: 141: }
+"141
 [e :UE 117 ]
 }
-"151
+"143
 [v _fifo_pop `(uc ~T0 @X0 1 ef ]
-"152
+"144
 {
-[; ;main.c: 151: unsigned char fifo_pop(void)
-[; ;main.c: 152: {
+[; ;main.c: 143: unsigned char fifo_pop(void)
+[; ;main.c: 144: {
 [e :U _fifo_pop ]
 [f ]
-"153
+"145
 [v _temp `uc ~T0 @X0 1 a ]
-[; ;main.c: 153: unsigned char temp;
-[; ;main.c: 154: switch(fifo_read_bank)
-"154
+[; ;main.c: 145: unsigned char temp;
+[; ;main.c: 146: switch(fifo_read_bank)
+"146
 [e $U 131  ]
-[; ;main.c: 155: {
-"155
+[; ;main.c: 147: {
+"147
 {
-[; ;main.c: 156: case 0:
-"156
+[; ;main.c: 148: case 0:
+"148
 [e :U 132 ]
-"157
+"149
 [e :U 133 ]
-[; ;main.c: 157: case 1:
-[; ;main.c: 158: temp = fifo_bank_A[fifo_read_idx & 0x3F];
-"158
-[e = _temp *U + &U _fifo_bank_A * -> -> & -> _fifo_read_idx `i -> 63 `i `ui `ux -> -> # *U &U _fifo_bank_A `ui `ux ]
-[; ;main.c: 159: break;
-"159
+[; ;main.c: 149: case 1:
+[; ;main.c: 150: temp = fifo_bank_A[fifo_read_idx];
+"150
+[e = _temp *U + &U _fifo_bank_A * -> _fifo_read_idx `ux -> -> # *U &U _fifo_bank_A `ui `ux ]
+[; ;main.c: 151: break;
+"151
 [e $U 130  ]
-[; ;main.c: 160: case 2:
-"160
+[; ;main.c: 152: case 2:
+"152
 [e :U 134 ]
-"161
+"153
 [e :U 135 ]
-[; ;main.c: 161: case 3:
-[; ;main.c: 162: temp = fifo_bank_B[fifo_read_idx & 0x3F];
-"162
-[e = _temp *U + &U _fifo_bank_B * -> -> & -> _fifo_read_idx `i -> 63 `i `ui `ux -> -> # *U &U _fifo_bank_B `ui `ux ]
-[; ;main.c: 163: break;
-"163
-[e $U 130  ]
-[; ;main.c: 164: case 4:
-"164
-[e :U 136 ]
-[; ;main.c: 165: temp = fifo_bank_C[fifo_read_idx & 0x1F];
-"165
-[e = _temp *U + &U _fifo_bank_C * -> -> & -> _fifo_read_idx `i -> 31 `i `ui `ux -> -> # *U &U _fifo_bank_C `ui `ux ]
-[; ;main.c: 166: break;
-"166
-[e $U 130  ]
-[; ;main.c: 167: case 5:
-"167
-[e :U 137 ]
-[; ;main.c: 168: temp = fifo_bank_D[fifo_read_idx & 0x1F];
-"168
-[e = _temp *U + &U _fifo_bank_D * -> -> & -> _fifo_read_idx `i -> 31 `i `ui `ux -> -> # *U &U _fifo_bank_D `ui `ux ]
-[; ;main.c: 169: break;
-"169
-[e $U 130  ]
-[; ;main.c: 170: case 6:
-"170
-[e :U 138 ]
-[; ;main.c: 171: temp = fifo_bank_E[fifo_read_idx & 0x1F];
-"171
-[e = _temp *U + &U _fifo_bank_E * -> -> & -> _fifo_read_idx `i -> 31 `i `ui `ux -> -> # *U &U _fifo_bank_E `ui `ux ]
-[; ;main.c: 172: break;
-"172
-[e $U 130  ]
-[; ;main.c: 173: case 7:
-"173
-[e :U 139 ]
-[; ;main.c: 174: temp = fifo_bank_F[fifo_read_idx & 0x1F];
-"174
-[e = _temp *U + &U _fifo_bank_F * -> -> & -> _fifo_read_idx `i -> 31 `i `ui `ux -> -> # *U &U _fifo_bank_F `ui `ux ]
-[; ;main.c: 175: break;
-"175
-[e $U 130  ]
-"176
-}
-[; ;main.c: 176: }
-[e $U 130  ]
 "154
+[e :U 136 ]
+[; ;main.c: 153: case 3:
+[; ;main.c: 154: case 4:
+[; ;main.c: 155: temp = fifo_bank_B[fifo_read_idx - 64];
+"155
+[e = _temp *U + &U _fifo_bank_B * -> -> - -> _fifo_read_idx `i -> 64 `i `ui `ux -> -> # *U &U _fifo_bank_B `ui `ux ]
+[; ;main.c: 156: break;
+"156
+[e $U 130  ]
+[; ;main.c: 157: case 5:
+"157
+[e :U 137 ]
+"158
+[e :U 138 ]
+"159
+[e :U 139 ]
+[; ;main.c: 158: case 6:
+[; ;main.c: 159: case 7:
+[; ;main.c: 160: temp = fifo_bank_C[fifo_read_idx - (64 + 96)];
+"160
+[e = _temp *U + &U _fifo_bank_C * -> -> - -> _fifo_read_idx `i + -> 64 `i -> 96 `i `ui `ux -> -> # *U &U _fifo_bank_C `ui `ux ]
+[; ;main.c: 161: break;
+"161
+[e $U 130  ]
+"162
+}
+[; ;main.c: 162: }
+[e $U 130  ]
+"146
 [e :U 131 ]
 [e [\ _fifo_read_bank , $ -> -> 0 `i `uc 132
  , $ -> -> 1 `i `uc 133
@@ -1728,782 +1686,794 @@ Version 3.2 HI-TECH Software Intermediate Code
  , $ -> -> 6 `i `uc 138
  , $ -> -> 7 `i `uc 139
  130 ]
-"176
+"162
 [e :U 130 ]
-[; ;main.c: 177: ++fifo_read_idx;
-"177
+[; ;main.c: 163: ++fifo_read_idx;
+"163
 [e =+ _fifo_read_idx -> -> 1 `i `uc ]
-[; ;main.c: 178: if(!(fifo_read_idx & 0x1F))
-"178
+[; ;main.c: 164: if(!(fifo_read_idx & 0x1F))
+"164
 [e $ ! ! != & -> _fifo_read_idx `i -> 31 `i -> 0 `i 140  ]
-[; ;main.c: 179: {
-"179
+[; ;main.c: 165: {
+"165
 {
-[; ;main.c: 180: ++fifo_read_bank;
-"180
+[; ;main.c: 166: ++fifo_read_bank;
+"166
 [e =+ _fifo_read_bank -> -> 1 `i `uc ]
-"181
+"167
 }
 [e :U 140 ]
-[; ;main.c: 181: }
-[; ;main.c: 182: --fifo_num_bytes;
-"182
+[; ;main.c: 167: }
+[; ;main.c: 168: --fifo_num_bytes;
+"168
 [e =- _fifo_num_bytes -> -> 1 `i `uc ]
-[; ;main.c: 183: return temp;
-"183
+[; ;main.c: 169: return temp;
+"169
 [e ) _temp ]
 [e $UE 129  ]
-[; ;main.c: 184: }
-"184
+[; ;main.c: 170: }
+"170
 [e :UE 129 ]
 }
-"186
+"172
 [v _byte_to_hex `(v ~T0 @X0 1 ef1`uc ]
-"187
+"173
 {
-[; ;main.c: 186: void byte_to_hex(unsigned char data)
-[; ;main.c: 187: {
+[; ;main.c: 172: void byte_to_hex(unsigned char data)
+[; ;main.c: 173: {
 [e :U _byte_to_hex ]
-"186
+"172
 [v _data `uc ~T0 @X0 1 r1 ]
-"187
+"173
 [f ]
-[; ;main.c: 188: hex_char_low = hex_table[data & (unsigned char)0x0F];
-"188
+[; ;main.c: 174: hex_char_low = hex_table[data & (unsigned char)0x0F];
+"174
 [e = _hex_char_low *U + &U _hex_table * -> -> & -> _data `i -> -> -> 15 `i `uc `i `ui `ux -> -> # *U &U _hex_table `ui `ux ]
-[; ;main.c: 189: data = data >> 4;
-"189
+[; ;main.c: 175: data = data >> 4;
+"175
 [e = _data -> >> -> _data `i -> 4 `i `uc ]
-[; ;main.c: 190: hex_char_high = hex_table[data & (unsigned char)0x0F];
-"190
+[; ;main.c: 176: hex_char_high = hex_table[data & (unsigned char)0x0F];
+"176
 [e = _hex_char_high *U + &U _hex_table * -> -> & -> _data `i -> -> -> 15 `i `uc `i `ui `ux -> -> # *U &U _hex_table `ui `ux ]
-[; ;main.c: 191: return;
-"191
+[; ;main.c: 177: return;
+"177
 [e $UE 141  ]
-[; ;main.c: 192: }
-"192
+[; ;main.c: 178: }
+"178
 [e :UE 141 ]
 }
-"194
+"180
 [v _print_string_lcd `(v ~T0 @X0 1 ef1`*Cuc ]
-"195
+"181
 {
-[; ;main.c: 194: void print_string_lcd(const char* string)
-[; ;main.c: 195: {
+[; ;main.c: 180: void print_string_lcd(const char* string)
+[; ;main.c: 181: {
 [e :U _print_string_lcd ]
-"194
+"180
 [v _string `*Cuc ~T0 @X0 1 r1 ]
-"195
+"181
 [f ]
-"196
+"182
 [v _i `uc ~T0 @X0 1 a ]
-[; ;main.c: 196: unsigned char i = 0;
+[; ;main.c: 182: unsigned char i = 0;
 [e = _i -> -> 0 `i `uc ]
-[; ;main.c: 197: while(string[i])
-"197
+[; ;main.c: 183: while(string[i])
+"183
 [e $U 143  ]
 [e :U 144 ]
-[; ;main.c: 198: {
-"198
+[; ;main.c: 184: {
+"184
 {
-[; ;main.c: 199: lcd_putc(string[i]);
-"199
+[; ;main.c: 185: lcd_putc(string[i]);
+"185
 [e ( _lcd_putc (1 *U + _string * -> _i `ux -> -> # *U _string `ui `ux ]
-[; ;main.c: 200: ++i;
-"200
+[; ;main.c: 186: ++i;
+"186
 [e =+ _i -> -> 1 `i `uc ]
-"201
+"187
 }
 [e :U 143 ]
-"197
+"183
 [e $ != -> *U + _string * -> _i `ux -> -> # *U _string `ui `ux `i -> -> -> 0 `i `Cuc `i 144  ]
 [e :U 145 ]
-[; ;main.c: 201: }
-[; ;main.c: 202: return;
-"202
+[; ;main.c: 187: }
+[; ;main.c: 188: return;
+"188
 [e $UE 142  ]
-[; ;main.c: 203: }
-"203
+[; ;main.c: 189: }
+"189
 [e :UE 142 ]
 }
-"205
+"191
 [v _print_string_serial `(v ~T0 @X0 1 ef1`*Cuc ]
-"206
+"192
 {
-[; ;main.c: 205: void print_string_serial(const char* string)
-[; ;main.c: 206: {
+[; ;main.c: 191: void print_string_serial(const char* string)
+[; ;main.c: 192: {
 [e :U _print_string_serial ]
-"205
+"191
 [v _string `*Cuc ~T0 @X0 1 r1 ]
-"206
+"192
 [f ]
-"207
+"193
 [v _i `uc ~T0 @X0 1 a ]
-[; ;main.c: 207: unsigned char i = 0;
+[; ;main.c: 193: unsigned char i = 0;
 [e = _i -> -> 0 `i `uc ]
-[; ;main.c: 208: while(string[i])
-"208
+[; ;main.c: 194: while(string[i])
+"194
 [e $U 147  ]
 [e :U 148 ]
-[; ;main.c: 209: {
-"209
+[; ;main.c: 195: {
+"195
 {
-[; ;main.c: 210: uart_send(string[i]);
-"210
+[; ;main.c: 196: uart_send(string[i]);
+"196
 [e ( _uart_send (1 *U + _string * -> _i `ux -> -> # *U _string `ui `ux ]
-[; ;main.c: 211: ++i;
-"211
+[; ;main.c: 197: ++i;
+"197
 [e =+ _i -> -> 1 `i `uc ]
-"212
+"198
 }
 [e :U 147 ]
-"208
+"194
 [e $ != -> *U + _string * -> _i `ux -> -> # *U _string `ui `ux `i -> -> -> 0 `i `Cuc `i 148  ]
 [e :U 149 ]
-[; ;main.c: 212: }
-[; ;main.c: 213: return;
-"213
+[; ;main.c: 198: }
+[; ;main.c: 199: return;
+"199
 [e $UE 146  ]
-[; ;main.c: 214: }
-"214
+[; ;main.c: 200: }
+"200
 [e :UE 146 ]
 }
-"216
+"202
 [v _timeout_error `(v ~T0 @X0 1 ef ]
-"217
+"203
 {
-[; ;main.c: 216: void timeout_error()
-[; ;main.c: 217: {
+[; ;main.c: 202: void timeout_error()
+[; ;main.c: 203: {
 [e :U _timeout_error ]
 [f ]
-[; ;main.c: 218: print_string_serial(str_timeout);
-"218
+[; ;main.c: 204: print_string_serial(str_timeout);
+"204
 [e ( _print_string_serial (1 &U _str_timeout ]
-[; ;main.c: 219: byte_to_hex(usb_target_status);
-"219
+[; ;main.c: 205: byte_to_hex(usb_target_status);
+"205
 [e ( _byte_to_hex (1 _usb_target_status ]
+[; ;main.c: 206: uart_send(hex_char_high);
+"206
+[e ( _uart_send (1 _hex_char_high ]
+[; ;main.c: 207: uart_send(hex_char_low);
+"207
+[e ( _uart_send (1 _hex_char_low ]
+[; ;main.c: 208: uart_send('\n');
+"208
+[e ( _uart_send (1 -> -> 10 `ui `uc ]
+[; ;main.c: 209: return;
+"209
+[e $UE 150  ]
+[; ;main.c: 210: }
+"210
+[e :UE 150 ]
+}
+"212
+[v _print_capacity `(v ~T0 @X0 1 ef ]
+"213
+{
+[; ;main.c: 212: void print_capacity()
+[; ;main.c: 213: {
+[e :U _print_capacity ]
+[f ]
+[; ;main.c: 214: usb_disk_capacity();
+"214
+[e ( _usb_disk_capacity ..  ]
+[; ;main.c: 215: print_string_serial("Physical bytes: ");
+"215
+[e ( _print_string_serial (1 :s 1C ]
+[; ;main.c: 216: byte_to_hex(usb_drive_size3);
+"216
+[e ( _byte_to_hex (1 _usb_drive_size3 ]
+[; ;main.c: 217: uart_send(hex_char_high);
+"217
+[e ( _uart_send (1 _hex_char_high ]
+[; ;main.c: 218: uart_send(hex_char_low);
+"218
+[e ( _uart_send (1 _hex_char_low ]
+[; ;main.c: 219: byte_to_hex(usb_drive_size2);
+"219
+[e ( _byte_to_hex (1 _usb_drive_size2 ]
 [; ;main.c: 220: uart_send(hex_char_high);
 "220
 [e ( _uart_send (1 _hex_char_high ]
 [; ;main.c: 221: uart_send(hex_char_low);
 "221
 [e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 222: uart_send('\n');
+[; ;main.c: 222: byte_to_hex(usb_drive_size1);
 "222
-[e ( _uart_send (1 -> -> 10 `ui `uc ]
-[; ;main.c: 223: return;
-"223
-[e $UE 150  ]
-[; ;main.c: 224: }
-"224
-[e :UE 150 ]
-}
-"226
-[v _print_capacity `(v ~T0 @X0 1 ef ]
-"227
-{
-[; ;main.c: 226: void print_capacity()
-[; ;main.c: 227: {
-[e :U _print_capacity ]
-[f ]
-[; ;main.c: 228: usb_disk_capacity();
-"228
-[e ( _usb_disk_capacity ..  ]
-[; ;main.c: 229: print_string_serial("Physical bytes: ");
-"229
-[e ( _print_string_serial (1 :s 1C ]
-[; ;main.c: 230: byte_to_hex(usb_drive_size3);
-"230
-[e ( _byte_to_hex (1 _usb_drive_size3 ]
-[; ;main.c: 231: uart_send(hex_char_high);
-"231
-[e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 232: uart_send(hex_char_low);
-"232
-[e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 233: byte_to_hex(usb_drive_size2);
-"233
-[e ( _byte_to_hex (1 _usb_drive_size2 ]
-[; ;main.c: 234: uart_send(hex_char_high);
-"234
-[e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 235: uart_send(hex_char_low);
-"235
-[e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 236: byte_to_hex(usb_drive_size1);
-"236
 [e ( _byte_to_hex (1 _usb_drive_size1 ]
-[; ;main.c: 237: uart_send(hex_char_high);
-"237
+[; ;main.c: 223: uart_send(hex_char_high);
+"223
 [e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 238: uart_send(hex_char_low);
-"238
+[; ;main.c: 224: uart_send(hex_char_low);
+"224
 [e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 239: uart_send('0');
-"239
+[; ;main.c: 225: uart_send('0');
+"225
 [e ( _uart_send (1 -> -> 48 `ui `uc ]
-[; ;main.c: 240: uart_send('0');
-"240
+[; ;main.c: 226: uart_send('0');
+"226
 [e ( _uart_send (1 -> -> 48 `ui `uc ]
-[; ;main.c: 241: uart_send('\n');
-"241
+[; ;main.c: 227: uart_send('\n');
+"227
 [e ( _uart_send (1 -> -> 10 `ui `uc ]
-[; ;main.c: 242: return;
-"242
+[; ;main.c: 228: return;
+"228
 [e $UE 151  ]
-[; ;main.c: 243: }
-"243
+[; ;main.c: 229: }
+"229
 [e :UE 151 ]
 }
-"244
+"230
 [v _print_query `(v ~T0 @X0 1 ef ]
-"245
+"231
 {
-[; ;main.c: 244: void print_query()
-[; ;main.c: 245: {
+[; ;main.c: 230: void print_query()
+[; ;main.c: 231: {
 [e :U _print_query ]
 [f ]
-[; ;main.c: 246: usb_disk_query();
-"246
+[; ;main.c: 232: usb_disk_query();
+"232
 [e ( _usb_disk_query ..  ]
-[; ;main.c: 247: print_string_serial("Logical bytes: ");
-"247
+[; ;main.c: 233: print_string_serial("Logical bytes: ");
+"233
 [e ( _print_string_serial (1 :s 2C ]
-[; ;main.c: 248: byte_to_hex(usb_logical_bytes3);
-"248
+[; ;main.c: 234: byte_to_hex(usb_logical_bytes3);
+"234
 [e ( _byte_to_hex (1 _usb_logical_bytes3 ]
-[; ;main.c: 249: uart_send(hex_char_high);
-"249
+[; ;main.c: 235: uart_send(hex_char_high);
+"235
 [e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 250: uart_send(hex_char_low);
-"250
+[; ;main.c: 236: uart_send(hex_char_low);
+"236
 [e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 251: byte_to_hex(usb_logical_bytes2);
-"251
+[; ;main.c: 237: byte_to_hex(usb_logical_bytes2);
+"237
 [e ( _byte_to_hex (1 _usb_logical_bytes2 ]
-[; ;main.c: 252: uart_send(hex_char_high);
-"252
+[; ;main.c: 238: uart_send(hex_char_high);
+"238
 [e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 253: uart_send(hex_char_low);
-"253
+[; ;main.c: 239: uart_send(hex_char_low);
+"239
 [e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 254: byte_to_hex(usb_logical_bytes1);
-"254
+[; ;main.c: 240: byte_to_hex(usb_logical_bytes1);
+"240
 [e ( _byte_to_hex (1 _usb_logical_bytes1 ]
-[; ;main.c: 255: uart_send(hex_char_high);
-"255
+[; ;main.c: 241: uart_send(hex_char_high);
+"241
 [e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 256: uart_send(hex_char_low);
-"256
+[; ;main.c: 242: uart_send(hex_char_low);
+"242
 [e ( _uart_send (1 _hex_char_low ]
+[; ;main.c: 243: uart_send('0');
+"243
+[e ( _uart_send (1 -> -> 48 `ui `uc ]
+[; ;main.c: 244: uart_send('0');
+"244
+[e ( _uart_send (1 -> -> 48 `ui `uc ]
+[; ;main.c: 245: uart_send('\n');
+"245
+[e ( _uart_send (1 -> -> 10 `ui `uc ]
+[; ;main.c: 246: print_string_serial("Free bytes: ");
+"246
+[e ( _print_string_serial (1 :s 3C ]
+[; ;main.c: 247: byte_to_hex(usb_free_space3);
+"247
+[e ( _byte_to_hex (1 _usb_free_space3 ]
+[; ;main.c: 248: uart_send(hex_char_high);
+"248
+[e ( _uart_send (1 _hex_char_high ]
+[; ;main.c: 249: uart_send(hex_char_low);
+"249
+[e ( _uart_send (1 _hex_char_low ]
+[; ;main.c: 250: byte_to_hex(usb_free_space2);
+"250
+[e ( _byte_to_hex (1 _usb_free_space2 ]
+[; ;main.c: 251: uart_send(hex_char_high);
+"251
+[e ( _uart_send (1 _hex_char_high ]
+[; ;main.c: 252: uart_send(hex_char_low);
+"252
+[e ( _uart_send (1 _hex_char_low ]
+[; ;main.c: 253: byte_to_hex(usb_free_space1);
+"253
+[e ( _byte_to_hex (1 _usb_free_space1 ]
+[; ;main.c: 254: uart_send(hex_char_high);
+"254
+[e ( _uart_send (1 _hex_char_high ]
+[; ;main.c: 255: uart_send(hex_char_low);
+"255
+[e ( _uart_send (1 _hex_char_low ]
+[; ;main.c: 256: uart_send('0');
+"256
+[e ( _uart_send (1 -> -> 48 `ui `uc ]
 [; ;main.c: 257: uart_send('0');
 "257
 [e ( _uart_send (1 -> -> 48 `ui `uc ]
-[; ;main.c: 258: uart_send('0');
+[; ;main.c: 258: uart_send('\n');
 "258
-[e ( _uart_send (1 -> -> 48 `ui `uc ]
-[; ;main.c: 259: uart_send('\n');
-"259
 [e ( _uart_send (1 -> -> 10 `ui `uc ]
-[; ;main.c: 260: print_string_serial("Free bytes: ");
+[; ;main.c: 259: return;
+"259
+[e $UE 152  ]
+[; ;main.c: 260: }
 "260
-[e ( _print_string_serial (1 :s 3C ]
-[; ;main.c: 261: byte_to_hex(usb_free_space3);
-"261
-[e ( _byte_to_hex (1 _usb_free_space3 ]
-[; ;main.c: 262: uart_send(hex_char_high);
+[e :UE 152 ]
+}
 "262
-[e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 263: uart_send(hex_char_low);
+[v _usb_autoconfig `(v ~T0 @X0 1 ef ]
 "263
-[e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 264: byte_to_hex(usb_free_space2);
+{
+[; ;main.c: 262: void usb_autoconfig()
+[; ;main.c: 263: {
+[e :U _usb_autoconfig ]
+[f ]
 "264
-[e ( _byte_to_hex (1 _usb_free_space2 ]
-[; ;main.c: 265: uart_send(hex_char_high);
+[v _temp `uc ~T0 @X0 1 a ]
+[; ;main.c: 264: unsigned char temp;
+[; ;main.c: 265: print_string_serial("USB Autoconfig:\n");
 "265
-[e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 266: uart_send(hex_char_low);
+[e ( _print_string_serial (1 :s 4C ]
+[; ;main.c: 266: temp = usb_check_exists(0x55);
 "266
-[e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 267: byte_to_hex(usb_free_space1);
+[e = _temp ( _usb_check_exists (1 -> -> 85 `i `uc ]
+[; ;main.c: 267: byte_to_hex(temp);
 "267
-[e ( _byte_to_hex (1 _usb_free_space1 ]
+[e ( _byte_to_hex (1 _temp ]
 [; ;main.c: 268: uart_send(hex_char_high);
 "268
 [e ( _uart_send (1 _hex_char_high ]
 [; ;main.c: 269: uart_send(hex_char_low);
 "269
 [e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 270: uart_send('0');
+[; ;main.c: 270: uart_send('\n');
 "270
-[e ( _uart_send (1 -> -> 48 `ui `uc ]
-[; ;main.c: 271: uart_send('0');
-"271
-[e ( _uart_send (1 -> -> 48 `ui `uc ]
-[; ;main.c: 272: uart_send('\n');
+[e ( _uart_send (1 -> -> 10 `ui `uc ]
+[; ;main.c: 272: temp = usb_get_version();
 "272
-[e ( _uart_send (1 -> -> 10 `ui `uc ]
-[; ;main.c: 273: return;
-"273
-[e $UE 152  ]
-[; ;main.c: 274: }
-"274
-[e :UE 152 ]
-}
-"276
-[v _usb_autoconfig `(v ~T0 @X0 1 ef ]
-"277
-{
-[; ;main.c: 276: void usb_autoconfig()
-[; ;main.c: 277: {
-[e :U _usb_autoconfig ]
-[f ]
-"278
-[v _temp `uc ~T0 @X0 1 a ]
-[; ;main.c: 278: unsigned char temp;
-[; ;main.c: 279: print_string_serial("USB Autoconfig:\n");
-"279
-[e ( _print_string_serial (1 :s 4C ]
-[; ;main.c: 280: temp = usb_check_exists(0x55);
-"280
-[e = _temp ( _usb_check_exists (1 -> -> 85 `i `uc ]
-[; ;main.c: 281: byte_to_hex(temp);
-"281
-[e ( _byte_to_hex (1 _temp ]
-[; ;main.c: 282: uart_send(hex_char_high);
-"282
-[e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 283: uart_send(hex_char_low);
-"283
-[e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 284: uart_send('\n');
-"284
-[e ( _uart_send (1 -> -> 10 `ui `uc ]
-[; ;main.c: 286: temp = usb_get_version();
-"286
 [e = _temp ( _usb_get_version ..  ]
-[; ;main.c: 287: byte_to_hex(temp);
-"287
+[; ;main.c: 273: byte_to_hex(temp);
+"273
 [e ( _byte_to_hex (1 _temp ]
-[; ;main.c: 288: print_string_serial("Version: ");
-"288
+[; ;main.c: 274: print_string_serial("Version: ");
+"274
 [e ( _print_string_serial (1 :s 5C ]
-[; ;main.c: 289: uart_send(hex_char_high);
-"289
+[; ;main.c: 275: uart_send(hex_char_high);
+"275
 [e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 290: uart_send(hex_char_low);
-"290
+[; ;main.c: 276: uart_send(hex_char_low);
+"276
 [e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 291: uart_send('\n');
-"291
+[; ;main.c: 277: uart_send('\n');
+"277
 [e ( _uart_send (1 -> -> 10 `ui `uc ]
-[; ;main.c: 293: usb_set_mode(0x05);
-"293
+[; ;main.c: 279: usb_set_mode(0x05);
+"279
 [e ( _usb_set_mode (1 -> -> 5 `i `uc ]
-[; ;main.c: 294: delay_millis(1);
-"294
+[; ;main.c: 280: delay_millis(1);
+"280
 [e ( _delay_millis (1 -> -> 1 `i `uc ]
-[; ;main.c: 295: usb_set_mode(0x07);
-"295
+[; ;main.c: 281: usb_set_mode(0x07);
+"281
 [e ( _usb_set_mode (1 -> -> 7 `i `uc ]
-[; ;main.c: 296: delay_millis(1);
-"296
+[; ;main.c: 282: delay_millis(1);
+"282
 [e ( _delay_millis (1 -> -> 1 `i `uc ]
-[; ;main.c: 297: usb_set_mode(0x06);
-"297
+[; ;main.c: 283: usb_set_mode(0x06);
+"283
 [e ( _usb_set_mode (1 -> -> 6 `i `uc ]
-[; ;main.c: 298: delay_millis(1);
-"298
+[; ;main.c: 284: delay_millis(1);
+"284
 [e ( _delay_millis (1 -> -> 1 `i `uc ]
-[; ;main.c: 299: usb_disk_connect();
-"299
+[; ;main.c: 285: usb_disk_connect();
+"285
 [e ( _usb_disk_connect ..  ]
-[; ;main.c: 300: delay_millis(250);
-"300
+[; ;main.c: 286: delay_millis(250);
+"286
 [e ( _delay_millis (1 -> -> 250 `i `uc ]
-[; ;main.c: 301: delay_millis(250);
-"301
+[; ;main.c: 287: delay_millis(250);
+"287
 [e ( _delay_millis (1 -> -> 250 `i `uc ]
-[; ;main.c: 302: usb_disk_mount();
-"302
+[; ;main.c: 288: usb_disk_mount();
+"288
 [e ( _usb_disk_mount ..  ]
-[; ;main.c: 303: delay_millis(250);
-"303
+[; ;main.c: 289: delay_millis(250);
+"289
 [e ( _delay_millis (1 -> -> 250 `i `uc ]
-[; ;main.c: 304: delay_millis(250);
-"304
+[; ;main.c: 290: delay_millis(250);
+"290
 [e ( _delay_millis (1 -> -> 250 `i `uc ]
-[; ;main.c: 306: temp = usb_get_status();
-"306
+[; ;main.c: 292: temp = usb_get_status();
+"292
 [e = _temp ( _usb_get_status ..  ]
-[; ;main.c: 307: byte_to_hex(temp);
-"307
+[; ;main.c: 293: byte_to_hex(temp);
+"293
 [e ( _byte_to_hex (1 _temp ]
-[; ;main.c: 308: print_string_serial("Status: ");
-"308
+[; ;main.c: 294: print_string_serial("Status: ");
+"294
 [e ( _print_string_serial (1 :s 6C ]
-[; ;main.c: 309: uart_send(hex_char_high);
-"309
+[; ;main.c: 295: uart_send(hex_char_high);
+"295
 [e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 310: uart_send(hex_char_low);
-"310
+[; ;main.c: 296: uart_send(hex_char_low);
+"296
 [e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 311: uart_send('\n');
-"311
+[; ;main.c: 297: uart_send('\n');
+"297
 [e ( _uart_send (1 -> -> 10 `ui `uc ]
-[; ;main.c: 313: print_query();
-"313
+[; ;main.c: 299: print_query();
+"299
 [e ( _print_query ..  ]
-[; ;main.c: 314: return;
-"314
+[; ;main.c: 300: return;
+"300
 [e $UE 153  ]
-[; ;main.c: 315: }
-"315
+[; ;main.c: 301: }
+"301
 [e :UE 153 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]
-"317
+"303
 [v _main `(v ~T0 @X0 1 ef ]
-"318
+"304
 {
-[; ;main.c: 317: void main(void)
-[; ;main.c: 318: {
+[; ;main.c: 303: void main(void)
+[; ;main.c: 304: {
 [e :U _main ]
 [f ]
-"319
+"305
 [v _state `uc ~T0 @X0 1 a ]
-[; ;main.c: 319: unsigned char state = 0;
+[; ;main.c: 305: unsigned char state = 0;
 [e = _state -> -> 0 `i `uc ]
-[; ;main.c: 320: initialize();
-"320
+[; ;main.c: 306: initialize();
+"306
 [e ( _initialize ..  ]
-[; ;main.c: 321: usb_reset_all();
-"321
-[e ( _usb_reset_all ..  ]
-[; ;main.c: 322: delay_millis(100);
-"322
-[e ( _delay_millis (1 -> -> 100 `i `uc ]
-[; ;main.c: 323: usb_autoconfig();
-"323
-[e ( _usb_autoconfig ..  ]
-[; ;main.c: 326: print_string_lcd("Dragons");
-"326
+[; ;main.c: 312: print_string_lcd("Dragons");
+"312
 [e ( _print_string_lcd (1 :s 7C ]
-[; ;main.c: 327: lcd_line2();
-"327
+[; ;main.c: 313: lcd_line2();
+"313
 [e ( _lcd_line2 ..  ]
-[; ;main.c: 329: print_string_serial("deadbeef\n");
-"329
+[; ;main.c: 315: print_string_serial("deadbeef\n");
+"315
 [e ( _print_string_serial (1 :s 8C ]
-"331
+"317
 [v _temp `uc ~T0 @X0 1 a ]
-[; ;main.c: 331: unsigned char temp;
-[; ;main.c: 332: while(1)
-"332
+[; ;main.c: 317: unsigned char temp;
+[; ;main.c: 318: while(1)
+"318
 [e :U 156 ]
-[; ;main.c: 333: {
-"333
+[; ;main.c: 319: {
+"319
 {
-[; ;main.c: 334: temp = uart_read();
-"334
+[; ;main.c: 320: temp = uart_read();
+"320
 [e = _temp ( _uart_read ..  ]
-[; ;main.c: 336: switch(state)
-"336
+[; ;main.c: 322: switch(state)
+"322
 [e $U 159  ]
-[; ;main.c: 337: {
-"337
+[; ;main.c: 323: {
+"323
 {
-[; ;main.c: 338: case 0:
-"338
+[; ;main.c: 324: case 0:
+"324
 [e :U 160 ]
-[; ;main.c: 339: if(temp == 0xDE)
-"339
+[; ;main.c: 325: if(temp == 0xDE)
+"325
 [e $ ! == -> _temp `i -> 222 `i 161  ]
-[; ;main.c: 340: state = 1;
-"340
+[; ;main.c: 326: state = 1;
+"326
 [e = _state -> -> 1 `i `uc ]
 [e :U 161 ]
-[; ;main.c: 341: break;
-"341
+[; ;main.c: 327: break;
+"327
 [e $U 158  ]
-[; ;main.c: 342: case 1:
-"342
+[; ;main.c: 328: case 1:
+"328
 [e :U 162 ]
-[; ;main.c: 343: if(temp == 0xAD)
-"343
+[; ;main.c: 329: if(temp == 0xAD)
+"329
 [e $ ! == -> _temp `i -> 173 `i 163  ]
-[; ;main.c: 344: state = 2;
-"344
+[; ;main.c: 330: state = 2;
+"330
 [e = _state -> -> 2 `i `uc ]
 [e $U 164  ]
-"345
+"331
 [e :U 163 ]
-[; ;main.c: 345: else
-[; ;main.c: 346: state = 0;
-"346
+[; ;main.c: 331: else
+[; ;main.c: 332: state = 0;
+"332
 [e = _state -> -> 0 `i `uc ]
 [e :U 164 ]
-[; ;main.c: 347: break;
-"347
+[; ;main.c: 333: break;
+"333
 [e $U 158  ]
-[; ;main.c: 348: case 2:
-"348
+[; ;main.c: 334: case 2:
+"334
 [e :U 165 ]
-[; ;main.c: 349: if(temp == 0xBE)
-"349
+[; ;main.c: 335: if(temp == 0xBE)
+"335
 [e $ ! == -> _temp `i -> 190 `i 166  ]
-[; ;main.c: 350: state = 3;
-"350
+[; ;main.c: 336: state = 3;
+"336
 [e = _state -> -> 3 `i `uc ]
 [e $U 167  ]
-"351
+"337
 [e :U 166 ]
-[; ;main.c: 351: else
-[; ;main.c: 352: state = 0;
-"352
+[; ;main.c: 337: else
+[; ;main.c: 338: state = 0;
+"338
 [e = _state -> -> 0 `i `uc ]
 [e :U 167 ]
-[; ;main.c: 353: break;
-"353
+[; ;main.c: 339: break;
+"339
 [e $U 158  ]
-[; ;main.c: 354: case 3:
-"354
+[; ;main.c: 340: case 3:
+"340
 [e :U 168 ]
-[; ;main.c: 355: if(temp == 0xEF)
-"355
+[; ;main.c: 341: if(temp == 0xEF)
+"341
 [e $ ! == -> _temp `i -> 239 `i 169  ]
-[; ;main.c: 356: print_string_serial(str_cmd_mode);
-"356
+[; ;main.c: 342: print_string_serial(str_cmd_mode);
+"342
 [e ( _print_string_serial (1 &U _str_cmd_mode ]
 [e :U 169 ]
-[; ;main.c: 357: state = 4;
-"357
+[; ;main.c: 343: state = 4;
+"343
 [e = _state -> -> 4 `i `uc ]
-[; ;main.c: 358: break;
-"358
+[; ;main.c: 344: break;
+"344
 [e $U 158  ]
-[; ;main.c: 359: case 4:
-"359
+[; ;main.c: 345: case 4:
+"345
 [e :U 170 ]
-[; ;main.c: 360: switch(temp)
-"360
+[; ;main.c: 346: switch(temp)
+"346
 [e $U 172  ]
-[; ;main.c: 361: {
-"361
+[; ;main.c: 347: {
+"347
 {
-[; ;main.c: 362: case 0x00:
-"362
+[; ;main.c: 348: case 0x00:
+"348
 [e :U 173 ]
-[; ;main.c: 363: usb_reset_all();
-"363
+[; ;main.c: 349: usb_reset_all();
+"349
 [e ( _usb_reset_all ..  ]
-[; ;main.c: 364: break;
-"364
+[; ;main.c: 350: break;
+"350
 [e $U 171  ]
-[; ;main.c: 365: case 0x01:
-"365
+[; ;main.c: 351: case 0x01:
+"351
 [e :U 174 ]
-[; ;main.c: 366: usb_autoconfig();
-"366
+[; ;main.c: 352: usb_autoconfig();
+"352
 [e ( _usb_autoconfig ..  ]
-[; ;main.c: 367: break;
-"367
+[; ;main.c: 353: break;
+"353
 [e $U 171  ]
-[; ;main.c: 368: case 0x02:
-"368
+[; ;main.c: 354: case 0x02:
+"354
 [e :U 175 ]
-[; ;main.c: 369: temp = usb_get_version();
-"369
+[; ;main.c: 355: temp = usb_get_version();
+"355
 [e = _temp ( _usb_get_version ..  ]
-[; ;main.c: 370: break;
-"370
+[; ;main.c: 356: break;
+"356
 [e $U 171  ]
-[; ;main.c: 371: case 0x03:
-"371
+[; ;main.c: 357: case 0x03:
+"357
 [e :U 176 ]
-[; ;main.c: 372: usb_set_mode(0x05);
-"372
+[; ;main.c: 358: usb_set_mode(0x05);
+"358
 [e ( _usb_set_mode (1 -> -> 5 `i `uc ]
-[; ;main.c: 373: break;
-"373
+[; ;main.c: 359: break;
+"359
 [e $U 171  ]
-[; ;main.c: 374: case 0x04:
-"374
+[; ;main.c: 360: case 0x04:
+"360
 [e :U 177 ]
-[; ;main.c: 375: usb_set_mode(0x06);
-"375
+[; ;main.c: 361: usb_set_mode(0x06);
+"361
 [e ( _usb_set_mode (1 -> -> 6 `i `uc ]
-[; ;main.c: 376: break;
-"376
+[; ;main.c: 362: break;
+"362
 [e $U 171  ]
-[; ;main.c: 377: case 0x05:
-"377
+[; ;main.c: 363: case 0x05:
+"363
 [e :U 178 ]
-[; ;main.c: 378: usb_set_mode(0x07);
-"378
+[; ;main.c: 364: usb_set_mode(0x07);
+"364
 [e ( _usb_set_mode (1 -> -> 7 `i `uc ]
-[; ;main.c: 379: break;
-"379
+[; ;main.c: 365: break;
+"365
 [e $U 171  ]
-[; ;main.c: 380: case 0x06:
-"380
+[; ;main.c: 366: case 0x06:
+"366
 [e :U 179 ]
-[; ;main.c: 381: usb_disk_connect();
-"381
+[; ;main.c: 367: usb_disk_connect();
+"367
 [e ( _usb_disk_connect ..  ]
-[; ;main.c: 382: break;
-"382
+[; ;main.c: 368: break;
+"368
 [e $U 171  ]
-[; ;main.c: 383: case 0x07:
-"383
+[; ;main.c: 369: case 0x07:
+"369
 [e :U 180 ]
-[; ;main.c: 384: usb_disk_mount();
-"384
+[; ;main.c: 370: usb_disk_mount();
+"370
 [e ( _usb_disk_mount ..  ]
-[; ;main.c: 385: break;
-"385
+[; ;main.c: 371: break;
+"371
 [e $U 171  ]
-[; ;main.c: 386: case 0x08:
-"386
+[; ;main.c: 372: case 0x08:
+"372
 [e :U 181 ]
-[; ;main.c: 387: temp = usb_get_status();
-"387
+[; ;main.c: 373: temp = usb_get_status();
+"373
 [e = _temp ( _usb_get_status ..  ]
-[; ;main.c: 388: break;
-"388
+[; ;main.c: 374: break;
+"374
 [e $U 171  ]
-[; ;main.c: 389: case 0x09:
-"389
+[; ;main.c: 375: case 0x09:
+"375
 [e :U 182 ]
-[; ;main.c: 390: print_query();
-"390
+[; ;main.c: 376: print_query();
+"376
 [e ( _print_query ..  ]
-[; ;main.c: 391: break;
-"391
+[; ;main.c: 377: break;
+"377
 [e $U 171  ]
-[; ;main.c: 392: case 0x0A:
-"392
+[; ;main.c: 378: case 0x0A:
+"378
 [e :U 183 ]
-[; ;main.c: 393: print_capacity();
-"393
+[; ;main.c: 379: print_capacity();
+"379
 [e ( _print_capacity ..  ]
-[; ;main.c: 394: break;
-"394
+[; ;main.c: 380: break;
+"380
 [e $U 171  ]
-[; ;main.c: 395: case 0x0B:
-"395
+[; ;main.c: 381: case 0x0B:
+"381
 [e :U 184 ]
-[; ;main.c: 396: usb_set_file_name();
-"396
+[; ;main.c: 382: usb_set_file_name();
+"382
 [e ( _usb_set_file_name ..  ]
-[; ;main.c: 397: print_name();
-"397
+[; ;main.c: 383: print_name();
+"383
 [e ( _print_name ..  ]
-[; ;main.c: 398: break;
-"398
+[; ;main.c: 384: break;
+"384
 [e $U 171  ]
-[; ;main.c: 399: case 0x0C:
-"399
+[; ;main.c: 385: case 0x0C:
+"385
 [e :U 185 ]
-[; ;main.c: 400: usb_file_open();
-"400
+[; ;main.c: 386: usb_file_open();
+"386
 [e ( _usb_file_open ..  ]
+[; ;main.c: 387: break;
+"387
+[e $U 171  ]
+[; ;main.c: 388: case 0x0D:
+"388
+[e :U 186 ]
+[; ;main.c: 389: usb_file_close();
+"389
+[e ( _usb_file_close ..  ]
+[; ;main.c: 390: break;
+"390
+[e $U 171  ]
+[; ;main.c: 391: case 0x0E:
+"391
+[e :U 187 ]
+[; ;main.c: 392: usb_get_file_size();
+"392
+[e ( _usb_get_file_size ..  ]
+[; ;main.c: 393: print_string_serial("File size: ");
+"393
+[e ( _print_string_serial (1 :s 9C ]
+[; ;main.c: 394: byte_to_hex(usb_file_size_high);
+"394
+[e ( _byte_to_hex (1 _usb_file_size_high ]
+[; ;main.c: 395: uart_send(hex_char_high);
+"395
+[e ( _uart_send (1 _hex_char_high ]
+[; ;main.c: 396: uart_send(hex_char_low);
+"396
+[e ( _uart_send (1 _hex_char_low ]
+[; ;main.c: 397: byte_to_hex(usb_file_size_low);
+"397
+[e ( _byte_to_hex (1 _usb_file_size_low ]
+[; ;main.c: 398: uart_send(hex_char_high);
+"398
+[e ( _uart_send (1 _hex_char_high ]
+[; ;main.c: 399: uart_send(hex_char_low);
+"399
+[e ( _uart_send (1 _hex_char_low ]
+[; ;main.c: 400: uart_send('\n');
+"400
+[e ( _uart_send (1 -> -> 10 `ui `uc ]
 [; ;main.c: 401: break;
 "401
 [e $U 171  ]
-[; ;main.c: 402: case 0x0D:
+[; ;main.c: 402: case 0x0F:
 "402
-[e :U 186 ]
-[; ;main.c: 403: usb_file_close();
+[e :U 188 ]
+[; ;main.c: 403: temp = usb_file_read();
 "403
-[e ( _usb_file_close ..  ]
+[e = _temp ( _usb_file_read ..  ]
 [; ;main.c: 404: break;
 "404
 [e $U 171  ]
-[; ;main.c: 405: case 0x0E:
+[; ;main.c: 405: case 0x10:
 "405
-[e :U 187 ]
-[; ;main.c: 406: usb_get_file_size();
-"406
-[e ( _usb_get_file_size ..  ]
-[; ;main.c: 407: print_string_serial("File size: ");
-"407
-[e ( _print_string_serial (1 :s 9C ]
-[; ;main.c: 408: byte_to_hex(usb_file_size_high);
-"408
-[e ( _byte_to_hex (1 _usb_file_size_high ]
-[; ;main.c: 409: uart_send(hex_char_high);
-"409
-[e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 410: uart_send(hex_char_low);
-"410
-[e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 411: byte_to_hex(usb_file_size_low);
-"411
-[e ( _byte_to_hex (1 _usb_file_size_low ]
-[; ;main.c: 412: uart_send(hex_char_high);
-"412
-[e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 413: uart_send(hex_char_low);
-"413
-[e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 414: uart_send('\n');
-"414
-[e ( _uart_send (1 -> -> 10 `ui `uc ]
-[; ;main.c: 415: break;
-"415
-[e $U 171  ]
-[; ;main.c: 416: case 0x0F:
-"416
-[e :U 188 ]
-[; ;main.c: 417: usb_file_read();
-"417
-[e ( _usb_file_read ..  ]
-[; ;main.c: 418: break;
-"418
-[e $U 171  ]
-[; ;main.c: 419: case 0x10:
-"419
 [e :U 189 ]
-[; ;main.c: 420: usb_file_create();
-"420
+[; ;main.c: 406: usb_file_create();
+"406
 [e ( _usb_file_create ..  ]
-[; ;main.c: 421: break;
-"421
+[; ;main.c: 407: break;
+"407
 [e $U 171  ]
-[; ;main.c: 428: case 0x20:
-"428
+[; ;main.c: 414: case 0x20:
+"414
 [e :U 190 ]
-[; ;main.c: 429: mem_clear();
-"429
+[; ;main.c: 415: mem_clear();
+"415
 [e ( _mem_clear ..  ]
-[; ;main.c: 430: break;
-"430
+[; ;main.c: 416: break;
+"416
 [e $U 171  ]
-[; ;main.c: 431: case 0x21:
-"431
+[; ;main.c: 417: case 0x21:
+"417
 [e :U 191 ]
-[; ;main.c: 432: mem_dump();
-"432
+[; ;main.c: 418: mem_dump();
+"418
 [e ( _mem_dump ..  ]
-[; ;main.c: 433: break;
-"433
+[; ;main.c: 419: break;
+"419
 [e $U 171  ]
-[; ;main.c: 434: case 0x22:
-"434
+[; ;main.c: 420: case 0x22:
+"420
 [e :U 192 ]
-[; ;main.c: 435: print_test_data();
-"435
+[; ;main.c: 421: file_dump();
+"421
+[e ( _file_dump ..  ]
+[; ;main.c: 422: break;
+"422
+[e $U 171  ]
+[; ;main.c: 423: case 0x23:
+"423
+[e :U 193 ]
+[; ;main.c: 424: print_test_data();
+"424
 [e ( _print_test_data ..  ]
-[; ;main.c: 436: break;
-"436
+[; ;main.c: 425: break;
+"425
 [e $U 171  ]
-"437
+[; ;main.c: 426: case 0x24:
+"426
+[e :U 194 ]
+[; ;main.c: 427: usb_file_size_low = 16;
+"427
+[e = _usb_file_size_low -> -> 16 `i `uc ]
+[; ;main.c: 428: usb_file_size_high = 0;
+"428
+[e = _usb_file_size_high -> -> 0 `i `uc ]
+[; ;main.c: 429: file_dump();
+"429
+[e ( _file_dump ..  ]
+"430
 }
-[; ;main.c: 437: }
+[; ;main.c: 430: }
 [e $U 171  ]
-"360
+"346
 [e :U 172 ]
 [e [\ _temp , $ -> -> 0 `i `uc 173
  , $ -> -> 1 `i `uc 174
@@ -2525,35 +2495,37 @@ Version 3.2 HI-TECH Software Intermediate Code
  , $ -> -> 32 `i `uc 190
  , $ -> -> 33 `i `uc 191
  , $ -> -> 34 `i `uc 192
+ , $ -> -> 35 `i `uc 193
+ , $ -> -> 36 `i `uc 194
  171 ]
-"437
+"430
 [e :U 171 ]
-[; ;main.c: 438: byte_to_hex(temp);
-"438
+[; ;main.c: 431: byte_to_hex(temp);
+"431
 [e ( _byte_to_hex (1 _temp ]
-[; ;main.c: 439: uart_send(hex_char_high);
-"439
+[; ;main.c: 432: uart_send(hex_char_high);
+"432
 [e ( _uart_send (1 _hex_char_high ]
-[; ;main.c: 440: uart_send(hex_char_low);
-"440
+[; ;main.c: 433: uart_send(hex_char_low);
+"433
 [e ( _uart_send (1 _hex_char_low ]
-[; ;main.c: 441: lcd_clear2();
-"441
+[; ;main.c: 434: lcd_clear2();
+"434
 [e ( _lcd_clear2 ..  ]
-[; ;main.c: 442: lcd_putc(hex_char_high);
-"442
+[; ;main.c: 435: lcd_putc(hex_char_high);
+"435
 [e ( _lcd_putc (1 _hex_char_high ]
-[; ;main.c: 443: lcd_putc(hex_char_low);
-"443
+[; ;main.c: 436: lcd_putc(hex_char_low);
+"436
 [e ( _lcd_putc (1 _hex_char_low ]
-[; ;main.c: 444: break;
-"444
+[; ;main.c: 437: break;
+"437
 [e $U 158  ]
-"445
+"438
 }
-[; ;main.c: 445: }
+[; ;main.c: 438: }
 [e $U 158  ]
-"336
+"322
 [e :U 159 ]
 [e [\ _state , $ -> -> 0 `i `uc 160
  , $ -> -> 1 `i `uc 162
@@ -2561,20 +2533,20 @@ Version 3.2 HI-TECH Software Intermediate Code
  , $ -> -> 3 `i `uc 168
  , $ -> -> 4 `i `uc 170
  158 ]
-"445
+"438
 [e :U 158 ]
-"446
+"439
 }
 [e :U 155 ]
-"332
+"318
 [e $U 156  ]
 [e :U 157 ]
-[; ;main.c: 446: }
-[; ;main.c: 447: return;
-"447
+[; ;main.c: 439: }
+[; ;main.c: 440: return;
+"440
 [e $UE 154  ]
-[; ;main.c: 448: }
-"448
+[; ;main.c: 441: }
+"441
 [e :UE 154 ]
 }
 [a 7C 68 114 97 103 111 110 115 0 ]
