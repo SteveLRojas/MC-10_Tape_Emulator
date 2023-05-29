@@ -2034,10 +2034,14 @@ unsigned char gen_count;
 unsigned char gen_count2;
 unsigned char gen_count3;
 unsigned char gen_count4;
+unsigned char gen_count5;
+unsigned char gen_count6;
 unsigned char tape_size_high;
 unsigned char tape_size_low;
 unsigned char hex_char_high;
 unsigned char hex_char_low;
+unsigned char usb_bytes_sent_high;
+unsigned char usb_bytes_sent_low;
 unsigned char usb_file_size_high;
 unsigned char usb_file_size_low;
 unsigned char usb_bytes_read_high;
@@ -2093,7 +2097,7 @@ void usb_set_mode(unsigned char);
 unsigned char usb_get_version();
 void usb_disk_capacity();
 void usb_disk_query();
-
+void usb_write_test_data();
 
 unsigned char usb_file_read();
 
@@ -2301,7 +2305,7 @@ void main(void)
 unsigned char state = 0;
 initialize();
 
-# 312
+# 316
 print_string_lcd("Dragons");
 lcd_line2();
 
@@ -2399,7 +2403,10 @@ case 0x10:
 usb_file_create();
 break;
 
-# 414
+# 415
+case 0x12:
+usb_write_test_data();
+break;
 case 0x20:
 mem_clear();
 break;

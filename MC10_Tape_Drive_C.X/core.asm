@@ -94,10 +94,14 @@ global _gen_count
 global _gen_count2
 global _gen_count3
 global _gen_count4
+global _gen_count5
+global _gen_count6
 global _tape_size_high
 global _tape_size_low
 global _hex_char_high
 global _hex_char_low
+global _usb_bytes_sent_high
+global _usb_bytes_sent_low
 global _usb_file_size_high
 global _usb_file_size_low
 global _usb_bytes_read_high
@@ -1276,107 +1280,116 @@ _usb_disk_query
     RLF _usb_free_space3, F
     RETURN
 
-;USB_WRITE_TEST_DATA
-;    CLRF S_REG_LOW
-;    CLRF S_REG_HIGH
-;    BCF FLAG_REG, 0 ;INITIALIZE PSUEDO-RANDOM DATA GENERATOR
-;    CALL USB_FILE_CREATE
-;    MOVLW H'B8'
-;    MOVWF TIMEOUT_LOW
-;    MOVLW H'0B'
-;    MOVWF TIMEOUT_HIGH  ;SET TIMEOUT TO 3 SECONDS
-;    MOVLW H'14'
-;    MOVWF USB_TARGET_STATUS ;SET TARGET STATUS TO 0x14
-;    CALL USB_WAIT_STATUS
-;    MOVLW H'04'
-;    MOVWF GEN_COUNT6
-;UWTD_L4
-;    CLRF USB_BYTES_SENT_HIGH
-;    CLRF USB_BYTES_SENT_LOW
-;    MOVLW H'80'
-;    MOVWF USB_FILE_SIZE_HIGH
-;    CLRF USB_FILE_SIZE_LOW
-;    CALL USB_BYTE_WRITE
-;    MOVLW H'0B'
-;    MOVWF TIMEOUT_HIGH
-;    MOVLW H'B8'
-;    MOVWF TIMEOUT_LOW
-;    MOVLW H'1E'
-;    MOVWF USB_TARGET_STATUS
-;    CALL USB_WAIT_STATUS
-;UWTD_ND_LOOP
-;    BCF USB_CS
-;    MOVLW H'2D'
-;    MOVWF DREG
-;    CALL SPI_TRANSFER   ;SEND WR_REQ_DATA
-;    CLRF DREG
-;    CALL SPI_TRANSFER   ;GET NUMBER OF BYTES TO SEND
-;    MOVF DREG, W
-;    MOVWF GEN_COUNT5
-;UWTD_WR_LOOP
-;    CALL GET_TEST_BYTE
-;    CALL SPI_TRANSFER
-;    INCFSZ USB_BYTES_SENT_LOW, F
-;    DECF USB_BYTES_SENT_HIGH, F
-;    INCF USB_BYTES_SENT_HIGH, F
-;    MOVF USB_BYTES_SENT_HIGH, W
-;    XORWF USB_FILE_SIZE_HIGH, W
-;    BTFSS STATUS, Z
-;    GOTO UWTD_NB
-;    MOVF USB_BYTES_SENT_LOW, W
-;    XORWF USB_FILE_SIZE_LOW, W
-;    BTFSC STATUS, Z
-;    GOTO UWTD_BREAK
-;UWTD_NB
-;    DECFSZ GEN_COUNT5, F
-;    GOTO UWTD_WR_LOOP
-;UWTD_BREAK
-;    BSF USB_CS
-;    MOVLW H'0B'
-;    MOVWF TIMEOUT_HIGH
-;    MOVLW H'B8'
-;    MOVWF TIMEOUT_LOW
-;    MOVLW H'1E'
-;    MOVWF USB_TARGET_STATUS
-;    CALL USB_WAIT_STATUS
-;    MOVF USB_BYTES_SENT_HIGH, W
-;    XORWF USB_FILE_SIZE_HIGH, W
-;    BTFSS STATUS, Z
-;    GOTO UWTD_NE
-;    MOVF USB_BYTES_SENT_LOW, W
-;    XORWF USB_FILE_SIZE_LOW, W
-;    BTFSC STATUS, Z
-;    GOTO UWTD_EQUAL
-;UWTD_NE
-;    CALL USB_BYTE_WR_GO
-;    MOVLW H'0B'
-;    MOVWF TIMEOUT_HIGH
-;    MOVLW H'B8'
-;    MOVWF TIMEOUT_LOW
-;    MOVLW H'1E'
-;    MOVWF USB_TARGET_STATUS
-;    CALL USB_WAIT_STATUS
-;    GOTO UWTD_ND_LOOP
-;UWTD_EQUAL
-;    CALL USB_BYTE_WR_GO
-;    MOVLW H'0B'
-;    MOVWF TIMEOUT_HIGH
-;    MOVLW H'B8'
-;    MOVWF TIMEOUT_LOW
-;    MOVLW H'14'
-;    MOVWF USB_TARGET_STATUS
-;    CALL USB_WAIT_STATUS
-;    DECFSZ GEN_COUNT6, F
-;    GOTO UWTD_L4
-;    CALL USB_FILE_CLOSE
-;    MOVLW H'0B'
-;    MOVWF TIMEOUT_HIGH
-;    MOVLW H'B8'
-;    MOVWF TIMEOUT_LOW
-;    MOVLW H'14'
-;    MOVWF USB_TARGET_STATUS
-;    CALL USB_WAIT_STATUS
-;    RETURN
+global _usb_write_test_data
+_usb_write_test_data
+    CLRF _s_reg_low
+    CLRF _s_reg_high
+    BCF F_SRL_VALID ;INITIALIZE PSUEDO-RANDOM DATA GENERATOR
+    CALL _usb_file_create
+    MOVLW 0xB8
+    MOVWF _timeout_low
+    MOVLW 0x0B
+    MOVWF _timeout_high  ;SET TIMEOUT TO 3 SECONDS
+    MOVLW 0x14
+    MOVWF _usb_target_status ;SET TARGET STATUS TO 0x14
+    CALL USB_WAIT_STATUS
+    BTFSC F_TIMEOUT   ;CHECK TIMEOUT FLAG
+    RETURN
+    MOVLW 0x04	;WE WILL WRITE 4 BLOCKS OF 32KB
+    MOVWF _gen_count6
+UWTD_L4
+    CLRF _usb_bytes_sent_high
+    CLRF _usb_bytes_sent_low
+    MOVLW 0x80	;SET FILE SIZE TO 32KB
+    MOVWF _usb_file_size_high
+    CLRF _usb_file_size_low
+    CALL USB_BYTE_WRITE
+    MOVLW 0x0B
+    MOVWF _timeout_high
+    MOVLW 0xB8
+    MOVWF _timeout_low	;3 SECOND TIMEOUT
+    MOVLW 0x1E
+    MOVWF _usb_target_status
+    CALL USB_WAIT_STATUS
+    BTFSC F_TIMEOUT   ;CHECK TIMEOUT FLAG
+    RETURN
+UWTD_ND_LOOP
+    BCF USB_CS
+    MOVLW 0x2D
+    CALL SPI_TRANSFER   ;SEND WR_REQ_DATA
+    CLRW
+    CALL SPI_TRANSFER   ;GET NUMBER OF BYTES TO SEND
+    MOVWF _gen_count5
+UWTD_WR_LOOP
+    CALL GET_TEST_BYTE
+    CALL SPI_TRANSFER
+    INCFSZ _usb_bytes_sent_low, F
+    DECF _usb_bytes_sent_high, F
+    INCF _usb_bytes_sent_high, F
+    MOVF _usb_bytes_sent_high, W
+    XORWF _usb_file_size_high, W
+    BTFSS ZERO
+    GOTO UWTD_NB
+    MOVF _usb_bytes_sent_low, W
+    XORWF _usb_file_size_low, W
+    BTFSC ZERO
+    GOTO UWTD_BREAK
+UWTD_NB	;GO HERE IF BYTES SENT != FILE SIZE
+    DECFSZ _gen_count5, F
+    GOTO UWTD_WR_LOOP
+UWTD_BREAK  ;GO HERE IF BYTES SENT == FILE SIZE
+    BSF USB_CS
+    MOVLW 0x0B
+    MOVWF _timeout_high
+    MOVLW 0xB8
+    MOVWF _timeout_low	;3 SECOND TIMEOUT
+    MOVLW 0x1E
+    MOVWF _usb_target_status
+    CALL USB_WAIT_STATUS
+    BTFSC F_TIMEOUT   ;CHECK TIMEOUT FLAG
+    RETURN
+    MOVF _usb_bytes_sent_high, W
+    XORWF _usb_file_size_high, W
+    BTFSS ZERO
+    GOTO UWTD_NE
+    MOVF _usb_bytes_sent_low, W
+    XORWF _usb_file_size_low, W
+    BTFSC ZERO
+    GOTO UWTD_EQUAL
+UWTD_NE
+    CALL USB_BYTE_WR_GO
+    MOVLW 0x0B
+    MOVWF _timeout_high
+    MOVLW 0xB8
+    MOVWF _timeout_low	;3 SECOND TIMEOUT
+    MOVLW 0x1E
+    MOVWF _usb_target_status
+    CALL USB_WAIT_STATUS
+    BTFSC F_TIMEOUT   ;CHECK TIMEOUT FLAG
+    RETURN
+    GOTO UWTD_ND_LOOP
+UWTD_EQUAL
+    CALL USB_BYTE_WR_GO
+    MOVLW 0x0B
+    MOVWF _timeout_high
+    MOVLW 0xB8
+    MOVWF _timeout_low	;3 SECOND TIMEOUT
+    MOVLW 0x14
+    MOVWF _usb_target_status
+    CALL USB_WAIT_STATUS
+    BTFSC F_TIMEOUT   ;CHECK TIMEOUT FLAG
+    RETURN
+    DECFSZ _gen_count6, F
+    GOTO UWTD_L4
+    CALL _usb_file_close
+    MOVLW 0x0B
+    MOVWF _timeout_high
+    MOVLW 0xB8
+    MOVWF _timeout_low	;3 SECOND TIMEOUT
+    MOVLW 0x14
+    MOVWF _usb_target_status
+    CALL USB_WAIT_STATUS
+    RETURN
 
 ;USB_FILE_WRITE
 ;    CALL USB_SET_FILE_NAME
