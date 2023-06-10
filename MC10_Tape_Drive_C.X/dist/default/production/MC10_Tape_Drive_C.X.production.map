@@ -5,19 +5,19 @@ Linker command line:
 -W-3 --edf=/opt/microchip/xc8/v2.05/pic/dat/en_msgs.txt -cs \
   -h+dist/default/production/MC10_Tape_Drive_C.X.production.sym \
   --cmf=dist/default/production/MC10_Tape_Drive_C.X.production.cmf -z \
-  -Q16F747 -o/tmp/xcXZN1f2d --defsym=__MPLAB_BUILD=1 \
+  -Q16F747 -o/tmp/xcXBvwaaJ --defsym=__MPLAB_BUILD=1 \
   -Mdist/default/production/MC10_Tape_Drive_C.X.production.map -E1 -ver=XC8 \
-  --acfsm=1493 -ASTACK=058h-06Fh -pstack=STACK -ACODE=00h-07FFhx2 \
+  --acfsm=1493 -ASTACK=05Bh-06Fh -pstack=STACK -ACODE=00h-07FFhx2 \
   -ASTRCODE=00h-0FFFh -ASTRING=00h-0FFhx16 -ACONST=00h-0FFhx16 \
   -AENTRY=00h-0FFhx16 -ACOMMON=070h-07Fh -ABANK0=020h-06Fh \
   -ABANK1=0A0h-0EFh -ABANK2=0110h-016Fh -ABANK3=0190h-01EFh \
   -ARAM=020h-06Fh,0A0h-0EFh,0110h-016Fh,0190h-01EFh \
   -AABS1=020h-07Fh,0A0h-0EFh,0110h-016Fh,0190h-01EFh -ASFR0=00h-01Fh \
   -ASFR1=080h-09Fh -ASFR2=0100h-010Fh -ASFR3=0180h-018Fh \
-  -preset_vec=00h,intentry,init,end_init -ppowerup=CODE -pcinit=CODE \
+  -preset_vec=00h,intentry=04h,init,end_init -ppowerup=CODE -pcinit=CODE \
   -pfunctab=ENTRY -ACONFIG=02007h-02008h -pconfig=CONFIG -DCONFIG=2 \
   -AIDLOC=02000h-02003h -pidloc=IDLOC -DIDLOC=2 -DCODE=2 -DSTRCODE=2 \
-  -DSTRING=2 -DCONST=2 -DENTRY=2 -k /tmp/xcXRLtfAq.o \
+  -DSTRING=2 -DCONST=2 -DENTRY=2 -k /tmp/xcXfrLScV.o \
   dist/default/production/MC10_Tape_Drive_C.X.production.o \
   build/default/production/core.o 
 
@@ -28,57 +28,61 @@ Machine type is 16F747
 
 
                 Name                               Link     Load   Length Selector   Space Scale
-/tmp/xcXRLtfAq.o
-                end_init                              0        0        2        0       0
+/tmp/xcXfrLScV.o
+                end_init                              5        5        2        8       0
+                reset_vec                             0        0        2        0       0
                 config                             2007     2007        2     400E       0
 dist/default/production/MC10_Tape_Drive_C.X.production.o
-                cinit                               7BE      7BE       42      F7C       0
-                text8                               183      183       23      306       0
-                text7                               1DE      1DE       3E      3BC       0
-                text6                               21C      21C       46      438       0
-                text5                               149      149       1D      292       0
-                text4                               1A6      1A6       38      34C       0
-                text3                               166      166       1D      2CC       0
-                text2                               262      262       74      4C4       0
-                text1                               2D6      2D6       86      5AC       0
-                maintext                            35C      35C      138      6B8       0
-                cstackBANK0                          45       45        B       20       1
+                cinit                                 7        7       42        8       0
+                text8                               FA5      FA5       23     1F4A       0
+                text7                               5A9      5A9       3E        8       0
+                text6                               798      798       46      D3C       0
+                text5                               F88      F88       1D     1F10       0
+                text4                               FC8      FC8       38     1F90       0
+                text3                               7DE      7DE       1D      D3C       0
+                text2                               724      724       74      D3C       0
+                text1                               69E      69E       86      D3C       0
+                maintext                            46A      46A      13F        8       0
+                cstackBANK0                          48       48        B       20       1
                 cstackCOMMON                         77       77        4       70       1
-                clrtext                             139      139        8      272       0
+                clrtext                             5EF      5EF        8        8       0
                 bssBANK2                            110      110       60      110       1
                 bssBANK3                            190      190       60      190       1
                 bssBANK1                             A0       A0       40       A0       1
-                dataBANK0                            50       50        8       20       1
-                bssBANK0                             20       20       25       20       1
+                dataBANK0                            53       53        8       20       1
+                bssBANK0                             20       20       28       20       1
                 bssCOMMON                            70       70        7       70       1
-                strings                               2        2       9E        4       0
-                idataBANK0                          141      141        8      282       0
+                strings                             600      600       9E      C00       0
+                idataBANK0                          5E7      5E7        8        8       0
 build/default/production/core.o
-                barfunc                             494      494      32A      928       0
+                intentry                              4        4        1        8       0
+                barfunc                              49       49      421        8       0
 
 TOTAL           Name                               Link     Load   Length     Space
         CLASS   STACK          
 
         CLASS   CODE           
-                end_init                              0        0        2         0
-                cinit                               7BE      7BE       42         0
-                text8                               183      183       23         0
-                text7                               1DE      1DE       3E         0
-                text6                               21C      21C       46         0
-                text5                               149      149       1D         0
-                text4                               1A6      1A6       38         0
-                text3                               166      166       1D         0
-                text2                               262      262       74         0
-                text1                               2D6      2D6       86         0
-                maintext                            35C      35C      138         0
-                clrtext                             139      139        8         0
-                idataBANK0                          141      141        8         0
-                barfunc                             494      494      32A         0
+                end_init                              5        5        2         0
+                cinit                                 7        7       42         0
+                intentry                              4        4        1         0
+                reset_vec                             0        0        2         0
+                text8                               FA5      FA5       23         0
+                text7                               5A9      5A9       3E         0
+                text6                               798      798       46         0
+                text5                               F88      F88       1D         0
+                text4                               FC8      FC8       38         0
+                text3                               7DE      7DE       1D         0
+                text2                               724      724       74         0
+                text1                               69E      69E       86         0
+                maintext                            46A      46A      13F         0
+                clrtext                             5EF      5EF        8         0
+                idataBANK0                          5E7      5E7        8         0
+                barfunc                              49       49      421         0
 
         CLASS   STRCODE        
 
         CLASS   STRING         
-                strings                               2        2       9E         0
+                strings                             600      600       9E         0
 
         CLASS   CONST          
 
@@ -89,9 +93,9 @@ TOTAL           Name                               Link     Load   Length     Sp
                 bssCOMMON                            70       70        7         1
 
         CLASS   BANK0          
-                cstackBANK0                          45       45        B         1
-                dataBANK0                            50       50        8         1
-                bssBANK0                             20       20       25         1
+                cstackBANK0                          48       48        B         1
+                dataBANK0                            53       53        8         1
+                bssBANK0                             20       20       28         1
 
         CLASS   BANK1          
                 bssBANK1                             A0       A0       40         1
@@ -127,52 +131,49 @@ TOTAL           Name                               Link     Load   Length     Sp
 SEGMENTS        Name                           Load    Length   Top    Selector   Space  Class     Delta
 
                 reset_vec                      000000  000002  000002         0       0  CODE        2
-                strings                        000002  00009E  0000A0         4       0  STRING      2
-                bssBANK0                       000020  000038  000058        20       1  BANK0       1
+                intentry                       000004  0005F3  0005F7         8       0  CODE        2
+                bssBANK0                       000020  00003B  00005B        20       1  BANK0       1
                 bssCOMMON                      000070  00000B  00007B        70       1  COMMON      1
                 bssBANK1                       0000A0  000040  0000E0        A0       1  BANK1       1
                 bssBANK2                       000110  000060  000170       110       1  BANK2       1
                 bssBANK3                       000190  000060  0001F0       190       1  BANK3       1
-                clrtext                        000139  000008  000141       272       0  CODE        2
-                idataBANK0                     000141  000008  000149       282       0  CODE        2
-                text5                          000149  00001D  000166       292       0  CODE        2
-                text3                          000166  00001D  000183       2CC       0  CODE        2
-                text8                          000183  000023  0001A6       306       0  CODE        2
-                text4                          0001A6  000038  0001DE       34C       0  CODE        2
-                text7                          0001DE  00003E  00021C       3BC       0  CODE        2
-                text6                          00021C  000046  000262       438       0  CODE        2
-                text2                          000262  000074  0002D6       4C4       0  CODE        2
-                text1                          0002D6  000086  00035C       5AC       0  CODE        2
-                maintext                       00035C  000138  000494       6B8       0  CODE        2
-                barfunc                        000494  00032A  0007BE       928       0  CODE        2
-                cinit                          0007BE  000042  000800       F7C       0  CODE        2
+                strings                        000600  00009E  00069E       C00       0  STRING      2
+                text1                          00069E  00015D  0007FB       D3C       0  CODE        2
+                text5                          000F88  00001D  000FA5      1F10       0  CODE        2
+                text8                          000FA5  000023  000FC8      1F4A       0  CODE        2
+                text4                          000FC8  000038  001000      1F90       0  CODE        2
                 config                         002007  000002  002009      400E       0  CONFIG      2
 
 
 UNUSED ADDRESS RANGES
 
         Name                Unused          Largest block    Delta
-        BANK0            0058-006F             18           1
+        BANK0            005B-006F             15           1
         BANK1            00E0-00EF             10           1
-        CODE             00A0-0138             99           2
-                         0800-0FFF            800
+        CODE             0002-0003              2           2
+                         05F7-05FF              9
+                         07FB-0F87              5
         COMMON           007B-007D              3           1
-        CONST            00A0-0138             60           2
-                         0800-0FFF            100
-        ENTRY            00A0-0138             60           2
-                         0800-0FFF            100
+        CONST            0002-0003              2           2
+                         05F7-05FF              9
+                         07FB-0F87            100
+        ENTRY            0002-0003              2           2
+                         05F7-05FF              9
+                         07FB-0F87            100
         IDLOC            2000-2003              4           2
-        RAM              0058-006F             18           1
+        RAM              005B-006F             15           1
                          00E0-00EF             10
         SFR0             0000-001F             20           1
         SFR1             0080-009F             20           1
         SFR2             0100-010F             10           1
         SFR3             0180-018F             10           1
-        STACK            0058-006F             18           1
-        STRCODE          00A0-0138             99           2
-                         0800-0FFF            800
-        STRING           00A0-0138             60           2
-                         0800-0FFF            100
+        STACK            005B-006F             15           1
+        STRCODE          0002-0003              2           2
+                         05F7-05FF              9
+                         07FB-0F87            78D
+        STRING           0002-0003              2           2
+                         05F7-05FF              9
+                         07FB-0F87            100
 
                                   Symbol Table
 
@@ -197,7 +198,7 @@ __HbssBANK1                   bssBANK1     0000
 __HbssBANK2                   bssBANK2     0000
 __HbssBANK3                   bssBANK3     0000
 __HbssCOMMON                  bssCOMMON    0000
-__Hcinit                      cinit        0800
+__Hcinit                      cinit        0049
 __Hclrtext                    clrtext      0000
 __Hcode                       code         0000
 __Hcommon                     common       0000
@@ -206,17 +207,17 @@ __HcstackBANK0                cstackBANK0  0000
 __HcstackCOMMON               cstackCOMMON 0000
 __HdataBANK0                  dataBANK0    0000
 __Heeprom_data                eeprom_data  0000
-__Hend_init                   end_init     0002
+__Hend_init                   end_init     0007
 __Hfunctab                    functab      0000
 __HidataBANK0                 idataBANK0   0000
 __Hidloc                      idloc        0000
-__Hinit                       init         0000
-__Hintentry                   intentry     0000
+__Hinit                       init         0005
+__Hintentry                   intentry     0005
 __Hmaintext                   maintext     0000
 __Hpa_nodes0                  pa_nodes0    0000
 __Hpowerup                    powerup      0000
 __Hram                        ram          0000
-__Hreset_vec                  reset_vec    0000
+__Hreset_vec                  reset_vec    0002
 __Hsfr0                       sfr0         0000
 __Hsfr1                       sfr1         0000
 __Hsfr2                       sfr2         0000
@@ -238,7 +239,7 @@ __LbssBANK1                   bssBANK1     0000
 __LbssBANK2                   bssBANK2     0000
 __LbssBANK3                   bssBANK3     0000
 __LbssCOMMON                  bssCOMMON    0000
-__Lcinit                      cinit        07BE
+__Lcinit                      cinit        0007
 __Lclrtext                    clrtext      0000
 __Lcode                       code         0000
 __Lcommon                     common       0000
@@ -247,12 +248,12 @@ __LcstackBANK0                cstackBANK0  0000
 __LcstackCOMMON               cstackCOMMON 0000
 __LdataBANK0                  dataBANK0    0000
 __Leeprom_data                eeprom_data  0000
-__Lend_init                   end_init     0000
+__Lend_init                   end_init     0005
 __Lfunctab                    functab      0000
 __LidataBANK0                 idataBANK0   0000
 __Lidloc                      idloc        0000
-__Linit                       init         0000
-__Lintentry                   intentry     0000
+__Linit                       init         0005
+__Lintentry                   intentry     0004
 __Lmaintext                   maintext     0000
 __Lpa_nodes0                  pa_nodes0    0000
 __Lpowerup                    powerup      0000
@@ -277,40 +278,40 @@ ___latbits                    (abs)        0001
 ___sp                         stack        0000
 ___stackhi                    (abs)        0000
 ___stacklo                    (abs)        0000
-__end_of__initialization      cinit        07FD
-__end_of__stringtab           strings      0008
-__end_of_byte_to_hex          text8        01A6
-__end_of_fifo_pop             text7        021C
-__end_of_fifo_push            text6        0262
-__end_of_hex_table            strings      0018
-__end_of_main                 maintext     0494
-__end_of_print_capacity       text4        01DE
-__end_of_print_query          text2        02D6
-__end_of_print_string_lcd     text3        0183
-__end_of_print_string_serial  text5        0166
-__end_of_str_cmd_mode         strings      0026
-__end_of_str_timeout          strings      0030
-__end_of_usb_autoconfig       text1        035C
-__initialization              cinit        07BE
+__end_of__initialization      cinit        0046
+__end_of__stringtab           strings      0606
+__end_of_byte_to_hex          text8        0FC8
+__end_of_fifo_pop             text7        05E7
+__end_of_fifo_push            text6        07DE
+__end_of_hex_table            strings      0616
+__end_of_main                 maintext     05A9
+__end_of_print_capacity       text4        1000
+__end_of_print_query          text2        0798
+__end_of_print_string_lcd     text3        07FB
+__end_of_print_string_serial  text5        0FA5
+__end_of_str_cmd_mode         strings      0624
+__end_of_str_timeout          strings      062E
+__end_of_usb_autoconfig       text1        0724
+__initialization              cinit        0007
 __pbssBANK0                   bssBANK0     0020
 __pbssBANK1                   bssBANK1     00A0
 __pbssBANK2                   bssBANK2     0110
 __pbssBANK3                   bssBANK3     0190
 __pbssCOMMON                  bssCOMMON    0070
-__pcstackBANK0                cstackBANK0  0045
+__pcstackBANK0                cstackBANK0  0048
 __pcstackCOMMON               cstackCOMMON 0077
-__pdataBANK0                  dataBANK0    0050
-__pidataBANK0                 idataBANK0   0141
-__pmaintext                   maintext     035C
-__pstrings                    strings      0002
-__ptext1                      text1        02D6
-__ptext2                      text2        0262
-__ptext3                      text3        0166
-__ptext4                      text4        01A6
-__ptext5                      text5        0149
-__ptext6                      text6        021C
-__ptext7                      text7        01DE
-__ptext8                      text8        0183
+__pdataBANK0                  dataBANK0    0053
+__pidataBANK0                 idataBANK0   05E7
+__pmaintext                   maintext     046A
+__pstrings                    strings      0600
+__ptext1                      text1        069E
+__ptext2                      text2        0724
+__ptext3                      text3        07DE
+__ptext4                      text4        0FC8
+__ptext5                      text5        0F88
+__ptext6                      text6        0798
+__ptext7                      text7        05A9
+__ptext8                      text8        0FA5
 __size_of_byte_to_hex         (abs)        0000
 __size_of_fifo_pop            (abs)        0000
 __size_of_fifo_push           (abs)        0000
@@ -320,102 +321,107 @@ __size_of_print_query         (abs)        0000
 __size_of_print_string_lcd    (abs)        0000
 __size_of_print_string_serial (abs)        0000
 __size_of_usb_autoconfig      (abs)        0000
-__stringbase                  strings      0007
-__stringtab                   strings      0002
-_byte_to_hex                  text8        0183
+__stringbase                  strings      0605
+__stringtab                   strings      0600
+_bit_count                    bssBANK0     0036
+_byte_to_hex                  text8        0FA5
 _delay_counter                bssBANK0     0024
-_delay_millis                 barfunc      05FB
+_delay_millis                 barfunc      0232
 _fifo_bank_A                  bssBANK1     00A0
 _fifo_bank_B                  bssBANK3     0190
 _fifo_bank_C                  bssBANK2     0110
 _fifo_num_bytes               bssBANK0     0020
-_fifo_pop                     text7        01DE
-_fifo_push                    text6        021C
+_fifo_pop                     text7        05A9
+_fifo_push                    text6        0798
 _fifo_read_bank               bssBANK0     0022
 _fifo_read_idx                bssCOMMON    0071
 _fifo_write_bank              bssBANK0     0021
 _fifo_write_idx               bssCOMMON    0070
-_file_dump                    barfunc      04EA
+_file_dump                    barfunc      009F
 _flag_reg                     bssBANK0     0023
-_gen_count                    bssBANK0     003D
-_gen_count2                   bssBANK0     003C
-_gen_count3                   bssBANK0     003B
-_gen_count4                   bssBANK0     003A
-_gen_count5                   bssBANK0     0039
-_gen_count6                   bssBANK0     0038
+_gen_count                    bssBANK0     003E
+_gen_count2                   bssBANK0     003D
+_gen_count3                   bssBANK0     003C
+_gen_count4                   bssBANK0     003B
+_gen_count5                   bssBANK0     003A
+_gen_count6                   bssBANK0     0039
 _hex_char_high                bssCOMMON    0076
 _hex_char_low                 bssCOMMON    0075
-_hex_table                    strings      0008
-_initialize                   barfunc      0494
-_lcd_clear2                   barfunc      05B3
-_lcd_line2                    barfunc      059A
-_lcd_putc                     barfunc      0567
-_lcd_send                     barfunc      056D
-_ldel_count                   bssBANK0     003E
-_main                         maintext     035C
-_mem_clear                    barfunc      04CE
-_mem_dump                     barfunc      04DC
-_print_capacity               text4        01A6
-_print_name                   barfunc      05CB
-_print_query                  text2        0262
-_print_string_lcd             text3        0166
-_print_string_serial          text5        0149
-_print_test_data              barfunc      0607
-_pulse_e                      barfunc      05C0
-_ram_address_h                bssBANK0     0041
-_ram_address_l                bssBANK0     0040
+_hex_table                    strings      0606
+_initialize                   barfunc      0049
+_lcd_clear2                   barfunc      0168
+_lcd_line2                    barfunc      014F
+_lcd_putc                     barfunc      011C
+_lcd_send                     barfunc      0122
+_ldel_count                   bssBANK0     003F
+_main                         maintext     046A
+_mem_clear                    barfunc      0083
+_mem_dump                     barfunc      0091
+_print_capacity               text4        0FC8
+_print_name                   barfunc      0180
+_print_query                  text2        0724
+_print_string_lcd             text3        07DE
+_print_string_serial          text5        0F88
+_print_test_data              barfunc      023E
+_pulse_e                      barfunc      0175
+_ram_address_h                bssBANK0     0042
+_ram_address_l                bssBANK0     0041
 _s_reg_high                   bssBANK0     0028
 _s_reg_low                    bssBANK0     0027
-_sdel_count                   bssBANK0     003F
-_str_cmd_mode                 strings      0018
-_str_timeout                  strings      0026
-_tape_name                    dataBANK0    0050
-_tape_size_high               bssBANK0     0037
-_tape_size_low                bssBANK0     0036
-_temp3                        bssBANK0     0044
-_temp4                        bssBANK0     0043
-_temp5                        bssBANK0     0042
+_sdel_count                   bssBANK0     0040
+_str_cmd_mode                 strings      0616
+_str_timeout                  strings      0624
+_tape_int                     barfunc      01CF
+_tape_name                    dataBANK0    0053
+_tape_size_high               bssBANK0     0038
+_tape_size_low                bssBANK0     0037
+_temp1                        bssBANK0     0047
+_temp2                        bssBANK0     0046
+_temp3                        bssBANK0     0045
+_temp4                        bssBANK0     0044
+_temp5                        bssBANK0     0043
 _timeout_high                 bssBANK0     0026
 _timeout_low                  bssBANK0     0025
-_uart_read                    barfunc      04FD
-_uart_send                    barfunc      0501
-_usb_autoconfig               text1        02D6
+_uart_read                    barfunc      00B2
+_uart_send                    barfunc      00B6
+_usb_autoconfig               text1        069E
 _usb_bytes_read_high          bssBANK0     0031
 _usb_bytes_read_low           bssBANK0     0030
 _usb_bytes_sent_high          bssBANK0     0035
 _usb_bytes_sent_low           bssBANK0     0034
-_usb_check_exists             barfunc      0674
-_usb_disk_capacity            barfunc      06C2
-_usb_disk_connect             barfunc      069D
-_usb_disk_mount               barfunc      0698
-_usb_disk_query               barfunc      06E4
+_usb_check_exists             barfunc      02AF
+_usb_disk_capacity            barfunc      02FD
+_usb_disk_connect             barfunc      02D8
+_usb_disk_mount               barfunc      02D3
+_usb_disk_query               barfunc      031F
 _usb_drive_size1              bssCOMMON    0074
 _usb_drive_size2              bssCOMMON    0073
 _usb_drive_size3              bssCOMMON    0072
-_usb_file_close               barfunc      063D
-_usb_file_create              barfunc      067E
-_usb_file_open                barfunc      0638
-_usb_file_read                barfunc      077A
+_usb_file_close               barfunc      0278
+_usb_file_create              barfunc      02B9
+_usb_file_open                barfunc      0273
+_usb_file_read                barfunc      0426
 _usb_file_size_high           bssBANK0     0033
 _usb_file_size_low            bssBANK0     0032
+_usb_file_write               barfunc      03B5
 _usb_free_space1              bssBANK0     002F
 _usb_free_space2              bssBANK0     002E
 _usb_free_space3              bssBANK0     002D
-_usb_get_file_size            barfunc      0663
-_usb_get_status               barfunc      0691
-_usb_get_version              barfunc      06AA
+_usb_get_file_size            barfunc      029E
+_usb_get_status               barfunc      02CC
+_usb_get_version              barfunc      02E5
 _usb_logical_bytes1           bssBANK0     002C
 _usb_logical_bytes2           bssBANK0     002B
 _usb_logical_bytes3           bssBANK0     002A
-_usb_reset_all                barfunc      0620
-_usb_set_file_name            barfunc      0625
-_usb_set_mode                 barfunc      06A2
+_usb_reset_all                barfunc      025B
+_usb_set_file_name            barfunc      0260
+_usb_set_mode                 barfunc      02DD
 _usb_target_status            bssBANK0     0029
-_usb_write_test_data          barfunc      0715
+_usb_write_test_data          barfunc      0350
 btemp                         (abs)        007E
-byte_to_hex@data              cstackBANK0  0047
-clear_ram0                    clrtext      0139
-end_of_initialization         cinit        07FD
+byte_to_hex@data              cstackBANK0  004A
+clear_ram0                    clrtext      05EF
+end_of_initialization         cinit        0046
 fifo_pop@temp                 cstackCOMMON 007A
 fifo_push@data                cstackCOMMON 0078
 intlevel0                     functab      0000
@@ -424,16 +430,16 @@ intlevel2                     functab      0000
 intlevel3                     functab      0000
 intlevel4                     functab      0000
 intlevel5                     functab      0000
-main@state                    cstackBANK0  004E
-main@temp                     cstackBANK0  004F
-print_string_lcd@i            cstackBANK0  004A
-print_string_lcd@string       cstackBANK0  0049
-print_string_serial@i         cstackBANK0  0049
-print_string_serial@string    cstackBANK0  004A
+main@state                    cstackBANK0  0051
+main@temp                     cstackBANK0  0052
+print_string_lcd@i            cstackBANK0  004D
+print_string_lcd@string       cstackBANK0  004C
+print_string_serial@i         cstackBANK0  004C
+print_string_serial@string    cstackBANK0  004D
 reset_vec                     reset_vec    0000
-start                         init         0000
-start_initialization          cinit        07BE
-usb_autoconfig@temp           cstackBANK0  004C
+start                         init         0005
+start_initialization          cinit        0007
+usb_autoconfig@temp           cstackBANK0  004F
 wtemp0                        (abs)        007E
 
 
@@ -441,7 +447,7 @@ FUNCTION INFORMATION:
 
  *************** function _main *****************
  Defined at:
-		line 307 in file "main.c"
+		line 311 in file "main.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -486,6 +492,7 @@ Total ram usage:        3 bytes
 		_usb_file_create
 		_usb_file_open
 		_usb_file_read
+		_usb_file_write
 		_usb_get_file_size
 		_usb_get_status
 		_usb_get_version
@@ -500,7 +507,7 @@ Total ram usage:        3 bytes
 
  *************** function _usb_autoconfig *****************
  Defined at:
-		line 266 in file "main.c"
+		line 270 in file "main.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -540,7 +547,7 @@ Total ram usage:        2 bytes
 
  *************** function _print_query *****************
  Defined at:
-		line 234 in file "main.c"
+		line 238 in file "main.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -574,7 +581,7 @@ Total ram usage:        0 bytes
 
  *************** function _print_string_lcd *****************
  Defined at:
-		line 184 in file "main.c"
+		line 188 in file "main.c"
  Parameters:    Size  Location     Type
   string          1    wreg     PTR const unsigned char 
 		 -> STR_7(8), 
@@ -607,7 +614,7 @@ Total ram usage:        3 bytes
 
  *************** function _print_capacity *****************
  Defined at:
-		line 216 in file "main.c"
+		line 220 in file "main.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -640,7 +647,7 @@ Total ram usage:        0 bytes
 
  *************** function _print_string_serial *****************
  Defined at:
-		line 195 in file "main.c"
+		line 199 in file "main.c"
  Parameters:    Size  Location     Type
   string          1    wreg     PTR const unsigned char 
 		 -> STR_9(12), str_cmd_mode(14), STR_8(10), STR_6(9), 
@@ -680,7 +687,7 @@ Total ram usage:        3 bytes
 
  *************** function _fifo_push *****************
  Defined at:
-		line 119 in file "main.c"
+		line 123 in file "main.c"
  Parameters:    Size  Location     Type
   data            1    wreg     unsigned char 
  Auto vars:     Size  Location     Type
@@ -709,7 +716,7 @@ Total ram usage:        2 bytes
 
  *************** function _fifo_pop *****************
  Defined at:
-		line 147 in file "main.c"
+		line 151 in file "main.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -738,7 +745,7 @@ Total ram usage:        2 bytes
 
  *************** function _byte_to_hex *****************
  Defined at:
-		line 176 in file "main.c"
+		line 180 in file "main.c"
  Parameters:    Size  Location     Type
   data            1    wreg     unsigned char 
  Auto vars:     Size  Location     Type
@@ -774,24 +781,24 @@ MODULE INFORMATION
 
 Module		Function		Class		Link	Load	Size
 shared
-		__stringtab    		STRING         	0002	0000	7
-		_str_cmd_mode  		STRING         	0018	0000	15
-		_hex_table     		STRING         	0008	0000	17
-		__initialization		CODE           	07BE	0000	64
-		_str_timeout   		STRING         	0026	0000	11
+		__stringtab    		STRING         	0600	0000	7
+		_str_cmd_mode  		STRING         	0616	0000	15
+		_hex_table     		STRING         	0606	0000	17
+		__initialization		CODE           	0007	0000	64
+		_str_timeout   		STRING         	0624	0000	11
 
 shared estimated size: 114
 
 main.c
-		_byte_to_hex   		CODE           	0183	0000	36
-		_print_query   		CODE           	0262	0000	117
-		_usb_autoconfig		CODE           	02D6	0000	135
-		_main          		CODE           	035C	0000	313
-		_print_string_serial		CODE           	0149	0000	30
-		_print_string_lcd		CODE           	0166	0000	30
-		_fifo_pop      		CODE           	01DE	0000	63
-		_fifo_push     		CODE           	021C	0000	71
-		_print_capacity		CODE           	01A6	0000	57
+		_byte_to_hex   		CODE           	0FA5	0000	36
+		_print_query   		CODE           	0724	0000	117
+		_usb_autoconfig		CODE           	069E	0000	135
+		_main          		CODE           	046A	0000	320
+		_print_string_serial		CODE           	0F88	0000	30
+		_print_string_lcd		CODE           	07DE	0000	30
+		_fifo_pop      		CODE           	05A9	0000	63
+		_fifo_push     		CODE           	0798	0000	71
+		_print_capacity		CODE           	0FC8	0000	57
 
-main.c estimated size: 852
+main.c estimated size: 859
 

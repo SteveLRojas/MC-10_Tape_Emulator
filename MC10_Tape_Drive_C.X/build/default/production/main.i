@@ -2023,6 +2023,8 @@ extern __bank0 __bit __powerdown;
 extern __bank0 __bit __timeout;
 
 # 30 "main.c"
+unsigned char temp1;
+unsigned char temp2;
 unsigned char temp3;
 unsigned char temp4;
 unsigned char temp5;
@@ -2038,6 +2040,7 @@ unsigned char gen_count5;
 unsigned char gen_count6;
 unsigned char tape_size_high;
 unsigned char tape_size_low;
+unsigned char bit_count;
 unsigned char hex_char_high;
 unsigned char hex_char_low;
 unsigned char usb_bytes_sent_high;
@@ -2071,6 +2074,7 @@ unsigned char fifo_num_bytes;
 unsigned char tape_name[8] = {'D', 'E', 'R', 'G', 'A', 'N', 'Q', 'Q'};
 
 
+
 void initialize();
 void mem_clear();
 void mem_dump();
@@ -2098,7 +2102,7 @@ unsigned char usb_get_version();
 void usb_disk_capacity();
 void usb_disk_query();
 void usb_write_test_data();
-
+void usb_file_write();
 unsigned char usb_file_read();
 
 
@@ -2305,7 +2309,7 @@ void main(void)
 unsigned char state = 0;
 initialize();
 
-# 316
+# 320
 print_string_lcd("Dragons");
 lcd_line2();
 
@@ -2402,8 +2406,9 @@ break;
 case 0x10:
 usb_file_create();
 break;
-
-# 415
+case 0x11:
+usb_file_write();
+break;
 case 0x12:
 usb_write_test_data();
 break;

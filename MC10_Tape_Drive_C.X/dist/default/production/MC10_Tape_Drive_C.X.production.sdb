@@ -7,197 +7,203 @@
 [v ___fladd __fladd `(d  1 e 4 0 ]
 "4 /opt/microchip/xc8/v2.05/pic/sources/c90/common/Umul8_16.c
 [v __Umul8_16 _Umul8_16 `(ui  1 e 2 0 ]
-"119 /home/dragomir/repos/MC-10_Tape_Emulator/MC10_Tape_Drive_C.X/main.c
+"123 /home/dragomir/repos/MC-10_Tape_Emulator/MC10_Tape_Drive_C.X/main.c
 [v _fifo_push fifo_push `(uc  1 e 1 0 ]
-"147
+"151
 [v _fifo_pop fifo_pop `(uc  1 e 1 0 ]
-"176
+"180
 [v _byte_to_hex byte_to_hex `(v  1 e 1 0 ]
-"184
+"188
 [v _print_string_lcd print_string_lcd `(v  1 e 1 0 ]
-"195
+"199
 [v _print_string_serial print_string_serial `(v  1 e 1 0 ]
-"216
+"220
 [v _print_capacity print_capacity `(v  1 e 1 0 ]
-"234
+"238
 [v _print_query print_query `(v  1 e 1 0 ]
-"266
+"270
 [v _usb_autoconfig usb_autoconfig `(v  1 e 1 0 ]
-"307
+"311
 [v _main main `(v  1 e 1 0 ]
 "30
-[v _temp3 temp3 `uc  1 e 1 0 ]
+[v _temp1 temp1 `uc  1 e 1 0 ]
 "31
-[v _temp4 temp4 `uc  1 e 1 0 ]
+[v _temp2 temp2 `uc  1 e 1 0 ]
 "32
-[v _temp5 temp5 `uc  1 e 1 0 ]
+[v _temp3 temp3 `uc  1 e 1 0 ]
 "33
-[v _ram_address_h ram_address_h `uc  1 e 1 0 ]
+[v _temp4 temp4 `uc  1 e 1 0 ]
 "34
-[v _ram_address_l ram_address_l `uc  1 e 1 0 ]
+[v _temp5 temp5 `uc  1 e 1 0 ]
 "35
-[v _sdel_count sdel_count `uc  1 e 1 0 ]
+[v _ram_address_h ram_address_h `uc  1 e 1 0 ]
 "36
-[v _ldel_count ldel_count `uc  1 e 1 0 ]
+[v _ram_address_l ram_address_l `uc  1 e 1 0 ]
 "37
-[v _gen_count gen_count `uc  1 e 1 0 ]
+[v _sdel_count sdel_count `uc  1 e 1 0 ]
 "38
-[v _gen_count2 gen_count2 `uc  1 e 1 0 ]
+[v _ldel_count ldel_count `uc  1 e 1 0 ]
 "39
-[v _gen_count3 gen_count3 `uc  1 e 1 0 ]
+[v _gen_count gen_count `uc  1 e 1 0 ]
 "40
-[v _gen_count4 gen_count4 `uc  1 e 1 0 ]
+[v _gen_count2 gen_count2 `uc  1 e 1 0 ]
 "41
-[v _gen_count5 gen_count5 `uc  1 e 1 0 ]
+[v _gen_count3 gen_count3 `uc  1 e 1 0 ]
 "42
-[v _gen_count6 gen_count6 `uc  1 e 1 0 ]
+[v _gen_count4 gen_count4 `uc  1 e 1 0 ]
 "43
-[v _tape_size_high tape_size_high `uc  1 e 1 0 ]
+[v _gen_count5 gen_count5 `uc  1 e 1 0 ]
 "44
-[v _tape_size_low tape_size_low `uc  1 e 1 0 ]
+[v _gen_count6 gen_count6 `uc  1 e 1 0 ]
 "45
-[v _hex_char_high hex_char_high `uc  1 e 1 0 ]
+[v _tape_size_high tape_size_high `uc  1 e 1 0 ]
 "46
-[v _hex_char_low hex_char_low `uc  1 e 1 0 ]
+[v _tape_size_low tape_size_low `uc  1 e 1 0 ]
 "47
-[v _usb_bytes_sent_high usb_bytes_sent_high `uc  1 e 1 0 ]
+[v _bit_count bit_count `uc  1 e 1 0 ]
 "48
-[v _usb_bytes_sent_low usb_bytes_sent_low `uc  1 e 1 0 ]
+[v _hex_char_high hex_char_high `uc  1 e 1 0 ]
 "49
-[v _usb_file_size_high usb_file_size_high `uc  1 e 1 0 ]
+[v _hex_char_low hex_char_low `uc  1 e 1 0 ]
 "50
-[v _usb_file_size_low usb_file_size_low `uc  1 e 1 0 ]
+[v _usb_bytes_sent_high usb_bytes_sent_high `uc  1 e 1 0 ]
 "51
-[v _usb_bytes_read_high usb_bytes_read_high `uc  1 e 1 0 ]
+[v _usb_bytes_sent_low usb_bytes_sent_low `uc  1 e 1 0 ]
 "52
-[v _usb_bytes_read_low usb_bytes_read_low `uc  1 e 1 0 ]
+[v _usb_file_size_high usb_file_size_high `uc  1 e 1 0 ]
 "53
-[v _usb_drive_size1 usb_drive_size1 `uc  1 e 1 0 ]
+[v _usb_file_size_low usb_file_size_low `uc  1 e 1 0 ]
 "54
-[v _usb_drive_size2 usb_drive_size2 `uc  1 e 1 0 ]
+[v _usb_bytes_read_high usb_bytes_read_high `uc  1 e 1 0 ]
 "55
-[v _usb_drive_size3 usb_drive_size3 `uc  1 e 1 0 ]
+[v _usb_bytes_read_low usb_bytes_read_low `uc  1 e 1 0 ]
 "56
-[v _usb_free_space1 usb_free_space1 `uc  1 e 1 0 ]
+[v _usb_drive_size1 usb_drive_size1 `uc  1 e 1 0 ]
 "57
-[v _usb_free_space2 usb_free_space2 `uc  1 e 1 0 ]
+[v _usb_drive_size2 usb_drive_size2 `uc  1 e 1 0 ]
 "58
-[v _usb_free_space3 usb_free_space3 `uc  1 e 1 0 ]
+[v _usb_drive_size3 usb_drive_size3 `uc  1 e 1 0 ]
 "59
-[v _usb_logical_bytes1 usb_logical_bytes1 `uc  1 e 1 0 ]
+[v _usb_free_space1 usb_free_space1 `uc  1 e 1 0 ]
 "60
-[v _usb_logical_bytes2 usb_logical_bytes2 `uc  1 e 1 0 ]
+[v _usb_free_space2 usb_free_space2 `uc  1 e 1 0 ]
 "61
-[v _usb_logical_bytes3 usb_logical_bytes3 `uc  1 e 1 0 ]
+[v _usb_free_space3 usb_free_space3 `uc  1 e 1 0 ]
 "62
-[v _usb_target_status usb_target_status `uc  1 e 1 0 ]
+[v _usb_logical_bytes1 usb_logical_bytes1 `uc  1 e 1 0 ]
 "63
-[v _s_reg_high s_reg_high `uc  1 e 1 0 ]
+[v _usb_logical_bytes2 usb_logical_bytes2 `uc  1 e 1 0 ]
 "64
-[v _s_reg_low s_reg_low `uc  1 e 1 0 ]
+[v _usb_logical_bytes3 usb_logical_bytes3 `uc  1 e 1 0 ]
 "65
-[v _timeout_high timeout_high `uc  1 e 1 0 ]
+[v _usb_target_status usb_target_status `uc  1 e 1 0 ]
 "66
-[v _timeout_low timeout_low `uc  1 e 1 0 ]
+[v _s_reg_high s_reg_high `uc  1 e 1 0 ]
 "67
-[v _delay_counter delay_counter `uc  1 e 1 0 ]
+[v _s_reg_low s_reg_low `uc  1 e 1 0 ]
 "68
-[v _flag_reg flag_reg `uc  1 e 1 0 ]
+[v _timeout_high timeout_high `uc  1 e 1 0 ]
 "69
-[v _fifo_read_idx fifo_read_idx `uc  1 e 1 0 ]
+[v _timeout_low timeout_low `uc  1 e 1 0 ]
 "70
-[v _fifo_read_bank fifo_read_bank `uc  1 e 1 0 ]
+[v _delay_counter delay_counter `uc  1 e 1 0 ]
 "71
-[v _fifo_write_idx fifo_write_idx `uc  1 e 1 0 ]
+[v _flag_reg flag_reg `uc  1 e 1 0 ]
 "72
-[v _fifo_write_bank fifo_write_bank `uc  1 e 1 0 ]
+[v _fifo_read_idx fifo_read_idx `uc  1 e 1 0 ]
 "73
-[v _fifo_num_bytes fifo_num_bytes `uc  1 e 1 0 ]
+[v _fifo_read_bank fifo_read_bank `uc  1 e 1 0 ]
+"74
+[v _fifo_write_idx fifo_write_idx `uc  1 e 1 0 ]
 "75
+[v _fifo_write_bank fifo_write_bank `uc  1 e 1 0 ]
+"76
+[v _fifo_num_bytes fifo_num_bytes `uc  1 e 1 0 ]
+"78
 [v _tape_name tape_name `[8]uc  1 e 8 0 ]
-"109
-[v _fifo_bank_A fifo_bank_A `[64]uc  1 e 64 0 ]
-"110
-[v _fifo_bank_B fifo_bank_B `[96]uc  1 e 96 0 ]
-"111
-[v _fifo_bank_C fifo_bank_C `[96]uc  1 e 96 0 ]
 "113
-[v _str_timeout str_timeout `DC[10]uc  1 e 10 0 ]
+[v _fifo_bank_A fifo_bank_A `[64]uc  1 e 64 0 ]
 "114
+[v _fifo_bank_B fifo_bank_B `[96]uc  1 e 96 0 ]
+"115
+[v _fifo_bank_C fifo_bank_C `[96]uc  1 e 96 0 ]
+"117
+[v _str_timeout str_timeout `DC[10]uc  1 e 10 0 ]
+"118
 [v _str_cmd_mode str_cmd_mode `DC[14]uc  1 e 14 0 ]
-"116
+"120
 [v _hex_table hex_table `DC[16]uc  1 e 16 0 ]
-"307
+"311
 [v _main main `(v  1 e 1 0 ]
 {
-"321
+"325
 [v main@temp temp `uc  1 a 1 10 ]
-"309
+"313
 [v main@state state `uc  1 a 1 9 ]
-"445
+"449
 } 0
-"266
+"270
 [v _usb_autoconfig usb_autoconfig `(v  1 e 1 0 ]
 {
-"268
+"272
 [v usb_autoconfig@temp temp `uc  1 a 1 7 ]
-"305
+"309
 } 0
-"234
+"238
 [v _print_query print_query `(v  1 e 1 0 ]
 {
-"264
+"268
 } 0
-"184
+"188
 [v _print_string_lcd print_string_lcd `(v  1 e 1 0 ]
 {
 [v print_string_lcd@string string `*.24DCuc  1 a 1 wreg ]
-"186
+"190
 [v print_string_lcd@i i `uc  1 a 1 5 ]
-"184
+"188
 [v print_string_lcd@string string `*.24DCuc  1 a 1 wreg ]
-"186
+"190
 [v print_string_lcd@string string `*.24DCuc  1 a 1 4 ]
-"193
+"197
 } 0
-"216
+"220
 [v _print_capacity print_capacity `(v  1 e 1 0 ]
 {
-"233
+"237
 } 0
-"195
+"199
 [v _print_string_serial print_string_serial `(v  1 e 1 0 ]
 {
 [v print_string_serial@string string `*.24DCuc  1 a 1 wreg ]
-"197
+"201
 [v print_string_serial@i i `uc  1 a 1 4 ]
-"195
+"199
 [v print_string_serial@string string `*.24DCuc  1 a 1 wreg ]
-"197
+"201
 [v print_string_serial@string string `*.24DCuc  1 a 1 5 ]
-"204
+"208
 } 0
-"119
+"123
 [v _fifo_push fifo_push `(uc  1 e 1 0 ]
 {
 [v fifo_push@data data `uc  1 a 1 wreg ]
 [v fifo_push@data data `uc  1 a 1 wreg ]
 [v fifo_push@data data `uc  1 a 1 1 ]
-"145
+"149
 } 0
-"147
+"151
 [v _fifo_pop fifo_pop `(uc  1 e 1 0 ]
 {
-"149
+"153
 [v fifo_pop@temp temp `uc  1 a 1 3 ]
-"174
+"178
 } 0
-"176
+"180
 [v _byte_to_hex byte_to_hex `(v  1 e 1 0 ]
 {
 [v byte_to_hex@data data `uc  1 a 1 wreg ]
 [v byte_to_hex@data data `uc  1 a 1 wreg ]
-"178
-[v byte_to_hex@data data `uc  1 a 1 2 ]
 "182
+[v byte_to_hex@data data `uc  1 a 1 2 ]
+"186
 } 0

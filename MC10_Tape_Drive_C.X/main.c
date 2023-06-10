@@ -27,6 +27,8 @@
 
 //ASM globals
 //unsigned char dreg;
+unsigned char temp1;
+unsigned char temp2;
 unsigned char temp3;
 unsigned char temp4;
 unsigned char temp5;
@@ -42,6 +44,7 @@ unsigned char gen_count5;
 unsigned char gen_count6;
 unsigned char tape_size_high;
 unsigned char tape_size_low;
+unsigned char bit_count;
 unsigned char hex_char_high;
 unsigned char hex_char_low;
 unsigned char usb_bytes_sent_high;
@@ -75,6 +78,7 @@ unsigned char fifo_num_bytes;
 unsigned char tape_name[8] = {'D', 'E', 'R', 'G', 'A', 'N', 'Q', 'Q'};
 
 //ASM function declarations
+//void interrupt tape_int(void);
 void initialize();
 void mem_clear();
 void mem_dump();
@@ -102,7 +106,7 @@ unsigned char usb_get_version();
 void usb_disk_capacity();
 void usb_disk_query();
 void usb_write_test_data();
-//void usb_file_write();
+void usb_file_write();
 unsigned char usb_file_read();
 
 //C globals
@@ -409,9 +413,9 @@ void main(void)
                     case 0x10:
                         usb_file_create();
                         break;
-                    /*case 0x11:
+                    case 0x11:
                         usb_file_write();
-                        break;*/
+                        break;
                     case 0x12:
                         usb_write_test_data();
                         break;
