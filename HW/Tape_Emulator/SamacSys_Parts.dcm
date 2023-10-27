@@ -1,0 +1,81 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP NE555DR
+D Single Precision Timer
+K
+F http://www.ti.com/lit/ds/symlink/ne555.pdf
+$ENDCMP
+#
+$CMP W25Q16JVSNIQ
+D NOR Flash spiFlash, 3V, 16M-bit, 4Kb Uniform Sector
+K
+F http://www.winbond.com/resource-files/w25q16jv%20spi%20revg%2003222018%20plus.pdf
+$ENDCMP
+#
+$CMP SS24-TP
+D Diode Schottky 40V 2A 2-Pin SMA T/R
+K
+F https://componentsearchengine.com/Datasheets/1/SS24-TP.pdf
+$ENDCMP
+#
+$CMP VLS5045EX-330M
+D Wirewound Inductor 33uH 1.3A 240 mOhm TDK VLS-EX Series Shielded Wire-wound SMD Inductor with a Ferrite Core, 33 uH +/-20% Wire-Wound 1.3A Idc
+K
+F https://product.tdk.com/system/files/dam/doc/product/inductor/inductor/smd/catalog/inductor_commercial_power_vls5045ex_en.pdf
+$ENDCMP
+#
+$CMP RAHHD19TR
+D HDMI, Displayport & DVI Connectors HDMI Type A Rcpt Horizontal SMT
+K
+F https://www.switchcraft.com/Drawings/RAHHD19TR_CD.pdf
+$ENDCMP
+#
+$CMP TPD12S016PWR
+D Texas Instruments,TPD12S016PWR,IC,HDMI TPD12S016PWR, HDMI Interface 12-channel HDMI 4.5 
+K
+F http://www.ti.com/lit/ds/symlink/tpd12s016.pdf
+$ENDCMP
+#
+$CMP AT89S52-24PU
+D MICROCHIP - AT89S52-24PU - MCU, 8BIT, 8051, 24MHZ, DIP-40
+K
+F http://www.atmel.com/images/doc1919.pdf
+$ENDCMP
+#
+$CMP 240-1288-00-0602J
+D 3M 2.54mm Pitch Vertical 40 Way, Through Hole Closed Frame IC Dip Socket, 1A
+K
+F http://multimedia.3m.com/mws/media/99720O/3mtm-textooltm-universal-zip-dip-socket-ts0392.pdf
+$ENDCMP
+#
+$CMP SJ1-3525NG-GR
+D Phone Connectors 3.5 mm, Stereo, Right Angle, Through Hole, Isolated Ground, 3 Conductors, 0 2 Internal Switches, Audio Jack Connector
+K
+F https://www.cuidevices.com/product/resource/digikeypdf/sj1-352xng.pdf
+$ENDCMP
+#
+$CMP 23LC512T-I_SN
+D SRAM 512K 2.5V SPI SERIAL SRAM SQI
+K
+F https://ww1.microchip.com/downloads/en/DeviceDoc/20005155B.pdf
+$ENDCMP
+#
+$CMP LL3301NF065QG
+D E-SWITCH - LL3301NF065QG - TACTILE SW, SPST, 0.05A, 12VDC, SOLDER
+K
+F http://spec_sheets.e-switch.com/specs/P090002.pdf
+$ENDCMP
+#
+$CMP LCD-20x4Y
+D LCD Character Display Modules & Accessories 20X4 CHARCTR YW/GRN LCD W/BACKLIGHT
+K
+F https://componentsearchengine.com/Datasheets/1/LCD-20x4Y.pdf
+$ENDCMP
+#
+$CMP NXS0104PWJ
+D NXS0104 - Dual supply translating transceiver; open drain; autodirectionsensing@en-us
+K
+F https://assets.nexperia.com/documents/data-sheet/NXS0104.pdf
+$ENDCMP
+#
+#End Doc Library
