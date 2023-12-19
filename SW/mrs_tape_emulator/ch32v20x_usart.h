@@ -179,6 +179,8 @@ FlagStatus USART_GetFlagStatus(USART_TypeDef *USARTx, uint16_t USART_FLAG);
 void       USART_ClearFlag(USART_TypeDef *USARTx, uint16_t USART_FLAG);
 ITStatus   USART_GetITStatus(USART_TypeDef *USARTx, uint16_t USART_IT);
 void       USART_ClearITPendingBit(USART_TypeDef *USARTx, uint16_t USART_IT);
+uint16_t uart_get_string(char* buf, uint16_t size);
+void uart_print_string(char* buf);
 
 #ifdef __cplusplus
 }

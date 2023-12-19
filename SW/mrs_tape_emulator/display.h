@@ -8,8 +8,6 @@
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 
-#include "debug.h"
-
 #define PORT_LCD_BUS GPIOA  		// Data & Commands
 #define PORT_LCD_CTRL GPIOB 		// LCD Control Signals
 

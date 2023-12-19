@@ -5,6 +5,7 @@
  *      Author: Steve
  */
 
+#include "debug.h"
 #include "display.h"
 
 void lcd_pulse_enable()

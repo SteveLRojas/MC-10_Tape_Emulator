@@ -198,6 +198,7 @@ void       SPI_Cmd(SPI_TypeDef *SPIx, FunctionalState NewState);
 void       I2S_Cmd(SPI_TypeDef *SPIx, FunctionalState NewState);
 void       SPI_I2S_ITConfig(SPI_TypeDef *SPIx, uint8_t SPI_I2S_IT, FunctionalState NewState);
 void       SPI_I2S_DMACmd(SPI_TypeDef *SPIx, uint16_t SPI_I2S_DMAReq, FunctionalState NewState);
+uint16_t spi_transfer(SPI_TypeDef *spi_x, uint16_t data);
 void       SPI_I2S_SendData(SPI_TypeDef *SPIx, uint16_t Data);
 uint16_t   SPI_I2S_ReceiveData(SPI_TypeDef *SPIx);
 void       SPI_NSSInternalSoftwareConfig(SPI_TypeDef *SPIx, uint16_t SPI_NSSInternalSoft);

@@ -810,3 +810,38 @@ void USART_ClearITPendingBit(USART_TypeDef *USARTx, uint16_t USART_IT)
     itmask = ((uint16_t)0x01 << (uint16_t)bitpos);
     USARTx->STATR = (uint16_t)~itmask;
 }
+
+uint16_t uart_get_string(char* buf, uint16_t size)
+{
+	uint16_t bytes_read = 0;
+	char received_data;
+
+	--size;	//leave space for the null byte
+	while(bytes_read < size)
+	{
+		while(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == RESET) {};
+		received_data = (char)USART_ReceiveData(USART1);
+		buf[bytes_read++] = received_data;
+		if(received_data == '\r' || received_data == '\n')
+			break;
+	}
+	buf[bytes_read] = '\0';
+	return bytes_read;
+}
+
+void uart_print_string(char* buf)
+{
+	uint16_t index = 0;
+
+	while(buf[index])
+	{
+		while(USART_GetFlagStatus(USART1, USART_FLAG_TC) == RESET) {};
+		USART_SendData(USART1, buf[index]);
+		++index;
+	}
+}
+
+
+
+
+

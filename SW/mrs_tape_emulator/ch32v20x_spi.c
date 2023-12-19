@@ -326,6 +326,16 @@ void SPI_I2S_DMACmd(SPI_TypeDef *SPIx, uint16_t SPI_I2S_DMAReq, FunctionalState 
     }
 }
 
+uint16_t spi_transfer(SPI_TypeDef *spi_x, uint16_t data)
+{
+	SPI_I2S_SendData(spi_x, data); // send
+	while(SPI_I2S_GetFlagStatus(spi_x, SPI_I2S_FLAG_RXNE) == RESET)
+	{
+		// wait until response buffer is not empty
+	}
+	return SPI_I2S_ReceiveData(spi_x); // receive
+}
+
 /*********************************************************************
  * @fn      SPI_I2S_SendData
  *
