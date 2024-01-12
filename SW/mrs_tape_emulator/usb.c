@@ -278,7 +278,6 @@ void usb_read_data0()
 
 void usb_file_read()
 {
-	uint8_t n_bytes = 0;
 	bytes_read = 0;
 
 	usb_file_open();

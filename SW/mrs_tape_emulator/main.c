@@ -159,7 +159,7 @@ int main(void)
 
 void serial_listen()
 {
-	uint8_t temp;
+	//uint8_t temp;
 
 	switch(get_hex())
 	{
