@@ -10,12 +10,12 @@
 
 #define CDC_BUF_SIZE 1024 // Must be power of 2
 
-extern uint8_t fifo_receive_buf[CDC_BUF_SIZE];
+extern __attribute__ ((aligned(4))) uint8_t fifo_receive_buf[CDC_BUF_SIZE];
 extern uint16_t fifo_rc_count;
 extern uint16_t fifo_rc_front;
 extern uint16_t fifo_rc_back;
 
-extern uint8_t fifo_transmit_buf[CDC_BUF_SIZE];
+extern __attribute__ ((aligned(4))) uint8_t fifo_transmit_buf[CDC_BUF_SIZE];
 extern uint16_t fifo_tm_count;
 extern uint16_t fifo_tm_front;
 extern uint16_t fifo_tm_back;

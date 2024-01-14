@@ -43,12 +43,12 @@ uint32_t USB_SIL_Init(void)
  */
 uint32_t USB_SIL_Write(uint8_t bEpAddr, uint8_t* pBufferPointer, uint32_t wBufferSize)
 {
-	uart_print_string("SIL\n");
-	print_hex_byte(bEpAddr);
-	print_hex_word((uint32_t)pBufferPointer >> 16);
-	print_hex_word((uint32_t)pBufferPointer & 0xFFFF);
-	print_hex_word(wBufferSize >> 16);
-	print_hex_word(wBufferSize & 0xFFFF);
+	//uart_print_string("SIL\n");
+	//print_hex_byte(bEpAddr);
+	//print_hex_word((uint32_t)pBufferPointer >> 16);
+	//print_hex_word((uint32_t)pBufferPointer & 0xFFFF);
+	//print_hex_word(wBufferSize >> 16);
+	//print_hex_word(wBufferSize & 0xFFFF);
 
 	UserToPMABufferCopy(pBufferPointer, GetEPTxAddr(bEpAddr & 0x7F), wBufferSize);
 	SetEPTxCount((bEpAddr & 0x7F), wBufferSize);

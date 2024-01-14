@@ -9,12 +9,12 @@
 #include "usb_type.h"
 #include "cdc_fifo.h"
 
-uint8_t fifo_receive_buf[CDC_BUF_SIZE] = {0};
+__attribute__ ((aligned(4))) uint8_t fifo_receive_buf[CDC_BUF_SIZE] = {0};
 uint16_t fifo_rc_count = 0;
 uint16_t fifo_rc_front = 0;
 uint16_t fifo_rc_back = 0;
 
-uint8_t fifo_transmit_buf[CDC_BUF_SIZE] = {0};
+__attribute__ ((aligned(4))) uint8_t fifo_transmit_buf[CDC_BUF_SIZE] = {0};
 uint16_t fifo_tm_count = 0;
 uint16_t fifo_tm_front = 0;
 uint16_t fifo_tm_back = 0;

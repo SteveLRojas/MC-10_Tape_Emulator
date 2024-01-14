@@ -61,7 +61,8 @@ int main(void)
 
     RCC_Configuration( );
     TIM2_Init( );
-    UART2_Init( 1, DEF_UARTx_BAUDRATE, DEF_UARTx_STOPBIT, DEF_UARTx_PARITY );
+    //UART2_Init( 1, DEF_UARTx_BAUDRATE, DEF_UARTx_STOPBIT, DEF_UARTx_PARITY );
+    UART2_ParaInit( 1 );
     
 	Set_USBConfig(); 
     USB_Init();	    
