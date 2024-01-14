@@ -1730,6 +1730,167 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x5e ./UART/UART.o
  .debug_macro   0x0000000000000000       0x58 ./UART/UART.o
  .debug_macro   0x0000000000000000       0x40 ./UART/UART.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .group         0x0000000000000000        0xc ./UART/cdc_fifo.o
+ .text          0x0000000000000000        0x0 ./UART/cdc_fifo.o
+ .data          0x0000000000000000        0x0 ./UART/cdc_fifo.o
+ .bss           0x0000000000000000        0x0 ./UART/cdc_fifo.o
+ .bss.fifo_receive_buf
+                0x0000000000000000      0x400 ./UART/cdc_fifo.o
+ .sbss.fifo_rc_count
+                0x0000000000000000        0x2 ./UART/cdc_fifo.o
+ .sbss.fifo_rc_front
+                0x0000000000000000        0x2 ./UART/cdc_fifo.o
+ .sbss.fifo_rc_back
+                0x0000000000000000        0x2 ./UART/cdc_fifo.o
+ .bss.fifo_transmit_buf
+                0x0000000000000000      0x400 ./UART/cdc_fifo.o
+ .sbss.fifo_tm_count
+                0x0000000000000000        0x2 ./UART/cdc_fifo.o
+ .sbss.fifo_tm_front
+                0x0000000000000000        0x2 ./UART/cdc_fifo.o
+ .sbss.fifo_tm_back
+                0x0000000000000000        0x2 ./UART/cdc_fifo.o
+ .text.fifo_rc_push
+                0x0000000000000000       0x90 ./UART/cdc_fifo.o
+ .text.fifo_rc_pop
+                0x0000000000000000       0x8c ./UART/cdc_fifo.o
+ .text.fifo_rc_peek
+                0x0000000000000000       0x3a ./UART/cdc_fifo.o
+ .text.fifo_rc_read
+                0x0000000000000000       0xba ./UART/cdc_fifo.o
+ .text.fifo_rc_write
+                0x0000000000000000       0xc0 ./UART/cdc_fifo.o
+ .text.fifo_tm_push
+                0x0000000000000000       0x90 ./UART/cdc_fifo.o
+ .text.fifo_tm_pop
+                0x0000000000000000       0x8c ./UART/cdc_fifo.o
+ .text.fifo_tm_peek
+                0x0000000000000000       0x3a ./UART/cdc_fifo.o
+ .text.fifo_tm_read
+                0x0000000000000000       0xba ./UART/cdc_fifo.o
+ .text.fifo_tm_write
+                0x0000000000000000       0xc0 ./UART/cdc_fifo.o
+ .debug_info    0x0000000000000000      0xc3b ./UART/cdc_fifo.o
+ .debug_abbrev  0x0000000000000000      0x2ad ./UART/cdc_fifo.o
+ .debug_aranges
+                0x0000000000000000       0x68 ./UART/cdc_fifo.o
+ .debug_ranges  0x0000000000000000       0x58 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x2cc ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x754 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x22 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x52 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x19 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x94 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x34 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x34 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x16 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x57 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x97 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x330 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0xfd ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x10 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x58 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x1f ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x43 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x20 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x18e ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x10 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x6a ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x1c ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x52 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x40 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x10 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x40 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0xd7 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x1c ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x3d ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x16 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x16f ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x3a ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0xef ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x1df ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x46 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000     0x5603 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x24f ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x12a ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x32f ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x7c ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x239 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x88 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x142 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x239 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x206 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x4c ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x64 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x35c ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x3a ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x1f1 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x564 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000      0x15e ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x22 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x28 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x22 ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x7c ./UART/cdc_fifo.o
+ .debug_macro   0x0000000000000000       0x10 ./UART/cdc_fifo.o
+ .debug_line    0x0000000000000000      0xa2f ./UART/cdc_fifo.o
+ .debug_str     0x0000000000000000    0x2d9e8 ./UART/cdc_fifo.o
+ .comment       0x0000000000000000       0x34 ./UART/cdc_fifo.o
+ .debug_frame   0x0000000000000000      0x168 ./UART/cdc_fifo.o
  .group         0x0000000000000000        0xc ./ch32v20x_adc.o
  .group         0x0000000000000000        0xc ./ch32v20x_adc.o
  .group         0x0000000000000000        0xc ./ch32v20x_adc.o
@@ -1925,7 +2086,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x28 ./ch32v20x_adc.o
  .debug_macro   0x0000000000000000      0x24f ./ch32v20x_adc.o
  .debug_line    0x0000000000000000     0x16fa ./ch32v20x_adc.o
- .debug_str     0x0000000000000000    0x2e2fc ./ch32v20x_adc.o
+ .debug_str     0x0000000000000000    0x2e313 ./ch32v20x_adc.o
  .comment       0x0000000000000000       0x34 ./ch32v20x_adc.o
  .debug_frame   0x0000000000000000      0x504 ./ch32v20x_adc.o
  .group         0x0000000000000000        0xc ./ch32v20x_bkp.o
@@ -2070,7 +2231,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x28 ./ch32v20x_bkp.o
  .debug_macro   0x0000000000000000      0x124 ./ch32v20x_bkp.o
  .debug_line    0x0000000000000000      0x7e6 ./ch32v20x_bkp.o
- .debug_str     0x0000000000000000    0x2db48 ./ch32v20x_bkp.o
+ .debug_str     0x0000000000000000    0x2db5f ./ch32v20x_bkp.o
  .comment       0x0000000000000000       0x34 ./ch32v20x_bkp.o
  .debug_frame   0x0000000000000000      0x194 ./ch32v20x_bkp.o
  .group         0x0000000000000000        0xc ./ch32v20x_can.o
@@ -2241,7 +2402,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x28 ./ch32v20x_can.o
  .debug_macro   0x0000000000000000      0x329 ./ch32v20x_can.o
  .debug_line    0x0000000000000000     0x1938 ./ch32v20x_can.o
- .debug_str     0x0000000000000000    0x2de14 ./ch32v20x_can.o
+ .debug_str     0x0000000000000000    0x2de2b ./ch32v20x_can.o
  .comment       0x0000000000000000       0x34 ./ch32v20x_can.o
  .debug_frame   0x0000000000000000      0x358 ./ch32v20x_can.o
  .group         0x0000000000000000        0xc ./ch32v20x_crc.o
@@ -2374,7 +2535,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x22 ./ch32v20x_crc.o
  .debug_macro   0x0000000000000000       0x28 ./ch32v20x_crc.o
  .debug_line    0x0000000000000000      0x673 ./ch32v20x_crc.o
- .debug_str     0x0000000000000000    0x2d6f1 ./ch32v20x_crc.o
+ .debug_str     0x0000000000000000    0x2d708 ./ch32v20x_crc.o
  .comment       0x0000000000000000       0x34 ./ch32v20x_crc.o
  .debug_frame   0x0000000000000000       0xd0 ./ch32v20x_crc.o
  .group         0x0000000000000000        0xc ./ch32v20x_dbgmcu.o
@@ -2505,7 +2666,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x28 ./ch32v20x_dbgmcu.o
  .debug_macro   0x0000000000000000       0x76 ./ch32v20x_dbgmcu.o
  .debug_line    0x0000000000000000      0x61d ./ch32v20x_dbgmcu.o
- .debug_str     0x0000000000000000    0x2d6d4 ./ch32v20x_dbgmcu.o
+ .debug_str     0x0000000000000000    0x2d6eb ./ch32v20x_dbgmcu.o
  .comment       0x0000000000000000       0x34 ./ch32v20x_dbgmcu.o
  .debug_frame   0x0000000000000000       0xb4 ./ch32v20x_dbgmcu.o
  .group         0x0000000000000000        0xc ./ch32v20x_dma.o
@@ -2647,7 +2808,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x28 ./ch32v20x_dma.o
  .debug_macro   0x0000000000000000      0x233 ./ch32v20x_dma.o
  .debug_line    0x0000000000000000      0x95e ./ch32v20x_dma.o
- .debug_str     0x0000000000000000    0x2db39 ./ch32v20x_dma.o
+ .debug_str     0x0000000000000000    0x2db50 ./ch32v20x_dma.o
  .comment       0x0000000000000000       0x34 ./ch32v20x_dma.o
  .debug_frame   0x0000000000000000      0x174 ./ch32v20x_dma.o
  .group         0x0000000000000000        0xc ./ch32v20x_exti.o
@@ -2956,7 +3117,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x28 ./ch32v20x_flash.o
  .debug_macro   0x0000000000000000      0x13c ./ch32v20x_flash.o
  .debug_line    0x0000000000000000     0x18e1 ./ch32v20x_flash.o
- .debug_str     0x0000000000000000    0x2dfc5 ./ch32v20x_flash.o
+ .debug_str     0x0000000000000000    0x2dfdc ./ch32v20x_flash.o
  .comment       0x0000000000000000       0x34 ./ch32v20x_flash.o
  .debug_frame   0x0000000000000000      0x474 ./ch32v20x_flash.o
  .group         0x0000000000000000        0xc ./ch32v20x_gpio.o
@@ -3282,7 +3443,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x28 ./ch32v20x_i2c.o
  .debug_macro   0x0000000000000000      0x200 ./ch32v20x_i2c.o
  .debug_line    0x0000000000000000      0xfb5 ./ch32v20x_i2c.o
- .debug_str     0x0000000000000000    0x2e007 ./ch32v20x_i2c.o
+ .debug_str     0x0000000000000000    0x2e01e ./ch32v20x_i2c.o
  .comment       0x0000000000000000       0x34 ./ch32v20x_i2c.o
  .debug_frame   0x0000000000000000      0x43c ./ch32v20x_i2c.o
  .group         0x0000000000000000        0xc ./ch32v20x_it.o
@@ -3532,7 +3693,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x28 ./ch32v20x_iwdg.o
  .debug_macro   0x0000000000000000       0x46 ./ch32v20x_iwdg.o
  .debug_line    0x0000000000000000      0x64d ./ch32v20x_iwdg.o
- .debug_str     0x0000000000000000    0x2d75b ./ch32v20x_iwdg.o
+ .debug_str     0x0000000000000000    0x2d772 ./ch32v20x_iwdg.o
  .comment       0x0000000000000000       0x34 ./ch32v20x_iwdg.o
  .debug_frame   0x0000000000000000       0xd0 ./ch32v20x_iwdg.o
  .group         0x0000000000000000        0xc ./ch32v20x_misc.o
@@ -3791,7 +3952,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x28 ./ch32v20x_pwr.o
  .debug_macro   0x0000000000000000       0x5e ./ch32v20x_pwr.o
  .debug_line    0x0000000000000000      0xa9b ./ch32v20x_pwr.o
- .debug_str     0x0000000000000000    0x2d8f5 ./ch32v20x_pwr.o
+ .debug_str     0x0000000000000000    0x2d90c ./ch32v20x_pwr.o
  .comment       0x0000000000000000       0x34 ./ch32v20x_pwr.o
  .debug_frame   0x0000000000000000      0x1d8 ./ch32v20x_pwr.o
  .group         0x0000000000000000        0xc ./ch32v20x_rcc.o
@@ -4104,7 +4265,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x28 ./ch32v20x_rtc.o
  .debug_macro   0x0000000000000000       0x34 ./ch32v20x_rtc.o
  .debug_line    0x0000000000000000      0x96d ./ch32v20x_rtc.o
- .debug_str     0x0000000000000000    0x2d8ab ./ch32v20x_rtc.o
+ .debug_str     0x0000000000000000    0x2d8c2 ./ch32v20x_rtc.o
  .comment       0x0000000000000000       0x34 ./ch32v20x_rtc.o
  .debug_frame   0x0000000000000000      0x1dc ./ch32v20x_rtc.o
  .group         0x0000000000000000        0xc ./ch32v20x_spi.o
@@ -4271,7 +4432,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x28 ./ch32v20x_spi.o
  .debug_macro   0x0000000000000000      0x1eb ./ch32v20x_spi.o
  .debug_line    0x0000000000000000      0xdc6 ./ch32v20x_spi.o
- .debug_str     0x0000000000000000    0x2dd4a ./ch32v20x_spi.o
+ .debug_str     0x0000000000000000    0x2dd61 ./ch32v20x_spi.o
  .comment       0x0000000000000000       0x34 ./ch32v20x_spi.o
  .debug_frame   0x0000000000000000      0x320 ./ch32v20x_spi.o
  .group         0x0000000000000000        0xc ./ch32v20x_tim.o
@@ -4852,7 +5013,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x28 ./ch32v20x_wwdg.o
  .debug_macro   0x0000000000000000       0x1c ./ch32v20x_wwdg.o
  .debug_line    0x0000000000000000      0x6d9 ./ch32v20x_wwdg.o
- .debug_str     0x0000000000000000    0x2d799 ./ch32v20x_wwdg.o
+ .debug_str     0x0000000000000000    0x2d7b0 ./ch32v20x_wwdg.o
  .comment       0x0000000000000000       0x34 ./ch32v20x_wwdg.o
  .debug_frame   0x0000000000000000      0x114 ./ch32v20x_wwdg.o
  .group         0x0000000000000000        0xc ./core_riscv.o
@@ -4917,7 +5078,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x6a ./core_riscv.o
  .debug_macro   0x0000000000000000      0x1df ./core_riscv.o
  .debug_line    0x0000000000000000      0x486 ./core_riscv.o
- .debug_str     0x0000000000000000     0x34df ./core_riscv.o
+ .debug_str     0x0000000000000000     0x34f6 ./core_riscv.o
  .comment       0x0000000000000000       0x34 ./core_riscv.o
  .debug_frame   0x0000000000000000      0x270 ./core_riscv.o
  .group         0x0000000000000000        0xc ./debug.o
@@ -5173,7 +5334,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x22 ./display.o
  .debug_macro   0x0000000000000000       0x28 ./display.o
  .debug_line    0x0000000000000000      0x88e ./display.o
- .debug_str     0x0000000000000000    0x2d7a6 ./display.o
+ .debug_str     0x0000000000000000    0x2d7bd ./display.o
  .comment       0x0000000000000000       0x34 ./display.o
  .debug_frame   0x0000000000000000      0x178 ./display.o
  .group         0x0000000000000000        0xc ./main.o
@@ -5718,7 +5879,7 @@ Discarded input sections
  .debug_macro   0x0000000000000000       0x22 ./usb.o
  .debug_macro   0x0000000000000000      0x10c ./usb.o
  .debug_line    0x0000000000000000     0x128d ./usb.o
- .debug_str     0x0000000000000000    0x2ddfa ./usb.o
+ .debug_str     0x0000000000000000    0x2de11 ./usb.o
  .comment       0x0000000000000000       0x34 ./usb.o
  .debug_frame   0x0000000000000000      0x38c ./usb.o
  COMMON         0x0000000000000000       0x10 ./usb.o
@@ -5908,6 +6069,7 @@ LOAD ./USBLIB/CONFIG/usb_istr.o
 LOAD ./USBLIB/CONFIG/usb_prop.o
 LOAD ./USBLIB/CONFIG/usb_pwr.o
 LOAD ./UART/UART.o
+LOAD ./UART/cdc_fifo.o
 LOAD ./ch32v20x_adc.o
 LOAD ./ch32v20x_bkp.o
 LOAD ./ch32v20x_can.o
@@ -7098,84 +7260,84 @@ OUTPUT(ch32v203_usb_cdc.elf elf32-littleriscv)
  .debug_macro   0x000000000000e521      0x2ba ./support.o
  .debug_macro   0x000000000000e7db      0x2b8 ./system_ch32v20x.o
 
-.debug_line     0x0000000000000000    0x12562
- .debug_line    0x0000000000000000     0x1b75 ./USBLIB/USB-Driver/src/usb_core.o
- .debug_line    0x0000000000001b75      0x695 ./USBLIB/USB-Driver/src/usb_init.o
- .debug_line    0x000000000000220a      0xa55 ./USBLIB/USB-Driver/src/usb_int.o
- .debug_line    0x0000000000002c5f      0x7c6 ./USBLIB/USB-Driver/src/usb_mem.o
- .debug_line    0x0000000000003425     0x1369 ./USBLIB/USB-Driver/src/usb_regs.o
- .debug_line    0x000000000000478e      0x73c ./USBLIB/USB-Driver/src/usb_sil.o
- .debug_line    0x0000000000004eca      0x908 ./USBLIB/CONFIG/hw_config.o
- .debug_line    0x00000000000057d2      0x649 ./USBLIB/CONFIG/usb_desc.o
- .debug_line    0x0000000000005e1b      0x86c ./USBLIB/CONFIG/usb_endp.o
- .debug_line    0x0000000000006687      0x944 ./USBLIB/CONFIG/usb_istr.o
- .debug_line    0x0000000000006fcb      0xc7e ./USBLIB/CONFIG/usb_prop.o
- .debug_line    0x0000000000007c49      0x9f1 ./USBLIB/CONFIG/usb_pwr.o
- .debug_line    0x000000000000863a      0xfa6 ./UART/UART.o
- .debug_line    0x00000000000095e0      0x893 ./ch32v20x_exti.o
- .debug_line    0x0000000000009e73      0xf5c ./ch32v20x_gpio.o
- .debug_line    0x000000000000adcf      0x659 ./ch32v20x_it.o
- .debug_line    0x000000000000b428      0x858 ./ch32v20x_misc.o
- .debug_line    0x000000000000bc80     0x1112 ./ch32v20x_rcc.o
- .debug_line    0x000000000000cd92     0x2362 ./ch32v20x_tim.o
- .debug_line    0x000000000000f0f4     0x107b ./ch32v20x_usart.o
- .debug_line    0x000000000001016f      0x7e2 ./debug.o
- .debug_line    0x0000000000010951      0x7a2 ./main.o
- .debug_line    0x00000000000110f3      0x257 ./startup_ch32v20x_D6.o
- .debug_line    0x000000000001134a      0x98b ./support.o
- .debug_line    0x0000000000011cd5      0x88d ./system_ch32v20x.o
+.debug_line     0x0000000000000000    0x1299b
+ .debug_line    0x0000000000000000     0x1bba ./USBLIB/USB-Driver/src/usb_core.o
+ .debug_line    0x0000000000001bba      0x6da ./USBLIB/USB-Driver/src/usb_init.o
+ .debug_line    0x0000000000002294      0xa9a ./USBLIB/USB-Driver/src/usb_int.o
+ .debug_line    0x0000000000002d2e      0x80b ./USBLIB/USB-Driver/src/usb_mem.o
+ .debug_line    0x0000000000003539     0x13ae ./USBLIB/USB-Driver/src/usb_regs.o
+ .debug_line    0x00000000000048e7      0x781 ./USBLIB/USB-Driver/src/usb_sil.o
+ .debug_line    0x0000000000005068      0x94d ./USBLIB/CONFIG/hw_config.o
+ .debug_line    0x00000000000059b5      0x68e ./USBLIB/CONFIG/usb_desc.o
+ .debug_line    0x0000000000006043      0x8c8 ./USBLIB/CONFIG/usb_endp.o
+ .debug_line    0x000000000000690b      0x989 ./USBLIB/CONFIG/usb_istr.o
+ .debug_line    0x0000000000007294      0xcda ./USBLIB/CONFIG/usb_prop.o
+ .debug_line    0x0000000000007f6e      0xa36 ./USBLIB/CONFIG/usb_pwr.o
+ .debug_line    0x00000000000089a4      0xfeb ./UART/UART.o
+ .debug_line    0x000000000000998f      0x893 ./ch32v20x_exti.o
+ .debug_line    0x000000000000a222      0xf5c ./ch32v20x_gpio.o
+ .debug_line    0x000000000000b17e      0x687 ./ch32v20x_it.o
+ .debug_line    0x000000000000b805      0x858 ./ch32v20x_misc.o
+ .debug_line    0x000000000000c05d     0x1112 ./ch32v20x_rcc.o
+ .debug_line    0x000000000000d16f     0x2362 ./ch32v20x_tim.o
+ .debug_line    0x000000000000f4d1     0x107b ./ch32v20x_usart.o
+ .debug_line    0x000000000001054c      0x7e2 ./debug.o
+ .debug_line    0x0000000000010d2e      0x7fe ./main.o
+ .debug_line    0x000000000001152c      0x257 ./startup_ch32v20x_D6.o
+ .debug_line    0x0000000000011783      0x98b ./support.o
+ .debug_line    0x000000000001210e      0x88d ./system_ch32v20x.o
 
-.debug_str      0x0000000000000000    0x34315
- .debug_str     0x0000000000000000    0x3042c ./USBLIB/USB-Driver/src/usb_core.o
-                                      0x307eb (size before relaxing)
- .debug_str     0x000000000003042c       0x24 ./USBLIB/USB-Driver/src/usb_init.o
-                                      0x30145 (size before relaxing)
- .debug_str     0x0000000000030450       0x63 ./USBLIB/USB-Driver/src/usb_int.o
-                                      0x3017b (size before relaxing)
- .debug_str     0x00000000000304b3       0x7b ./USBLIB/USB-Driver/src/usb_mem.o
-                                      0x30193 (size before relaxing)
- .debug_str     0x000000000003052e      0x3e7 ./USBLIB/USB-Driver/src/usb_regs.o
-                                      0x3051b (size before relaxing)
- .debug_str     0x0000000000030915       0x85 ./USBLIB/USB-Driver/src/usb_sil.o
-                                      0x3019d (size before relaxing)
- .debug_str     0x000000000003099a      0x9ea ./USBLIB/CONFIG/hw_config.o
-                                      0x30b57 (size before relaxing)
- .debug_str     0x0000000000031384       0x1c ./USBLIB/CONFIG/usb_desc.o
-                                      0x30331 (size before relaxing)
- .debug_str     0x00000000000313a0      0x37e ./USBLIB/CONFIG/usb_endp.o
-                                      0x30850 (size before relaxing)
- .debug_str     0x000000000003171e       0xb9 ./USBLIB/CONFIG/usb_istr.o
-                                      0x30338 (size before relaxing)
- .debug_str     0x00000000000317d7      0x196 ./USBLIB/CONFIG/usb_prop.o
-                                      0x30a54 (size before relaxing)
- .debug_str     0x000000000003196d       0x75 ./USBLIB/CONFIG/usb_pwr.o
-                                      0x302a8 (size before relaxing)
- .debug_str     0x00000000000319e2      0x5a8 ./UART/UART.o
-                                      0x3105e (size before relaxing)
- .debug_str     0x0000000000031f8a      0x10b ./ch32v20x_exti.o
-                                      0x2d825 (size before relaxing)
- .debug_str     0x0000000000032095      0x320 ./ch32v20x_gpio.o
-                                      0x2dacf (size before relaxing)
- .debug_str     0x00000000000323b5       0x3f ./ch32v20x_it.o
-                                      0x2dae0 (size before relaxing)
- .debug_str     0x00000000000323f4       0x8e ./ch32v20x_misc.o
-                                      0x2dafb (size before relaxing)
- .debug_str     0x0000000000032482      0x982 ./ch32v20x_rcc.o
-                                      0x2e040 (size before relaxing)
- .debug_str     0x0000000000032e04      0xab5 ./ch32v20x_tim.o
-                                      0x2e348 (size before relaxing)
- .debug_str     0x00000000000338b9      0x7d7 ./ch32v20x_usart.o
-                                      0x2dfb5 (size before relaxing)
- .debug_str     0x0000000000034090       0x78 ./debug.o
-                                      0x2d925 (size before relaxing)
- .debug_str     0x0000000000034108       0x19 ./main.o
-                                      0x305b4 (size before relaxing)
- .debug_str     0x0000000000034121       0x25 ./startup_ch32v20x_D6.o
-                                         0x5f (size before relaxing)
- .debug_str     0x0000000000034146      0x152 ./support.o
-                                      0x2d7b9 (size before relaxing)
- .debug_str     0x0000000000034298       0x7d ./system_ch32v20x.o
-                                      0x2d76b (size before relaxing)
+.debug_str      0x0000000000000000    0x3432c
+ .debug_str     0x0000000000000000    0x30443 ./USBLIB/USB-Driver/src/usb_core.o
+                                      0x30802 (size before relaxing)
+ .debug_str     0x0000000000030443       0x24 ./USBLIB/USB-Driver/src/usb_init.o
+                                      0x3015c (size before relaxing)
+ .debug_str     0x0000000000030467       0x63 ./USBLIB/USB-Driver/src/usb_int.o
+                                      0x30192 (size before relaxing)
+ .debug_str     0x00000000000304ca       0x7b ./USBLIB/USB-Driver/src/usb_mem.o
+                                      0x301aa (size before relaxing)
+ .debug_str     0x0000000000030545      0x3e7 ./USBLIB/USB-Driver/src/usb_regs.o
+                                      0x30532 (size before relaxing)
+ .debug_str     0x000000000003092c       0x85 ./USBLIB/USB-Driver/src/usb_sil.o
+                                      0x301b4 (size before relaxing)
+ .debug_str     0x00000000000309b1      0x9ea ./USBLIB/CONFIG/hw_config.o
+                                      0x30b6e (size before relaxing)
+ .debug_str     0x000000000003139b       0x1c ./USBLIB/CONFIG/usb_desc.o
+                                      0x30348 (size before relaxing)
+ .debug_str     0x00000000000313b7      0x37e ./USBLIB/CONFIG/usb_endp.o
+                                      0x30867 (size before relaxing)
+ .debug_str     0x0000000000031735       0xb9 ./USBLIB/CONFIG/usb_istr.o
+                                      0x3034f (size before relaxing)
+ .debug_str     0x00000000000317ee      0x196 ./USBLIB/CONFIG/usb_prop.o
+                                      0x30a6b (size before relaxing)
+ .debug_str     0x0000000000031984       0x75 ./USBLIB/CONFIG/usb_pwr.o
+                                      0x302bf (size before relaxing)
+ .debug_str     0x00000000000319f9      0x5a8 ./UART/UART.o
+                                      0x31075 (size before relaxing)
+ .debug_str     0x0000000000031fa1      0x10b ./ch32v20x_exti.o
+                                      0x2d83c (size before relaxing)
+ .debug_str     0x00000000000320ac      0x320 ./ch32v20x_gpio.o
+                                      0x2dae6 (size before relaxing)
+ .debug_str     0x00000000000323cc       0x3f ./ch32v20x_it.o
+                                      0x2daf7 (size before relaxing)
+ .debug_str     0x000000000003240b       0x8e ./ch32v20x_misc.o
+                                      0x2db12 (size before relaxing)
+ .debug_str     0x0000000000032499      0x982 ./ch32v20x_rcc.o
+                                      0x2e057 (size before relaxing)
+ .debug_str     0x0000000000032e1b      0xab5 ./ch32v20x_tim.o
+                                      0x2e35f (size before relaxing)
+ .debug_str     0x00000000000338d0      0x7d7 ./ch32v20x_usart.o
+                                      0x2dfcc (size before relaxing)
+ .debug_str     0x00000000000340a7       0x78 ./debug.o
+                                      0x2d93c (size before relaxing)
+ .debug_str     0x000000000003411f       0x19 ./main.o
+                                      0x305cb (size before relaxing)
+ .debug_str     0x0000000000034138       0x25 ./startup_ch32v20x_D6.o
+                                         0x76 (size before relaxing)
+ .debug_str     0x000000000003415d      0x152 ./support.o
+                                      0x2d7d0 (size before relaxing)
+ .debug_str     0x00000000000342af       0x7d ./system_ch32v20x.o
+                                      0x2d782 (size before relaxing)
 
 .comment        0x0000000000000000       0x33
  .comment       0x0000000000000000       0x33 ./USBLIB/USB-Driver/src/usb_core.o

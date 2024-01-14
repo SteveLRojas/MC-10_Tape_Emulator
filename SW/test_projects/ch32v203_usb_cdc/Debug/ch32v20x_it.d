@@ -6,8 +6,8 @@ ch32v20x_it.o: ../ch32v20x_it.c ../ch32v20x_it.h ../debug.h ../ch32v20x.h \
  ../ch32v20x_iwdg.h ../ch32v20x_pwr.h ../ch32v20x_rcc.h ../ch32v20x_rtc.h \
  ../ch32v20x_spi.h ../ch32v20x_tim.h ../ch32v20x_usart.h \
  ../ch32v20x_wwdg.h ../ch32v20x_misc.h \
- C:\Users\esteb\Documents\Workspace\ch32v203_usb_cdc\UART/UART.h \
- C:\Users\esteb\Documents\Workspace\ch32v203_usb_cdc/debug.h
+ C:\Users\Steve\repos\MC-10_Tape_Emulator\SW\test_projects\ch32v203_usb_cdc\UART/UART.h \
+ C:\Users\Steve\repos\MC-10_Tape_Emulator\SW\test_projects\ch32v203_usb_cdc/debug.h
 
 ../ch32v20x_it.h:
 
@@ -59,6 +59,6 @@ ch32v20x_it.o: ../ch32v20x_it.c ../ch32v20x_it.h ../debug.h ../ch32v20x.h \
 
 ../ch32v20x_misc.h:
 
-C:\Users\esteb\Documents\Workspace\ch32v203_usb_cdc\UART/UART.h:
+C:\Users\Steve\repos\MC-10_Tape_Emulator\SW\test_projects\ch32v203_usb_cdc\UART/UART.h:
 
-C:\Users\esteb\Documents\Workspace\ch32v203_usb_cdc/debug.h:
+C:\Users\Steve\repos\MC-10_Tape_Emulator\SW\test_projects\ch32v203_usb_cdc/debug.h:
