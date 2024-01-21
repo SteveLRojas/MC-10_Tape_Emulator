@@ -8,6 +8,7 @@
 #include "debug.h"
 #include "usb_type.h"
 #include "cdc_fifo.h"
+#include "support.h"
 
 __attribute__ ((aligned(4))) uint8_t fifo_receive_buf[CDC_BUF_SIZE] = {0};
 uint16_t fifo_rc_count = 0;
@@ -88,6 +89,43 @@ bool fifo_rc_read(uint8_t* dest, uint16_t amt)
 		fifo_rc_front &= (CDC_BUF_SIZE - 1); // Handle wrap-around
 		++dest;
 		--amt;
+	}
+
+	return TRUE;
+}
+
+// Copies 2 bytes at a time to dest
+bool fifo_rc_read_as_words(uint16_t* dest, uint16_t num_bytes)
+{
+	if(num_bytes > fifo_rc_count)
+	{
+		return FALSE; // Not enough data to read
+	}
+
+	if((fifo_rc_front & 0x01) || (num_bytes & 0x01))
+	{
+		// Use byte-copy for odd-numbered fifo index (not word aligned)
+		// or if odd-number of bytes requested
+		return fifo_rc_read((uint8_t*)dest, num_bytes);
+	}
+
+	// Byte bookkeeping
+	fifo_rc_count -= num_bytes;
+	fifo_rc_front += num_bytes;
+	fifo_rc_front &= (CDC_BUF_SIZE - 1); // Handle wrap-around
+
+	// Read from fifo to dest in terms of words
+	uint16_t* word_buf = (uint16_t*)((void*)fifo_receive_buf);
+	uint16_t word_front = fifo_rc_front >> 1;
+	uint16_t word_front_mask = (CDC_BUF_SIZE - 1) >> 1;
+
+	while(num_bytes)
+	{
+		*dest = word_buf[word_front];
+		++word_front;
+		word_front &= word_front_mask;	//handle wrap-around
+		++dest;
+		num_bytes -= 2;
 	}
 
 	return TRUE;

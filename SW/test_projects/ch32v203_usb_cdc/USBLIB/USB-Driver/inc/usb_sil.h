@@ -20,8 +20,8 @@
 #include "ch32v20x.h"
 
 uint32_t USB_SIL_Init(void);
-uint32_t USB_SIL_Write(uint8_t bEpAddr, uint8_t* pBufferPointer, uint32_t wBufferSize);
-uint32_t USB_SIL_Read(uint8_t bEpAddr, uint8_t* pBufferPointer);
+void USB_SIL_Write(uint8_t bEpAddr, uint16_t num_bytes);
+//uint32_t USB_SIL_Read(uint8_t bEpAddr, uint8_t* pBufferPointer);
 	 
 #ifdef __cplusplus
 }

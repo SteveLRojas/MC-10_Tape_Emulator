@@ -20,16 +20,17 @@ extern uint16_t fifo_tm_count;
 extern uint16_t fifo_tm_front;
 extern uint16_t fifo_tm_back;
 
-inline bool fifo_rc_empty();
-inline bool fifo_rc_full();
+bool fifo_rc_empty();
+bool fifo_rc_full();
 bool fifo_rc_push(uint8_t data);
 uint8_t fifo_rc_pop();
 uint8_t fifo_rc_peek();
 bool fifo_rc_read(uint8_t* dest, uint16_t amt);
+bool fifo_rc_read_as_words(uint16_t* dest, uint16_t num_bytes);
 bool fifo_rc_write(uint8_t* src, uint16_t amt);
 
-inline bool fifo_tm_empty();
-inline bool fifo_tm_full();
+bool fifo_tm_empty();
+bool fifo_tm_full();
 bool fifo_tm_push(uint8_t data);
 uint8_t fifo_tm_pop();
 uint8_t fifo_tm_peek();

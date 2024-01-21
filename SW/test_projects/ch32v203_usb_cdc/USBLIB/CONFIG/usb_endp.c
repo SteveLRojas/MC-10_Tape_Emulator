@@ -17,6 +17,7 @@
 #include "usb_pwr.h"
 #include "usb_prop.h"
 #include "UART.h"
+#include "cdc_fifo.h"
 
 uint8_t USBD_Endp3_Busy;
 uint16_t USB_Rx_Cnt=0; 
@@ -46,10 +47,34 @@ void EP1_IN_Callback (void)
  */
 void EP2_OUT_Callback (void)
 { 
-	uint32_t len;
-    len = GetEPRxCount( EP2_OUT & 0x7F );
-    PMAToUserBufferCopy( &UART2_Tx_Buf[ ( Uart.Tx_LoadNum * DEF_USB_FS_PACK_LEN ) ], GetEPRxAddr( EP2_OUT & 0x7F ), len );
-    Uart.Tx_PackLen[ Uart.Tx_LoadNum ] = len;
+	uint32_t num_bytes;
+    num_bytes = GetEPRxCount( EP2_OUT & 0x7F );
+//    PMAToUserBufferCopy( &UART2_Tx_Buf[ ( Uart.Tx_LoadNum * DEF_USB_FS_PACK_LEN ) ], GetEPRxAddr( EP2_OUT & 0x7F ), num_bytes );
+
+    uint16_t wPMABufAddr = GetEPRxAddr( EP2_OUT & 0x7F );
+    uint32_t*  pdwVal = (uint32_t *)(wPMABufAddr * 2 + PMAAddr);
+
+//    uint32_t num_words = (num_bytes + 1) >> 1;
+//	for (uint32_t i = num_words; i != 0; i--)
+//	{
+//		fifo_rc_push(*pdwVal & 0xFF);
+//		fifo_rc_push((*pdwVal >> 8) & 0xFF);
+//		++pdwVal;
+//	}
+
+	uint32_t i;
+	for (i = num_bytes; i > 1; i = i - 2)
+	{
+		fifo_rc_push(*pdwVal & 0xFF);
+		fifo_rc_push((*pdwVal >> 8) & 0xFF);
+		++pdwVal;
+	}
+	if(i)
+	{
+		fifo_rc_push(*pdwVal & 0xFF);
+	}
+
+    Uart.Tx_PackLen[ Uart.Tx_LoadNum ] = num_bytes;
     Uart.Tx_LoadNum++;
     if( Uart.Tx_LoadNum >= DEF_UARTx_TX_BUF_NUM_MAX )
     {
@@ -57,7 +82,7 @@ void EP2_OUT_Callback (void)
     }
     Uart.Tx_RemainNum++;
 
-	if( Uart.Tx_RemainNum >= ( DEF_UARTx_TX_BUF_NUM_MAX - 2 ) )
+	if( Uart.Tx_RemainNum >= ( DEF_UARTx_TX_BUF_NUM_MAX - 2 ) )	//TODO: fix this
     {
         Uart.USB_Down_StopFlag = 0x01;
     }
@@ -85,12 +110,11 @@ void EP3_IN_Callback (void)
  * @brief  USBD ENDPx DataUp Function
  * 
  * @param   endp - endpoint num.
- *          *pbuf - A pointer points to data.
  *          len - data length to transmit.
  * 
  * @return  data up status.
  */
-uint8_t USBD_ENDPx_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len )
+uint8_t USBD_ENDPx_DataUp( uint8_t endp, uint16_t len )
 {
 	if( endp == ENDP3 )
 	{
@@ -101,7 +125,7 @@ uint8_t USBD_ENDPx_DataUp( uint8_t endp, uint8_t *pbuf, uint16_t len )
 		{
 			return USB_ERROR;
 		}
-		USB_SIL_Write( EP3_IN, pbuf, len );
+		USB_SIL_Write( EP3_IN, len );
 		USBD_Endp3_Busy = 1;
 		SetEPTxStatus( ENDP3, EP_TX_VALID );
 	}

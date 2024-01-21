@@ -15,6 +15,7 @@
 #include "usb_desc.h"
 #include "usb_prop.h"
 #include "support.h"
+#include "cdc_fifo.h"
 
 /*******************************************************************************/
 /* Variable Definition */
@@ -225,12 +226,17 @@ void UART2_DataTx_Deal( void )	//USB -> UART
             DEF_UART2_TX_DMA_CH->CNTR = Uart.Tx_CurPackLen;
             DMA_Cmd( DEF_UART2_TX_DMA_CH, ENABLE );
             USART2->CTLR3 |= USART_DMAReq_Tx;*/
-            for(uint32_t i = 0; i < Uart.Tx_CurPackLen; ++i)
+//            for(uint32_t i = 0; i < Uart.Tx_CurPackLen; ++i)
+//            {
+//            	UART2_Rx_Buf[(Uart.Rx_DealPtr + i) % DEF_UARTx_RX_BUF_LEN] = UART2_Tx_Buf[Uart.Tx_CurPackPtr + i];
+//            }
+            while(!fifo_rc_empty() && !fifo_tm_full())
             {
-            	UART2_Rx_Buf[(Uart.Rx_DealPtr + i) % DEF_UARTx_RX_BUF_LEN] = UART2_Tx_Buf[Uart.Tx_CurPackPtr + i];
+            	uint8_t data = fifo_rc_pop();
+            	print_hex_byte(data);
+            	fifo_tm_push(data);
             }
             Uart.Rx_RemainLen = Uart.Tx_CurPackLen;
-            print_hex_word(Uart.Tx_CurPackLen);
 
             Uart.Tx_Flag = 0x01;
         }
@@ -288,7 +294,6 @@ void UART2_DataRx_Deal( void )	//UART -> USB
     /* Serial port 1 data processing via USB upload and reception */
     if( Uart.Rx_RemainLen )
     {
-    	//print_hex_word(Uart.Rx_RemainLen);
         if( Uart.USB_Up_IngFlag == 0 )
         {
             /* Calculate the length of this upload */
@@ -302,11 +307,10 @@ void UART2_DataRx_Deal( void )	//UART -> USB
             {
                 if( Uart.Rx_TimeOut >= Uart.Rx_TimeOutMax )
                 {
-                	//uart_print_string("CDC\n");
                     packlen = remain_len;
                 }
             }
-            if( packlen > ( DEF_UARTx_RX_BUF_LEN - Uart.Rx_DealPtr ) )	//Prevent wrapping?
+            if( packlen > ( DEF_UARTx_RX_BUF_LEN - Uart.Rx_DealPtr ) )	//Prevent wrapping? TODO: get rid of this
             {
                 packlen = ( DEF_UARTx_RX_BUF_LEN - Uart.Rx_DealPtr );
             }
@@ -318,7 +322,9 @@ void UART2_DataRx_Deal( void )	//UART -> USB
                 NVIC_DisableIRQ( USB_HP_CAN1_TX_IRQn );
                 Uart.USB_Up_IngFlag = 0x01;
                 Uart.USB_Up_TimeOut = 0x00;
-                USBD_ENDPx_DataUp( ENDP3, &UART2_Rx_Buf[ Uart.Rx_DealPtr], packlen);
+//                USBD_ENDPx_DataUp( ENDP3, &UART2_Rx_Buf[ Uart.Rx_DealPtr], packlen);
+                USBD_ENDPx_DataUp(ENDP3, packlen);
+
                 /* Calculate the variables of interest */
                 Uart.Rx_RemainLen -= packlen;
                 Uart.Rx_DealPtr += packlen;
@@ -344,7 +350,6 @@ void UART2_DataRx_Deal( void )	//UART -> USB
             /* Set the upload success flag directly if the upload is not successful after the timeout */
             if( Uart.USB_Up_TimeOut >= DEF_UARTx_USB_UP_TIMEOUT )
             {
-            	uart_print_string("ABA\n");
                 Uart.USB_Up_IngFlag = 0x00;
                 USBD_Endp3_Busy = 0;
             }
@@ -364,7 +369,7 @@ void UART2_DataRx_Deal( void )	//UART -> USB
                 Uart.USB_Up_IngFlag = 0x01;
                 Uart.USB_Up_TimeOut = 0x00;
 
-                USBD_ENDPx_DataUp( ENDP3, &UART2_Rx_Buf[ Uart.Rx_DealPtr], 0);
+                USBD_ENDPx_DataUp( ENDP3, 0);
 
                 Uart.USB_Up_IngFlag = 0;
                 Uart.USB_Up_Pack0_Flag = 0x00;
