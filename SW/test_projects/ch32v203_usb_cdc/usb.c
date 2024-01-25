@@ -17,7 +17,7 @@ unsigned int free_sectors;
 
 uint8_t wait_status(uint8_t target, uint16_t timeout)
 {
-	uint8_t last_status;
+	uint8_t last_status = 0;
 	timeout_flag = 0;
 
 	while (timeout != 0)

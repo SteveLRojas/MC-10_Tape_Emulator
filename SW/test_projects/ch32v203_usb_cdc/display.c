@@ -111,7 +111,7 @@ void lcd_cursor_line(uint8_t line)
 	}
 
 	GPIO_WriteBit(PORT_LCD_CTRL, PIN_LCD_CTRL_RS, Bit_RESET); // Bus Command
-	for(uint8_t i; i < inc_amt; i++)
+	for(uint8_t i = 0; i < inc_amt; i++)
 	{
 		// 0 0 0 1 D/C R/L 0 0
 		// "Move Cursor" Command
@@ -157,7 +157,7 @@ void lcd_clear_line(uint8_t line)
 {
 	lcd_cursor_line(line);
 
-	for(uint8_t i; i < 20; i++)
+	for(uint8_t i = 0; i < 20; i++)
 	{
 		lcd_putc(' ');
 	}

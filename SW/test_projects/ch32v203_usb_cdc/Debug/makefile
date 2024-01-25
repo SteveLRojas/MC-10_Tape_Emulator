@@ -43,7 +43,7 @@ all: ch32v203_usb_cdc.elf secondary-outputs
 ch32v203_usb_cdc.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GNU RISC-V Cross C Linker'
-	riscv-none-embed-gcc -march=rv32imac -mabi=ilp32 -msmall-data-limit=8 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wunused -Wuninitialized  -g3 -T "C:\Users\Steve\repos\MC-10_Tape_Emulator\SW\test_projects\ch32v203_usb_cdc\Link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"ch32v203_usb_cdc.map" --specs=nano.specs --specs=nosys.specs -o "ch32v203_usb_cdc.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	riscv-none-embed-gcc -march=rv32imac -mabi=ilp32 -msmall-data-limit=8 -O1 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -Wunused -Wuninitialized  -g3 -T "C:\Users\Steve\repos\MC-10_Tape_Emulator\SW\test_projects\ch32v203_usb_cdc\Link.ld" -nostartfiles -Xlinker --gc-sections -Wl,-Map,"ch32v203_usb_cdc.map" --specs=nano.specs --specs=nosys.specs -o "ch32v203_usb_cdc.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

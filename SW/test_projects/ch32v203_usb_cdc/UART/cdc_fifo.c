@@ -95,41 +95,41 @@ bool fifo_rc_read(uint8_t* dest, uint16_t amt)
 }
 
 // Copies 2 bytes at a time to dest
-bool fifo_rc_read_as_words(uint16_t* dest, uint16_t num_bytes)
-{
-	if(num_bytes > fifo_rc_count)
-	{
-		return FALSE; // Not enough data to read
-	}
-
-	if((fifo_rc_front & 0x01) || (num_bytes & 0x01))
-	{
-		// Use byte-copy for odd-numbered fifo index (not word aligned)
-		// or if odd-number of bytes requested
-		return fifo_rc_read((uint8_t*)dest, num_bytes);
-	}
-
-	// Byte bookkeeping
-	fifo_rc_count -= num_bytes;
-	fifo_rc_front += num_bytes;
-	fifo_rc_front &= (CDC_BUF_SIZE - 1); // Handle wrap-around
-
-	// Read from fifo to dest in terms of words
-	uint16_t* word_buf = (uint16_t*)((void*)fifo_receive_buf);
-	uint16_t word_front = fifo_rc_front >> 1;
-	uint16_t word_front_mask = (CDC_BUF_SIZE - 1) >> 1;
-
-	while(num_bytes)
-	{
-		*dest = word_buf[word_front];
-		++word_front;
-		word_front &= word_front_mask;	//handle wrap-around
-		++dest;
-		num_bytes -= 2;
-	}
-
-	return TRUE;
-}
+//bool fifo_rc_read_as_words(uint16_t* dest, uint16_t num_bytes)
+//{
+//	if(num_bytes > fifo_rc_count)
+//	{
+//		return FALSE; // Not enough data to read
+//	}
+//
+//	if((fifo_rc_front & 0x01) || (num_bytes & 0x01))
+//	{
+//		// Use byte-copy for odd-numbered fifo index (not word aligned)
+//		// or if odd-number of bytes requested
+//		return fifo_rc_read((uint8_t*)dest, num_bytes);
+//	}
+//
+//	// Byte bookkeeping
+//	fifo_rc_count -= num_bytes;
+//	fifo_rc_front += num_bytes;
+//	fifo_rc_front &= (CDC_BUF_SIZE - 1); // Handle wrap-around
+//
+//	// Read from fifo to dest in terms of words
+//	uint16_t* word_buf = (uint16_t*)((void*)fifo_receive_buf);
+//	uint16_t word_front = fifo_rc_front >> 1;
+//	uint16_t word_front_mask = (CDC_BUF_SIZE - 1) >> 1;
+//
+//	while(num_bytes)
+//	{
+//		*dest = word_buf[word_front];
+//		++word_front;
+//		word_front &= word_front_mask;	//handle wrap-around
+//		++dest;
+//		num_bytes -= 2;
+//	}
+//
+//	return TRUE;
+//}
 
 bool fifo_rc_write(uint8_t* src, uint16_t amt)
 {
@@ -242,6 +242,40 @@ bool fifo_tm_write(uint8_t* src, uint16_t amt)
 		fifo_tm_back &= (CDC_BUF_SIZE - 1); // Handle wrap-around
 		++src;
 		--amt;
+	}
+
+	return TRUE;
+}
+
+bool fifo_tm_to_pma(uint16_t* dest, uint16_t num_bytes)
+{
+	if(num_bytes > fifo_tm_count)
+	{
+		return FALSE; // Not enough data to read
+	}
+
+	uint16_t num_words = (num_bytes + 1) >> 1;
+	uint16_t tm_front_copy = fifo_tm_front;	//need copy so we don't mess up the FIFO if we copy an extra byte
+
+	//FIFO bookkeeping
+	fifo_tm_count -= num_bytes;
+	fifo_tm_front += num_bytes;
+	fifo_tm_front &= (CDC_BUF_SIZE - 1); // Handle wrap-around
+
+	uint16_t temp;
+	while(num_words)
+	{
+		temp = (uint16_t)(fifo_transmit_buf[tm_front_copy]);	//low byte
+		++tm_front_copy;
+		tm_front_copy &= (CDC_BUF_SIZE - 1); // Handle wrap-around
+
+		temp = temp | (((uint16_t)(fifo_transmit_buf[tm_front_copy])) << 8);	//high byte
+		++tm_front_copy;
+		tm_front_copy &= (CDC_BUF_SIZE - 1); // Handle wrap-around
+
+		*dest = temp;
+		dest = dest + 2;
+		--num_words;
 	}
 
 	return TRUE;

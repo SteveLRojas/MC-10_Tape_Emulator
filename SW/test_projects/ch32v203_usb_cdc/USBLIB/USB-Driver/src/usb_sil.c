@@ -40,19 +40,25 @@ uint32_t USB_SIL_Init(void)
  */
 void USB_SIL_Write(uint8_t bEpAddr, uint16_t num_bytes)
 {
+	//original stuff:
 	//	UserToPMABufferCopy(pBufferPointer, GetEPTxAddr(bEpAddr & 0x7F), wBufferSize);
 	uint16_t wPMABufAddr = GetEPTxAddr(bEpAddr & 0x7F);
 	uint16_t *pdwVal = (uint16_t *)(wPMABufAddr * 2 + PMAAddr);
-    uint32_t num_words = (num_bytes + 1) >> 1;
+	//old stuff:
+//	uint32_t num_words = (num_bytes + 1) >> 1;
 
-	uint32_t temp1, temp2;
-    for (uint32_t i = num_words; i != 0; i--)
-	{
-    	temp1 = (uint16_t)fifo_tm_pop();
-		temp2 = temp1 | (((uint16_t)fifo_tm_pop()) << 8);
-		*pdwVal++ = temp2;
-		pdwVal++;
-	}
+//	uint32_t temp1, temp2;
+//    for (uint32_t i = num_words; i != 0; i--)
+//	{
+//    	temp1 = (uint16_t)fifo_tm_pop();
+//		temp2 = temp1 | (((uint16_t)fifo_tm_pop()) << 8);
+//		*pdwVal++ = temp2;
+//		pdwVal++;
+//	}
+
+	//new stuff:
+	//uint8_t* pdwVal = (uint8_t*)(wPMABufAddr * 2 + PMAAddr);
+	fifo_tm_to_pma(pdwVal, num_bytes);
 
 	SetEPTxCount((bEpAddr & 0x7F), num_bytes);
 }
