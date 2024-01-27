@@ -20,10 +20,16 @@
 /*******************************************************************************/
 /* Variable Definition */
 /* Global */
+uint8_t volatile Rx_TimeOut;                                                /* Serial x data receive timeout */
+uint8_t Rx_TimeOutMax;                                                      /* Serial x data receive timeout maximum */
+uint8_t Tx_Flag;                                                            /* Serial x data send status */
+uint8_t volatile USB_Up_IngFlag;                                            /* Serial xUSB packet being uploaded flag */
+uint16_t volatile USB_Up_TimeOut;                                           /* Serial xUSB packet upload timeout timer */
+uint8_t USB_Up_Pack0_Flag;                                                  /* Serial xUSB data needs to upload 0-length packet flag */
+uint8_t volatile USB_Down_StopFlag;                                         /* Serial xUSB packet stop down flag */
+uint8_t volatile Com_Cfg[ 8 ];
 
 /* The following are serial port transmit and receive related variables and buffers */
-volatile UART_CTL Uart;
-
 __attribute__ ((aligned(4))) uint8_t  UART2_Tx_Buf[ DEF_UARTx_TX_BUF_LEN ];  /* Serial port 2 transmit data buffer */
 __attribute__ ((aligned(4))) uint8_t  UART2_Rx_Buf[ DEF_UARTx_RX_BUF_LEN ];  /* Serial port 2 receive data buffer */
 
@@ -90,40 +96,26 @@ void TIM2_Init( void )	//still used
  */
 void UART2_ParaInit( uint8_t mode )	//still used
 {
-    //uint8_t i;
+    Rx_TimeOut = 0x00;
+    Rx_TimeOutMax = 30;
 
-    //Uart.Rx_LoadPtr = 0x00;
-    //Uart.Rx_DealPtr = 0x00;
-    //Uart.Rx_RemainLen = 0x00;
-    Uart.Rx_TimeOut = 0x00;
-    Uart.Rx_TimeOutMax = 30;
+    Tx_Flag = 0x00;
 
-    //Uart.Tx_LoadNum = 0x00;
-    //Uart.Tx_DealNum = 0x00;
-    //Uart.Tx_RemainNum = 0x00;
-    //for( i = 0; i < DEF_UARTx_TX_BUF_NUM_MAX; i++ )
-    //{
-    //    Uart.Tx_PackLen[ i ] = 0x00;
-    //}
-    Uart.Tx_Flag = 0x00;
-    //Uart.Tx_CurPackLen = 0x00;
-    //Uart.Tx_CurPackPtr = 0x00;
-
-    Uart.USB_Up_IngFlag = 0x00;
-    Uart.USB_Up_TimeOut = 0x00;
-    Uart.USB_Up_Pack0_Flag = 0x00;
-    Uart.USB_Down_StopFlag = 0x00;
+    USB_Up_IngFlag = 0x00;
+    USB_Up_TimeOut = 0x00;
+    USB_Up_Pack0_Flag = 0x00;
+    USB_Down_StopFlag = 0x00;
 
     if( mode )
     {
-        Uart.Com_Cfg[ 0 ] = (uint8_t)( DEF_UARTx_BAUDRATE );
-        Uart.Com_Cfg[ 1 ] = (uint8_t)( DEF_UARTx_BAUDRATE >> 8 );
-        Uart.Com_Cfg[ 2 ] = (uint8_t)( DEF_UARTx_BAUDRATE >> 16 );
-        Uart.Com_Cfg[ 3 ] = (uint8_t)( DEF_UARTx_BAUDRATE >> 24 );
-        Uart.Com_Cfg[ 4 ] = DEF_UARTx_STOPBIT;
-        Uart.Com_Cfg[ 5 ] = DEF_UARTx_PARITY;
-        Uart.Com_Cfg[ 6 ] = DEF_UARTx_DATABIT;
-        Uart.Com_Cfg[ 7 ] = DEF_UARTx_RX_TIMEOUT;
+        Com_Cfg[ 0 ] = (uint8_t)( DEF_UARTx_BAUDRATE );
+        Com_Cfg[ 1 ] = (uint8_t)( DEF_UARTx_BAUDRATE >> 8 );
+        Com_Cfg[ 2 ] = (uint8_t)( DEF_UARTx_BAUDRATE >> 16 );
+        Com_Cfg[ 3 ] = (uint8_t)( DEF_UARTx_BAUDRATE >> 24 );
+        Com_Cfg[ 4 ] = DEF_UARTx_STOPBIT;
+        Com_Cfg[ 5 ] = DEF_UARTx_PARITY;
+        Com_Cfg[ 6 ] = DEF_UARTx_DATABIT;
+        Com_Cfg[ 7 ] = DEF_UARTx_RX_TIMEOUT;
     }
 }
 
@@ -150,63 +142,34 @@ void UART2_USB_Init( void )
 void UART2_DataTx_Deal( void )	//USB -> UART
 {
     /* uart1 transmission processing */
-    if( Uart.Tx_Flag )
-    {
-            Uart.Tx_Flag = 0x00;
+    //if( Tx_Flag )
+    //{
+		Tx_Flag = 0x00;
 
-            NVIC_DisableIRQ( USB_LP_CAN1_RX0_IRQn );
-            NVIC_DisableIRQ( USB_HP_CAN1_TX_IRQn );
+		NVIC_DisableIRQ( USB_LP_CAN1_RX0_IRQn );
+		NVIC_DisableIRQ( USB_HP_CAN1_TX_IRQn );
 
-            //Uart.Tx_CurPackPtr += Uart.Tx_CurPackLen;
-            //Uart.Tx_CurPackLen = 0;
+		if ((USB_Down_StopFlag == 0x01) && (fifo_rc_n_used() < (DEF_USB_FS_PACK_LEN * 2)))
+		{
+			SetEPRxValid( ENDP2);
+			USB_Down_StopFlag = 0x00;
+		}
 
-                //Uart.Tx_PackLen[ Uart.Tx_DealNum ] = 0x0000;
-                //Uart.Tx_DealNum++;
-                //if( Uart.Tx_DealNum >= DEF_UARTx_TX_BUF_NUM_MAX )
-                //{
-                //    Uart.Tx_DealNum = 0x00;
-                //}
-                //Uart.Tx_RemainNum--;
+		NVIC_EnableIRQ( USB_LP_CAN1_RX0_IRQn );
+		NVIC_EnableIRQ( USB_HP_CAN1_TX_IRQn );
+    //}
+    //else
+    //{
+		while(!fifo_rc_empty() && !fifo_tm_full())
+		{
+			uint8_t data = fifo_rc_pop();
+			print_hex_byte(data);
+			fifo_tm_push(data);
+			Rx_TimeOut = 0x00;
+		}
 
-            /* If the current serial port has suspended the downlink, restart the driver downlink */
-//            if( ( Uart.USB_Down_StopFlag == 0x01 ) && ( Uart.Tx_RemainNum < 2 ) )
-//            {
-//                SetEPRxValid( ENDP2 );
-//                Uart.USB_Down_StopFlag = 0x00;
-//            }
-			if ((Uart.USB_Down_StopFlag == 0x01) && (fifo_rc_n_used() < (DEF_USB_FS_PACK_LEN * 2)))
-			{
-				SetEPRxValid( ENDP2);
-				Uart.USB_Down_StopFlag = 0x00;
-			}
-
-            NVIC_EnableIRQ( USB_LP_CAN1_RX0_IRQn );
-            NVIC_EnableIRQ( USB_HP_CAN1_TX_IRQn );
-        //}
-    }
-    else
-    {
-        /* Load data from the serial port send buffer to send  */
-        //if( Uart.Tx_RemainNum )
-        //{
-            /* Determine whether to load from the last unsent buffer or from a new buffer */
-            //if( Uart.Tx_CurPackLen == 0x00 )
-            //{
-            //    Uart.Tx_CurPackLen = Uart.Tx_PackLen[ Uart.Tx_DealNum ];
-            //    Uart.Tx_CurPackPtr = ( Uart.Tx_DealNum * DEF_USB_FS_PACK_LEN );
-            //}
-
-            while(!fifo_rc_empty() && !fifo_tm_full())
-            {
-            	uint8_t data = fifo_rc_pop();
-            	print_hex_byte(data);
-            	fifo_tm_push(data);
-            }
-            //Uart.Rx_RemainLen = Uart.Tx_CurPackLen;
-
-            Uart.Tx_Flag = 0x01;
-        //}
-    }
+		Tx_Flag = 0x01;
+    //}
 }
 
 /*********************************************************************
@@ -221,12 +184,9 @@ void UART2_DataRx_Deal( void )	//UART -> USB
     uint32_t remain_len;
     uint16_t packlen;
 
-    /*****************************************************************/
-    /* Serial port 1 data processing via USB upload and reception */
-//    if( Uart.Rx_RemainLen )
     if (!fifo_tm_empty())
     {
-        if( Uart.USB_Up_IngFlag == 0 )
+        if( USB_Up_IngFlag == 0 )
         {
             /* Calculate the length of this upload */
             remain_len = fifo_tm_n_used();
@@ -237,40 +197,28 @@ void UART2_DataRx_Deal( void )	//UART -> USB
             }
             else
             {
-                if( Uart.Rx_TimeOut >= Uart.Rx_TimeOutMax )
+                if( Rx_TimeOut >= Rx_TimeOutMax )
                 {
                     packlen = remain_len;
                 }
             }
-            //if( packlen > ( DEF_UARTx_RX_BUF_LEN - Uart.Rx_DealPtr ) )	//Prevent wrapping? TODO: get rid of this
-            //{
-            //    packlen = ( DEF_UARTx_RX_BUF_LEN - Uart.Rx_DealPtr );
-            //}
 
             /* Upload serial data via usb */
             if( packlen )
             {
                 NVIC_DisableIRQ( USB_LP_CAN1_RX0_IRQn );
                 NVIC_DisableIRQ( USB_HP_CAN1_TX_IRQn );
-                Uart.USB_Up_IngFlag = 0x01;
-                Uart.USB_Up_TimeOut = 0x00;
+                USB_Up_IngFlag = 0x01;
+                USB_Up_TimeOut = 0x00;
 
                 USBD_ENDPx_DataUp(ENDP3, packlen);
-
-                /* Calculate the variables of interest */
-                //Uart.Rx_RemainLen -= packlen;
-                //Uart.Rx_DealPtr += packlen;
-                //if( Uart.Rx_DealPtr >= DEF_UARTx_RX_BUF_LEN )
-                //{
-                //    Uart.Rx_DealPtr = 0x00;
-                //
 
                 /* Start 0-length packet timeout timer */
                 if( packlen == DEF_UARTx_RX_BUF_LEN )
                 {
                 	// TODO: ^ Change to == DEF_USBD_MAX_PACK_SIZE?
                 	// http://tinyurl.com/2c436fkh
-                    Uart.USB_Up_Pack0_Flag = 0x01;
+                    USB_Up_Pack0_Flag = 0x01;
                 }
 
                 NVIC_EnableIRQ( USB_LP_CAN1_RX0_IRQn );
@@ -280,9 +228,9 @@ void UART2_DataRx_Deal( void )	//UART -> USB
         else
         {
             /* Set the upload success flag directly if the upload is not successful after the timeout */
-            if( Uart.USB_Up_TimeOut >= DEF_UARTx_USB_UP_TIMEOUT )
+            if( USB_Up_TimeOut >= DEF_UARTx_USB_UP_TIMEOUT )
             {
-                Uart.USB_Up_IngFlag = 0x00;
+                USB_Up_IngFlag = 0x00;
                 USBD_Endp3_Busy = 0;
             }
         }
@@ -290,21 +238,21 @@ void UART2_DataRx_Deal( void )	//UART -> USB
 
     /*****************************************************************/
     /* Determine if a 0-length packet needs to be uploaded (required for CDC mode) */
-    if( Uart.USB_Up_Pack0_Flag )
+    if( USB_Up_Pack0_Flag )
     {
-        if( Uart.USB_Up_IngFlag == 0 )
+        if( USB_Up_IngFlag == 0 )
         {
-            if( Uart.USB_Up_TimeOut >= ( DEF_UARTx_RX_TIMEOUT * 20 ) )
+            if( USB_Up_TimeOut >= ( DEF_UARTx_RX_TIMEOUT * 20 ) )
             {
                 NVIC_DisableIRQ( USB_LP_CAN1_RX0_IRQn );
                 NVIC_DisableIRQ( USB_HP_CAN1_TX_IRQn );
-                Uart.USB_Up_IngFlag = 0x01;
-                Uart.USB_Up_TimeOut = 0x00;
+                USB_Up_IngFlag = 0x01;
+                USB_Up_TimeOut = 0x00;
 
                 USBD_ENDPx_DataUp( ENDP3, 0);
 
-                Uart.USB_Up_IngFlag = 0;
-                Uart.USB_Up_Pack0_Flag = 0x00;
+                USB_Up_IngFlag = 0;
+                USB_Up_Pack0_Flag = 0x00;
                 NVIC_EnableIRQ( USB_LP_CAN1_RX0_IRQn );
                 NVIC_EnableIRQ( USB_HP_CAN1_TX_IRQn );
             }

@@ -56,21 +56,9 @@ void EP2_OUT_Callback (void)
 
     fifo_pma_to_rc(pdwVal, num_bytes);
 
-    //Uart.Tx_PackLen[ Uart.Tx_LoadNum ] = num_bytes;
-    //Uart.Tx_LoadNum++;
-    //if( Uart.Tx_LoadNum >= DEF_UARTx_TX_BUF_NUM_MAX )
-    //{
-    //    Uart.Tx_LoadNum = 0x00;
-    //}
-    //Uart.Tx_RemainNum++;
-
-//	if( Uart.Tx_RemainNum >= ( DEF_UARTx_TX_BUF_NUM_MAX - 2 ) )	//TODO: fix this
-//    {
-//        Uart.USB_Down_StopFlag = 0x01;
-//    }
 	if(fifo_rc_n_free() < (DEF_USB_FS_PACK_LEN * 2)) // Leave space for 2 packets in fifo
     {
-        Uart.USB_Down_StopFlag = 0x01;
+        USB_Down_StopFlag = 0x01;
     }
     else
     {
@@ -87,7 +75,7 @@ void EP2_OUT_Callback (void)
 void EP3_IN_Callback (void)
 { 
 	USBD_Endp3_Busy = 0;
-	Uart.USB_Up_IngFlag = 0x00;
+	USB_Up_IngFlag = 0x00;
 }
 
 /*********************************************************************

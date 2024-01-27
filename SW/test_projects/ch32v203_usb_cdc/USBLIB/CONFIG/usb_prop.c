@@ -340,7 +340,7 @@ uint8_t *USB_CDC_GetLineCoding( uint16_t Length )
         pInformation->Ctrl_Info.Usb_wLength = 7;
         return( NULL );
     }
-    return (uint8_t *)&Uart.Com_Cfg[ 0 ];
+    return (uint8_t *)&Com_Cfg[ 0 ];
 }
 
 /*********************************************************************
@@ -359,7 +359,7 @@ uint8_t *USB_CDC_SetLineCoding( uint16_t Length )
         pInformation->Ctrl_Info.Usb_wLength = 7;
         return( NULL );
     }
-    return(uint8_t *)&Uart.Com_Cfg[ 0 ];
+    return(uint8_t *)&Com_Cfg[ 0 ];
 }
 
 

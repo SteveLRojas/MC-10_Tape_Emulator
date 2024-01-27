@@ -37,8 +37,8 @@ void TIM2_IRQHandler( void )
 {
 
     /* uart timeout counts */
-    Uart.Rx_TimeOut++;
-    Uart.USB_Up_TimeOut++;
+    Rx_TimeOut++;
+    USB_Up_TimeOut++;
 
     /* clear status */
     TIM2->INTFR = (uint16_t)~TIM_IT_Update;
