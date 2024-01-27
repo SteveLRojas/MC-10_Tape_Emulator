@@ -47,32 +47,28 @@ void EP1_IN_Callback (void)
  */
 void EP2_OUT_Callback (void)
 { 
-	uint32_t num_bytes;
+	uint16_t num_bytes;
     num_bytes = GetEPRxCount( EP2_OUT & 0x7F );
 //    PMAToUserBufferCopy( &UART2_Tx_Buf[ ( Uart.Tx_LoadNum * DEF_USB_FS_PACK_LEN ) ], GetEPRxAddr( EP2_OUT & 0x7F ), num_bytes );
 
     uint16_t wPMABufAddr = GetEPRxAddr( EP2_OUT & 0x7F );
-    uint32_t*  pdwVal = (uint32_t *)(wPMABufAddr * 2 + PMAAddr);
-
-//    uint32_t num_words = (num_bytes + 1) >> 1;
-//	for (uint32_t i = num_words; i != 0; i--)
+//    uint32_t*  pdwVal = (uint32_t *)(wPMABufAddr * 2 + PMAAddr);
+//
+//	uint32_t i;
+//	for (i = num_bytes; i > 1; i = i - 2)
 //	{
 //		fifo_rc_push(*pdwVal & 0xFF);
 //		fifo_rc_push((*pdwVal >> 8) & 0xFF);
 //		++pdwVal;
 //	}
+//	if(i)
+//	{
+//		fifo_rc_push(*pdwVal & 0xFF);
+//	}
 
-	uint32_t i;
-	for (i = num_bytes; i > 1; i = i - 2)
-	{
-		fifo_rc_push(*pdwVal & 0xFF);
-		fifo_rc_push((*pdwVal >> 8) & 0xFF);
-		++pdwVal;
-	}
-	if(i)
-	{
-		fifo_rc_push(*pdwVal & 0xFF);
-	}
+    uint16_t*  pdwVal = (uint16_t*)(wPMABufAddr * 2 + PMAAddr);
+
+    fifo_pma_to_rc(pdwVal, num_bytes);
 
     Uart.Tx_PackLen[ Uart.Tx_LoadNum ] = num_bytes;
     Uart.Tx_LoadNum++;

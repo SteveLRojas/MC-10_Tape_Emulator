@@ -18,6 +18,7 @@ encoding//USBLIB/CONFIG/usb_pwr.h=GBK
 encoding//USBLIB/USB-Driver/inc/usb_core.h=GBK
 encoding//USBLIB/USB-Driver/inc/usb_init.h=GBK
 encoding//USBLIB/USB-Driver/inc/usb_lib.h=GBK
+encoding//USBLIB/USB-Driver/inc/usb_mem.h=GBK
 encoding//USBLIB/USB-Driver/inc/usb_regs.h=GBK
 encoding//USBLIB/USB-Driver/inc/usb_sil.h=GBK
 encoding//USBLIB/USB-Driver/inc/usb_type.h=GBK

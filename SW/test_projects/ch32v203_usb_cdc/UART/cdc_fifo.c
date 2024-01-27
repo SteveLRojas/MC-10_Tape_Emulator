@@ -152,6 +152,45 @@ bool fifo_rc_write(uint8_t* src, uint16_t amt)
 	return TRUE;
 }
 
+// The packet memory area (PMA) is accessed through a 16-bit APB bus.
+// Bits 31:16 are not used, and bits 15:0 must be written in a single request (writing single bytes does not work).
+void fifo_pma_to_rc(uint16_t* src, uint16_t num_bytes)
+{
+	//too late to check for space, overrun the buffer if its full
+	if(num_bytes > (CDC_BUF_SIZE - fifo_rc_count))
+		uart_print_string("RC buffer overrun!\n");
+
+	uint16_t num_words = num_bytes >> 1;	//round down
+	fifo_rc_count += num_bytes;
+
+	register uint16_t temp;
+	while(num_words)
+	{
+		temp = *src;
+		src = src + 2;
+
+		fifo_receive_buf[fifo_rc_back] = (uint8_t)temp;
+		++fifo_rc_back;
+		fifo_rc_back &= (CDC_BUF_SIZE - 1);	// Handle wrap-around
+
+		fifo_receive_buf[fifo_rc_back] = (uint8_t)(temp >> 8);
+		++fifo_rc_back;
+		fifo_rc_back &= (CDC_BUF_SIZE - 1);	// Handle wrap-around
+
+		--num_words;
+	}
+
+	//handle odd byte
+	if(num_bytes & 0x01)
+	{
+		fifo_receive_buf[fifo_rc_back] = (uint8_t)*src;
+		++fifo_rc_back;
+		fifo_rc_back &= (CDC_BUF_SIZE - 1);	// Handle wrap-around
+	}
+
+	return;
+}
+
 // ##############################
 // ########## TRANSMIT ##########
 // ##############################
@@ -247,6 +286,8 @@ bool fifo_tm_write(uint8_t* src, uint16_t amt)
 	return TRUE;
 }
 
+// The packet memory area (PMA) is accessed through a 16-bit APB bus.
+// Bits 31:16 are not used, and bits 15:0 must be written in a single request (writing single bytes does not work).
 bool fifo_tm_to_pma(uint16_t* dest, uint16_t num_bytes)
 {
 	if(num_bytes > fifo_tm_count)
@@ -262,7 +303,7 @@ bool fifo_tm_to_pma(uint16_t* dest, uint16_t num_bytes)
 	fifo_tm_front += num_bytes;
 	fifo_tm_front &= (CDC_BUF_SIZE - 1); // Handle wrap-around
 
-	uint16_t temp;
+	register uint16_t temp;
 	while(num_words)
 	{
 		temp = (uint16_t)(fifo_transmit_buf[tm_front_copy]);	//low byte
