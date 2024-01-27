@@ -47,20 +47,20 @@ extern "C" {
 /* Serial port X related structure definition */
 typedef struct __attribute__((packed)) _UART_CTL
 {
-    uint16_t Rx_LoadPtr;                                                         /* Serial x data receive buffer load pointer */
-    uint16_t Rx_DealPtr;                                                         /* Pointer to serial x data receive buffer processing */
-    volatile uint16_t Rx_RemainLen;                                              /* Remaining unprocessed length of the serial x data receive buffer */
+    //uint16_t Rx_LoadPtr;                                                         /* Serial x data receive buffer load pointer */
+    //uint16_t Rx_DealPtr;                                                         /* Pointer to serial x data receive buffer processing */
+    //volatile uint16_t Rx_RemainLen;                                              /* Remaining unprocessed length of the serial x data receive buffer */
     uint8_t  Rx_TimeOut;                                                         /* Serial x data receive timeout */
     uint8_t  Rx_TimeOutMax;                                                      /* Serial x data receive timeout maximum */
 
-    volatile uint16_t Tx_LoadNum;                                                /* Serial x data send buffer load number */
-    volatile uint16_t Tx_DealNum;                                                /* Serial x data send buffer processing number */
-    volatile uint16_t Tx_RemainNum;                                              /* Serial x data send buffer remaining unprocessed number */
-    volatile uint16_t Tx_PackLen[ DEF_UARTx_TX_BUF_NUM_MAX ];                    /* The current packet length of the serial x data send buffer */
+    //volatile uint16_t Tx_LoadNum;                                                /* Serial x data send buffer load number */
+    //volatile uint16_t Tx_DealNum;                                                /* Serial x data send buffer processing number */
+    //volatile uint16_t Tx_RemainNum;                                              /* Serial x data send buffer remaining unprocessed number */
+    //volatile uint16_t Tx_PackLen[ DEF_UARTx_TX_BUF_NUM_MAX ];                    /* The current packet length of the serial x data send buffer */
     uint8_t  Tx_Flag;                                                            /* Serial x data send status */
     uint8_t  Recv1;
-    uint16_t Tx_CurPackLen;                                                      /* The current packet length sent by serial port x */
-    uint16_t Tx_CurPackPtr;                                                      /* Pointer to the packet currently being sent by serial port x */
+    //uint16_t Tx_CurPackLen;                                                      /* The current packet length sent by serial port x */
+    //uint16_t Tx_CurPackPtr;                                                      /* Pointer to the packet currently being sent by serial port x */
 
     uint8_t  USB_Up_IngFlag;                                                     /* Serial xUSB packet being uploaded flag */
     uint8_t  Recv2;

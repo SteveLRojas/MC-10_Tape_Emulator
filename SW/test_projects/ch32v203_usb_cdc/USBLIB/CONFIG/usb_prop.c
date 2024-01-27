@@ -85,12 +85,12 @@ ONE_DESCRIPTOR String_Descriptor[4] =
  */
 void USBD_SetConfiguration(void)
 {
-  DEVICE_INFO *pInfo = &Device_Info;
+	DEVICE_INFO *pInfo = &Device_Info;
 
-  if (pInfo->Current_Configuration != 0)
-  {
-    bDeviceState = CONFIGURED;
-  }
+	if (pInfo->Current_Configuration != 0)
+	{
+		bDeviceState = CONFIGURED;
+	}
 }
 
 /*******************************************************************************
@@ -102,7 +102,7 @@ void USBD_SetConfiguration(void)
  */
 void USBD_SetDeviceAddress (void)
 {
-  bDeviceState = ADDRESSED;
+	bDeviceState = ADDRESSED;
 }
 
 
@@ -131,8 +131,6 @@ void USBD_ClearFeature(void)
 {
 
 }
-
-
 
 
 
@@ -176,18 +174,24 @@ void USBD_Status_Out(void)
  */
 void USBD_init(void)
 {
-  uint8_t	i;
-    
-  pInformation->Current_Configuration = 0;
-  PowerOn();
-  for (i=0;i<8;i++) _SetENDPOINT(i,_GetENDPOINT(i) & 0x7F7F & EPREG_MASK);//all clear
-  _SetISTR((uint16_t)0x00FF);//all clear
-  USB_SIL_Init();
-  bDeviceState = UNCONNECTED;
+	uint8_t	i;
+
+	pInformation->Current_Configuration = 0;
+	PowerOn();
+	for (i=0;i<8;i++) _SetENDPOINT(i,_GetENDPOINT(i) & 0x7F7F & EPREG_MASK);//all clear
+	_SetISTR((uint16_t)0x00FF);//all clear
+
+	//USB_SIL_Init();
+	//Stuff from usb_sil.c
+	_SetISTR(0);
+	wInterrupt_Mask = IMR_MSK;
+	_SetCNTR(wInterrupt_Mask);
   
-  USB_Port_Set(DISABLE, DISABLE);	
-  Delay_Ms(20);
-  USB_Port_Set(ENABLE, ENABLE);    
+	bDeviceState = UNCONNECTED;
+
+	USB_Port_Set(DISABLE, DISABLE);
+	Delay_Ms(20);
+	USB_Port_Set(ENABLE, ENABLE);
 }
 
 /*******************************************************************************
@@ -199,21 +203,21 @@ void USBD_init(void)
  */
 void USBD_Reset(void)
 {
-  pInformation->Current_Configuration = 0;
-  pInformation->Current_Feature = USBD_ConfigDescriptor[7];
-  pInformation->Current_Interface = 0;
+	pInformation->Current_Configuration = 0;
+	pInformation->Current_Feature = USBD_ConfigDescriptor[7];
+	pInformation->Current_Interface = 0;
 
-  SetBTABLE(BTABLE_ADDRESS);
+	SetBTABLE(BTABLE_ADDRESS);
 
-  SetEPType(ENDP0, EP_CONTROL);
-  SetEPTxStatus(ENDP0, EP_TX_STALL);
-  SetEPRxAddr(ENDP0, ENDP0_RXADDR);
-  SetEPTxAddr(ENDP0, ENDP0_TXADDR);
-  Clear_Status_Out(ENDP0);
-  SetEPRxCount(ENDP0, Device_Property.MaxPacketSize);
-  SetEPRxValid(ENDP0);
-  _ClearDTOG_RX(ENDP0);
-  _ClearDTOG_TX(ENDP0);
+	SetEPType(ENDP0, EP_CONTROL);
+	SetEPTxStatus(ENDP0, EP_TX_STALL);
+	SetEPRxAddr(ENDP0, ENDP0_RXADDR);
+	SetEPTxAddr(ENDP0, ENDP0_TXADDR);
+	Clear_Status_Out(ENDP0);
+	SetEPRxCount(ENDP0, Device_Property.MaxPacketSize);
+	SetEPRxValid(ENDP0);
+	_ClearDTOG_RX(ENDP0);
+	_ClearDTOG_TX(ENDP0);
 
     SetEPType(ENDP1, EP_INTERRUPT);
     SetEPTxStatus(ENDP1, EP_TX_NAK);
@@ -269,7 +273,7 @@ uint8_t *USBD_GetDeviceDescriptor(uint16_t Length)
  */
 uint8_t *USBD_GetConfigDescriptor(uint16_t Length)
 {
-  return Standard_GetDescriptorData(Length, &Config_Descriptor);
+	return Standard_GetDescriptorData(Length, &Config_Descriptor);
 }
 
 /*******************************************************************************
@@ -283,16 +287,16 @@ uint8_t *USBD_GetConfigDescriptor(uint16_t Length)
  */
 uint8_t *USBD_GetStringDescriptor(uint16_t Length)
 {
-  uint8_t wValue0 = pInformation->USBwValue0;
+	uint8_t wValue0 = pInformation->USBwValue0;
 	
-  if (wValue0 > 4)
-  {
-    return NULL;
-  }
-  else
-  {
-    return Standard_GetDescriptorData(Length, &String_Descriptor[wValue0]);
-  }
+	if (wValue0 > 4)
+	{
+	return NULL;
+	}
+	else
+	{
+	return Standard_GetDescriptorData(Length, &String_Descriptor[wValue0]);
+	}
 }
 
 /*********************************************************************
@@ -308,16 +312,16 @@ uint8_t *USBD_GetStringDescriptor(uint16_t Length)
  */
 RESULT USBD_Get_Interface_Setting(uint8_t Interface, uint8_t AlternateSetting)
 {
-  if (AlternateSetting > 0)
-  {
-    return USB_UNSUPPORT;
-  }
-  else if (Interface > 1)
-  {
-    return USB_UNSUPPORT;
-  }
+	if (AlternateSetting > 0)
+	{
+	return USB_UNSUPPORT;
+	}
+	else if (Interface > 1)
+	{
+	return USB_UNSUPPORT;
+	}
 	
-  return USB_SUCCESS;
+	return USB_SUCCESS;
 }
 
 /*********************************************************************
@@ -370,39 +374,42 @@ uint8_t *USB_CDC_SetLineCoding( uint16_t Length )
  */
 RESULT USBD_Data_Setup(uint8_t RequestNo)
 {
-  uint32_t Request_No = pInformation->USBbRequest;
-  uint8_t *(*CopyRoutine)(uint16_t);
-  CopyRoutine = NULL;
-  if (Type_Recipient == (STANDARD_REQUEST | INTERFACE_RECIPIENT))
-  {
-    return USB_UNSUPPORT;
-  }
-  else if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
-  {
-    if (Request_No == CDC_GET_LINE_CODING)
-    {
-      CopyRoutine = &USB_CDC_GetLineCoding;
-    }
-    else if (Request_No == CDC_SET_LINE_CODING)
-    {
-      CopyRoutine = &USB_CDC_SetLineCoding;
-    }
-    else
-    {
-      return USB_UNSUPPORT;
-    }
-  }
-  if (CopyRoutine)
-  {
-    pInformation->Ctrl_Info.CopyData = CopyRoutine;
-    pInformation->Ctrl_Info.Usb_wOffset = 0;
-    (*CopyRoutine)( 0 );
-  }
-  else
-  {
-    return( USB_UNSUPPORT );
-  }
-  return USB_SUCCESS;
+	uint32_t Request_No = pInformation->USBbRequest;
+	uint8_t *(*CopyRoutine)(uint16_t);
+	CopyRoutine = NULL;
+
+	if (Type_Recipient == (STANDARD_REQUEST | INTERFACE_RECIPIENT))
+	{
+		return USB_UNSUPPORT;
+	}
+	else if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
+	{
+		if (Request_No == CDC_GET_LINE_CODING)
+		{
+			CopyRoutine = &USB_CDC_GetLineCoding;
+		}
+		else if (Request_No == CDC_SET_LINE_CODING)
+		{
+			CopyRoutine = &USB_CDC_SetLineCoding;
+		}
+		else
+		{
+			return USB_UNSUPPORT;
+		}
+	}
+
+	if (CopyRoutine)
+	{
+		pInformation->Ctrl_Info.CopyData = CopyRoutine;
+		pInformation->Ctrl_Info.Usb_wOffset = 0;
+		(*CopyRoutine)( 0 );
+	}
+	else
+	{
+		return( USB_UNSUPPORT );
+	}
+
+	return USB_SUCCESS;
 }
 
 /*******************************************************************************
@@ -416,22 +423,22 @@ RESULT USBD_Data_Setup(uint8_t RequestNo)
  */
 RESULT USBD_NoData_Setup(uint8_t RequestNo)
 {      
-  uint32_t Request_No = pInformation->USBbRequest;
+	uint32_t Request_No = pInformation->USBbRequest;
 
-  if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
-  {
-    if (Request_No == CDC_SET_LINE_CTLSTE)
-    {
+	if (Type_Recipient == (CLASS_REQUEST | INTERFACE_RECIPIENT))
+	{
+		if (Request_No == CDC_SET_LINE_CTLSTE)
+		{
 
-    }
-    else if (Request_No == CDC_SEND_BREAK)
-    {
+		}
+		else if (Request_No == CDC_SEND_BREAK)
+		{
 
-    }
-    else
-    {
-      return USB_UNSUPPORT;
-    }    
-  }             
-  return USB_SUCCESS;
+		}
+		else
+		{
+			return USB_UNSUPPORT;
+		}
+	}
+	return USB_SUCCESS;
 }

@@ -23,6 +23,16 @@ uint16_t fifo_tm_back = 0;
 // #############################
 // ########## RECEIVE ##########
 // #############################
+inline uint16_t fifo_rc_n_used()
+{
+	return fifo_rc_count;
+}
+
+inline uint16_t fifo_rc_n_free()
+{
+	return (CDC_BUF_SIZE - fifo_rc_count);
+}
+
 inline bool fifo_rc_empty()
 {
 	return fifo_rc_count == 0;
@@ -194,6 +204,16 @@ void fifo_pma_to_rc(uint16_t* src, uint16_t num_bytes)
 // ##############################
 // ########## TRANSMIT ##########
 // ##############################
+inline uint16_t fifo_tm_n_used()
+{
+	return fifo_tm_count;
+}
+
+inline uint16_t fifo_tm_n_free()
+{
+	return (CDC_BUF_SIZE - fifo_tm_count);
+}
+
 inline bool fifo_tm_empty()
 {
 	return fifo_tm_count == 0;

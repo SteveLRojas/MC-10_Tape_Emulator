@@ -10,16 +10,21 @@
 
 #define CDC_BUF_SIZE 1024 // Must be power of 2
 
+// Receive
 extern __attribute__ ((aligned(4))) uint8_t fifo_receive_buf[CDC_BUF_SIZE];
 extern uint16_t fifo_rc_count;
 extern uint16_t fifo_rc_front;
 extern uint16_t fifo_rc_back;
 
+// Transmit
 extern __attribute__ ((aligned(4))) uint8_t fifo_transmit_buf[CDC_BUF_SIZE];
 extern uint16_t fifo_tm_count;
 extern uint16_t fifo_tm_front;
 extern uint16_t fifo_tm_back;
 
+// Receive
+uint16_t fifo_rc_n_used();
+uint16_t fifo_rc_n_free();
 bool fifo_rc_empty();
 bool fifo_rc_full();
 bool fifo_rc_push(uint8_t data);
@@ -30,6 +35,9 @@ bool fifo_rc_read(uint8_t* dest, uint16_t amt);
 bool fifo_rc_write(uint8_t* src, uint16_t amt);
 void fifo_pma_to_rc(uint16_t* src, uint16_t num_bytes);
 
+// Transmit
+uint16_t fifo_tm_n_used();
+uint16_t fifo_tm_n_free();
 bool fifo_tm_empty();
 bool fifo_tm_full();
 bool fifo_tm_push(uint8_t data);

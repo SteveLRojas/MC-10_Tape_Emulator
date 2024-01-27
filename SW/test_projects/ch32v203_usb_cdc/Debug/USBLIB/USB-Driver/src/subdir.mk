@@ -8,24 +8,21 @@ C_SRCS += \
 ../USBLIB/USB-Driver/src/usb_init.c \
 ../USBLIB/USB-Driver/src/usb_int.c \
 ../USBLIB/USB-Driver/src/usb_mem.c \
-../USBLIB/USB-Driver/src/usb_regs.c \
-../USBLIB/USB-Driver/src/usb_sil.c 
+../USBLIB/USB-Driver/src/usb_regs.c 
 
 OBJS += \
 ./USBLIB/USB-Driver/src/usb_core.o \
 ./USBLIB/USB-Driver/src/usb_init.o \
 ./USBLIB/USB-Driver/src/usb_int.o \
 ./USBLIB/USB-Driver/src/usb_mem.o \
-./USBLIB/USB-Driver/src/usb_regs.o \
-./USBLIB/USB-Driver/src/usb_sil.o 
+./USBLIB/USB-Driver/src/usb_regs.o 
 
 C_DEPS += \
 ./USBLIB/USB-Driver/src/usb_core.d \
 ./USBLIB/USB-Driver/src/usb_init.d \
 ./USBLIB/USB-Driver/src/usb_int.d \
 ./USBLIB/USB-Driver/src/usb_mem.d \
-./USBLIB/USB-Driver/src/usb_regs.d \
-./USBLIB/USB-Driver/src/usb_sil.d 
+./USBLIB/USB-Driver/src/usb_regs.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

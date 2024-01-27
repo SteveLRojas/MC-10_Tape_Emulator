@@ -52,33 +52,23 @@ void EP2_OUT_Callback (void)
 //    PMAToUserBufferCopy( &UART2_Tx_Buf[ ( Uart.Tx_LoadNum * DEF_USB_FS_PACK_LEN ) ], GetEPRxAddr( EP2_OUT & 0x7F ), num_bytes );
 
     uint16_t wPMABufAddr = GetEPRxAddr( EP2_OUT & 0x7F );
-//    uint32_t*  pdwVal = (uint32_t *)(wPMABufAddr * 2 + PMAAddr);
-//
-//	uint32_t i;
-//	for (i = num_bytes; i > 1; i = i - 2)
-//	{
-//		fifo_rc_push(*pdwVal & 0xFF);
-//		fifo_rc_push((*pdwVal >> 8) & 0xFF);
-//		++pdwVal;
-//	}
-//	if(i)
-//	{
-//		fifo_rc_push(*pdwVal & 0xFF);
-//	}
-
     uint16_t*  pdwVal = (uint16_t*)(wPMABufAddr * 2 + PMAAddr);
 
     fifo_pma_to_rc(pdwVal, num_bytes);
 
-    Uart.Tx_PackLen[ Uart.Tx_LoadNum ] = num_bytes;
-    Uart.Tx_LoadNum++;
-    if( Uart.Tx_LoadNum >= DEF_UARTx_TX_BUF_NUM_MAX )
-    {
-        Uart.Tx_LoadNum = 0x00;
-    }
-    Uart.Tx_RemainNum++;
+    //Uart.Tx_PackLen[ Uart.Tx_LoadNum ] = num_bytes;
+    //Uart.Tx_LoadNum++;
+    //if( Uart.Tx_LoadNum >= DEF_UARTx_TX_BUF_NUM_MAX )
+    //{
+    //    Uart.Tx_LoadNum = 0x00;
+    //}
+    //Uart.Tx_RemainNum++;
 
-	if( Uart.Tx_RemainNum >= ( DEF_UARTx_TX_BUF_NUM_MAX - 2 ) )	//TODO: fix this
+//	if( Uart.Tx_RemainNum >= ( DEF_UARTx_TX_BUF_NUM_MAX - 2 ) )	//TODO: fix this
+//    {
+//        Uart.USB_Down_StopFlag = 0x01;
+//    }
+	if(fifo_rc_n_free() < (DEF_USB_FS_PACK_LEN * 2)) // Leave space for 2 packets in fifo
     {
         Uart.USB_Down_StopFlag = 0x01;
     }
@@ -121,7 +111,14 @@ uint8_t USBD_ENDPx_DataUp( uint8_t endp, uint16_t len )
 		{
 			return USB_ERROR;
 		}
-		USB_SIL_Write( EP3_IN, len );
+
+		//USB_SIL_Write( EP3_IN, len );
+		//Stuff from usb_sil.c
+		uint16_t wPMABufAddr = GetEPTxAddr(EP3_IN & 0x7F);
+		uint16_t *pdwVal = (uint16_t *)(wPMABufAddr * 2 + PMAAddr);
+		fifo_tm_to_pma(pdwVal, len);
+		SetEPTxCount((EP3_IN & 0x7F), len);
+
 		USBD_Endp3_Busy = 1;
 		SetEPTxStatus( ENDP3, EP_TX_VALID );
 	}
