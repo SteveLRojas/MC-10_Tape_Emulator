@@ -23,12 +23,12 @@ uint16_t fifo_tm_back = 0;
 // #############################
 // ########## RECEIVE ##########
 // #############################
-inline uint16_t fifo_rc_n_used()
+inline uint16_t fifo_rc_num_used()
 {
 	return fifo_rc_count;
 }
 
-inline uint16_t fifo_rc_n_free()
+inline uint16_t fifo_rc_num_free()
 {
 	return (CDC_BUF_SIZE - fifo_rc_count);
 }
@@ -83,22 +83,22 @@ uint8_t fifo_rc_peek()
 	return fifo_receive_buf[fifo_rc_front];
 }
 
-bool fifo_rc_read(uint8_t* dest, uint16_t amt)
+bool fifo_rc_read(uint8_t* dest, uint16_t num_bytes)
 {
-	if(amt > fifo_rc_count)
+	if(num_bytes > fifo_rc_count)
 	{
 		return FALSE; // Not enough data to read
 	}
 
 	// Read from fifo to dest
-	fifo_rc_count -= amt;
-	while(amt)
+	fifo_rc_count -= num_bytes;
+	while(num_bytes)
 	{
 		*dest = fifo_receive_buf[fifo_rc_front];
 		++fifo_rc_front;
 		fifo_rc_front &= (CDC_BUF_SIZE - 1); // Handle wrap-around
 		++dest;
-		--amt;
+		--num_bytes;
 	}
 
 	return TRUE;
@@ -141,22 +141,22 @@ bool fifo_rc_read(uint8_t* dest, uint16_t amt)
 //	return TRUE;
 //}
 
-bool fifo_rc_write(uint8_t* src, uint16_t amt)
+bool fifo_rc_write(uint8_t* src, uint16_t num_bytes)
 {
-	if(amt > (CDC_BUF_SIZE - fifo_rc_count))
+	if(num_bytes > (CDC_BUF_SIZE - fifo_rc_count))
 	{
 		return FALSE; // Not enough space to write
 	}
 
 	// Write to fifo from src
-	fifo_rc_count += amt;
-	while(amt)
+	fifo_rc_count += num_bytes;
+	while(num_bytes)
 	{
 		fifo_receive_buf[fifo_rc_back] = *src;
 		++fifo_rc_back;
 		fifo_rc_back &= (CDC_BUF_SIZE - 1); // Handle wrap-around
 		++src;
-		--amt;
+		--num_bytes;
 	}
 
 	return TRUE;
@@ -204,12 +204,12 @@ void fifo_pma_to_rc(uint16_t* src, uint16_t num_bytes)
 // ##############################
 // ########## TRANSMIT ##########
 // ##############################
-inline uint16_t fifo_tm_n_used()
+inline uint16_t fifo_tm_num_used()
 {
 	return fifo_tm_count;
 }
 
-inline uint16_t fifo_tm_n_free()
+inline uint16_t fifo_tm_num_free()
 {
 	return (CDC_BUF_SIZE - fifo_tm_count);
 }
@@ -264,43 +264,43 @@ uint8_t fifo_tm_peek()
 	return fifo_transmit_buf[fifo_tm_front];
 }
 
-bool fifo_tm_read(uint8_t* dest, uint16_t amt)
+bool fifo_tm_read(uint8_t* dest, uint16_t num_bytes)
 {
-	if(amt > fifo_tm_count)
+	if(num_bytes > fifo_tm_count)
 	{
 		return FALSE; // Not enough data to read
 	}
 
 	// Read from fifo to dest
-	fifo_tm_count -= amt;
-	while(amt)
+	fifo_tm_count -= num_bytes;
+	while(num_bytes)
 	{
 		*dest = fifo_transmit_buf[fifo_tm_front];
 		++fifo_tm_front;
 		fifo_tm_front &= (CDC_BUF_SIZE - 1); // Handle wrap-around
 		++dest;
-		--amt;
+		--num_bytes;
 	}
 
 	return TRUE;
 }
 
-bool fifo_tm_write(uint8_t* src, uint16_t amt)
+bool fifo_tm_write(uint8_t* src, uint16_t num_bytes)
 {
-	if(amt > (CDC_BUF_SIZE - fifo_tm_count))
+	if(num_bytes > (CDC_BUF_SIZE - fifo_tm_count))
 	{
 		return FALSE; // Not enough space to write
 	}
 
 	// Write to fifo from src
-	fifo_tm_count += amt;
-	while(amt)
+	fifo_tm_count += num_bytes;
+	while(num_bytes)
 	{
 		fifo_transmit_buf[fifo_tm_back] = *src;
 		++fifo_tm_back;
 		fifo_tm_back &= (CDC_BUF_SIZE - 1); // Handle wrap-around
 		++src;
-		--amt;
+		--num_bytes;
 	}
 
 	return TRUE;

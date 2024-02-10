@@ -56,7 +56,7 @@ void EP2_OUT_Callback (void)
 
     fifo_pma_to_rc(pdwVal, num_bytes);
 
-	if(fifo_rc_n_free() < (DEF_USB_FS_PACK_LEN * 2)) // Leave space for 2 packets in fifo
+	if(fifo_rc_num_free() < (DEF_USB_FS_PACK_LEN * 2)) // Leave space for 2 packets in fifo
     {
         USB_Down_StopFlag = 0x01;
     }

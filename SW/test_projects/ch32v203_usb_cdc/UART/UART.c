@@ -66,10 +66,10 @@ void TIM2_Init( void )	//still used
     TIM_DeInit( TIM2 );
 
     /* Time base configuration */
-    TIM_TimeBaseStructure.TIM_Period = 100 - 1;
-    TIM_TimeBaseStructure.TIM_Prescaler = SystemCoreClock / 1000000 - 1;
-    TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+    TIM_TimeBaseStructure.TIM_Period = 100 - 1;	//event every 100 us
+    TIM_TimeBaseStructure.TIM_Prescaler = SystemCoreClock / 1000000 - 1;	//get 1MHz clock for a 1 us time scale
+    TIM_TimeBaseStructure.TIM_ClockDivision = 0;	//use internal clock source
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;	//count up to ATRLR, reload with 0
     TIM_TimeBaseInit( TIM2, &TIM_TimeBaseStructure );
 
     /* Clear TIM2 update pending flag */
@@ -149,7 +149,7 @@ void UART2_DataTx_Deal( void )	//USB -> UART
 		NVIC_DisableIRQ( USB_LP_CAN1_RX0_IRQn );
 		NVIC_DisableIRQ( USB_HP_CAN1_TX_IRQn );
 
-		if ((USB_Down_StopFlag == 0x01) && (fifo_rc_n_used() < (DEF_USB_FS_PACK_LEN * 2)))
+		if ((USB_Down_StopFlag == 0x01) && (fifo_rc_num_used() < (DEF_USB_FS_PACK_LEN * 2)))
 		{
 			SetEPRxValid( ENDP2);
 			USB_Down_StopFlag = 0x00;
@@ -189,7 +189,7 @@ void UART2_DataRx_Deal( void )	//UART -> USB
         if( USB_Up_IngFlag == 0 )
         {
             /* Calculate the length of this upload */
-            remain_len = fifo_tm_n_used();
+            remain_len = fifo_tm_num_used();
             packlen = 0x00;
             if( remain_len >= DEF_USBD_MAX_PACK_SIZE )
             {

@@ -21,6 +21,7 @@
 #include "UART.h"
 #include "debug.h"
 #include "usb_lib.h"
+#include "cdc_serial.h"
 
 void gpio_init()
 {
@@ -46,7 +47,7 @@ void gpio_init()
  * @return  none
  */
 int main(void)
-{   
+{
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	gpio_init();
 	Delay_Init(); 
@@ -70,8 +71,22 @@ int main(void)
  	
 	while(1)
 	{
-        UART2_DataRx_Deal( );
-        UART2_DataTx_Deal( );
+		// UART2_DataRx_Deal( );
+		// UART2_DataTx_Deal( );
+
+		// If there's stuff to read, read it
+		// Copy into TM FIFO
+		while(cdc_bytes_available())
+		{
+			cdc_write_byte(cdc_read_byte());
+			Rx_TimeOut = 0x00;
+		}
+
+		// If timeout, send it
+		 if( Rx_TimeOut >= Rx_TimeOutMax )
+		 {
+			 cdc_flush();
+		 }
 	}
 }
 
