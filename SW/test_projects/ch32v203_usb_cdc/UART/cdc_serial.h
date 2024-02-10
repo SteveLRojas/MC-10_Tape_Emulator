@@ -19,6 +19,9 @@
 #define CDC_TOUCH_TIMEOUT_MS 100
 #define CDC_FLUSH_TIMEOUT_MS 1000
 
+#define IS_TIMEDOUT(timer_val, timeout_val) ((timer_val >= timeout_val) && (timeout_val != 0))
+#define NOT_TIMEDOUT(timer_val, timeout_val) ((timer_val < timeout_val) || (!timeout_val))
+
 extern uint16_t read_timeout_ms;
 extern uint8_t  USB_Up_Pack0_Flag;				/* Serial xUSB data needs to upload 0-length packet flag */
 
@@ -51,7 +54,7 @@ uint16_t cdc_bytes_available_for_write();
 void cdc_write_byte(uint8_t val);
 uint16_t cdc_write_string(char* str);
 void cdc_write_bytes(uint8_t* src, uint16_t num_bytes);
-uint8_t cdc_task();
+void cdc_task();
 void cdc_flush();
 
 #endif /* UART_CDC_SERIAL_H_ */

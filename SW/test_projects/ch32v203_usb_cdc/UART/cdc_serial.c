@@ -15,18 +15,18 @@
 
 extern uint8_t USBD_Endp3_Busy;
 uint8_t volatile Com_Cfg[ 8 ];
-uint8_t volatile USB_Down_StopFlag;                                         /* Serial xUSB packet stop down flag */
-uint8_t volatile USB_Up_IngFlag;                                            /* Serial xUSB packet being uploaded flag */
+uint8_t volatile USB_Down_StopFlag;                 /* Serial xUSB packet stop down flag */
+uint8_t volatile USB_Up_IngFlag;                    /* Serial xUSB packet being uploaded flag */
 
 uint16_t volatile cdc_read_timer_ms;				// timer for user configurable timeout for cdc_read funcs
 uint16_t volatile cdc_up_force_finish_timer_ms;		// force USB upload complete if we don't get success callback when timeout
 uint16_t volatile cdc_touch_timer_ms;				// when this reaches its limit, any call to cdc library flushes the tx buffer
 uint16_t volatile cdc_flush_timer_ms;				// when this reaches its limit, the tx buffer is immediately flushed
 
-uint16_t read_timeout_ms = 0;
-uint8_t USB_Up_Pack0_Flag;                                                  /* Serial xUSB data needs to upload 0-length packet flag */
+uint16_t read_timeout_ms = 3; // 3ms
+uint8_t USB_Up_Pack0_Flag;                          /* Serial xUSB data needs to upload 0-length packet flag */
 
-//TODO: Implement timeout stuff, all functions flush when short timeout expires, re-enable down link
+//TODO: Check what needs to be volatile, disable USB interrupts where needed
 
 
 // #############################
@@ -46,8 +46,6 @@ void UART2_ParaInit( uint8_t mode )	//still used
 	cdc_up_force_finish_timer_ms = 0;
 	cdc_touch_timer_ms = 0;
 	cdc_flush_timer_ms = 0;
-
-	read_timeout_ms = 3;	//3 ms
 
     USB_Up_IngFlag = 0x00;
     USB_Up_Pack0_Flag = 0x00;
@@ -75,13 +73,16 @@ void cdc_set_read_timeout(uint16_t time_ms)
 	read_timeout_ms = time_ms;
 }
 
-uint16_t cdc_bytes_available()
+inline uint16_t cdc_bytes_available()
 {
 	return fifo_rc_num_used();
 }
 
-int16_t cdc_peek()
+inline int16_t cdc_peek()
 {
+	if(fifo_rc_empty())
+		return -1;
+
 	return fifo_rc_peek();
 }
 
@@ -89,10 +90,15 @@ int16_t cdc_read_byte()
 {
 	int16_t popped = -1;
 
-	if(!fifo_rc_empty())
+	cdc_read_timer_ms = 0;
+	while(NOT_TIMEDOUT(cdc_read_timer_ms, read_timeout_ms))
 	{
-		popped = fifo_rc_pop();
-		cdc_check_down_start();
+		if(!fifo_rc_empty())
+		{
+			popped = fifo_rc_pop();
+			cdc_check_down_start();
+			return popped;
+		}
 	}
 
 	return popped;
@@ -102,7 +108,9 @@ uint16_t cdc_read_bytes(uint8_t* dest, uint16_t num_bytes)
 {
 	uint16_t num_remaining = num_bytes;
 	uint16_t num_to_read = 0;
-	while(num_remaining) // && !timeout
+
+	cdc_read_timer_ms = 0;
+	while(num_remaining && NOT_TIMEDOUT(cdc_read_timer_ms, read_timeout_ms))
 	{
 		num_to_read = fifo_rc_num_used();
 		if (num_to_read > num_remaining)
@@ -123,7 +131,9 @@ uint16_t cdc_read_bytes_until(uint8_t terminator, uint8_t* dest, uint16_t num_by
 {
 	uint16_t num_remaining = num_bytes;
 	uint8_t popped;
-	while(num_remaining) // && !timeout
+
+	cdc_read_timer_ms = 0;
+	while(num_remaining && NOT_TIMEDOUT(cdc_read_timer_ms, read_timeout_ms))
 	{
 		if(fifo_rc_empty())
 			continue;
@@ -166,12 +176,22 @@ uint16_t cdc_bytes_available_for_write()
 
 void cdc_write_byte(uint8_t val)
 {
+	//bool touch_timeout = IS_TIMEDOUT(cdc_touch_timer_ms, CDC_TOUCH_TIMEOUT_MS);
+
 	if(fifo_tm_full())
 	{
 		cdc_flush();
+		//touch_timeout = FALSE; // Don't want to flush twice
 	}
 
 	fifo_tm_push(val);
+
+	//if(touch_timeout)
+	//{
+	//	cdc_flush();
+	//}
+	cdc_touch_timer_ms = 0;
+	cdc_flush_timer_ms = 0;
 }
 
 uint16_t cdc_write_string(char* str)
@@ -183,9 +203,11 @@ uint16_t cdc_write_string(char* str)
 
 void cdc_write_bytes(uint8_t* src, uint16_t num_bytes)
 {
+	//bool touch_timeout = IS_TIMEDOUT(cdc_touch_timer_ms, CDC_TOUCH_TIMEOUT_MS);
+
 	uint16_t num_remaining = num_bytes;
 	uint16_t num_to_write = 0;
-	while(num_remaining) // && !timeout
+	while(num_remaining)
 	{
 		num_to_write = fifo_tm_num_free();
 		if (num_to_write > num_remaining)
@@ -201,19 +223,32 @@ void cdc_write_bytes(uint8_t* src, uint16_t num_bytes)
 		if(fifo_tm_full())
 		{
 			cdc_flush();
+			//touch_timeout = FALSE; // Don't want to flush twice
 		}
 	}
+
+	//if(touch_timeout)
+	//{
+	//	cdc_flush();
+	//}
+	cdc_touch_timer_ms = 0;
+	cdc_flush_timer_ms = 0;
 }
 
-uint8_t cdc_task()
+void cdc_task()
 {
-	// if not timed-out
-	return 0;
+	if(IS_TIMEDOUT(cdc_touch_timer_ms, CDC_TOUCH_TIMEOUT_MS))
+	{
+		cdc_flush();
+		cdc_touch_timer_ms = 0;
+	}
+	return;
 }
 
 void cdc_flush()
 {
 	uint16_t num_to_write = 0;
+	cdc_flush_timer_ms = 0;	//prevent re-entry due to timer interrupt
 
     while (!fifo_tm_empty())
     {

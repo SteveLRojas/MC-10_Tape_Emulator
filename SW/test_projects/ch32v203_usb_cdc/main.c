@@ -110,16 +110,9 @@ int main(void)
 		while(cdc_bytes_available())
 		{
 			cdc_write_byte(cdc_read_byte());
-			cdc_read_timer_ms = 0;
-			cdc_touch_timer_ms = 0;
-			cdc_flush_timer_ms = 0;
 		}
 
-		// If timeout, send it
-		 if(cdc_touch_timer_ms >= CDC_TOUCH_TIMEOUT_MS)
-		 {
-			 cdc_flush();
-		 }
+		cdc_task();
 	}
 }
 

@@ -40,9 +40,16 @@ void TIM2_IRQHandler( void )
     /* uart timeout counts */
 //    Rx_TimeOut++;
 //    USB_Up_TimeOut++;
+	++cdc_read_timer_ms;
 	++cdc_up_force_finish_timer_ms;
 	++cdc_touch_timer_ms;
 	++cdc_flush_timer_ms;
+
+	if(IS_TIMEDOUT(cdc_flush_timer_ms, CDC_FLUSH_TIMEOUT_MS))
+	{
+		cdc_flush();
+		cdc_touch_timer_ms = 0;
+	}
 
     /* clear status */
     TIM2->INTFR = (uint16_t)~TIM_IT_Update;
