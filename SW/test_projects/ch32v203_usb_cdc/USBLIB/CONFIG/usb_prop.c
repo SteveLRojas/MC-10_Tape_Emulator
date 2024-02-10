@@ -15,7 +15,8 @@
 #include "usb_desc.h"
 #include "usb_pwr.h"
 #include "hw_config.h"
-#include "UART.h"
+//#include "UART.h"
+#include"cdc_serial.h"
 
 uint8_t Request = 0;
 
@@ -148,7 +149,7 @@ void USBD_Status_In(void)
     {
         if (Request_No == CDC_SET_LINE_CODING)
         {
-            UART2_USB_Init();
+        	UART2_ParaInit( 0 );
         }
     }
 }

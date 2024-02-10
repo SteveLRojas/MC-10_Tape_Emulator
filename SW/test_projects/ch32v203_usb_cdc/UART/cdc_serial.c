@@ -8,16 +8,64 @@
 #include "usb_type.h"
 #include "cdc_serial.h"
 #include "cdc_fifo.h"
-#include "UART.h"	//TODO: make it nice
 #include "usb_lib.h"
 #include "usb_desc.h"
 #include "usb_prop.h"
+#include "string.h"
 
 extern uint8_t USBD_Endp3_Busy;
+uint8_t volatile Com_Cfg[ 8 ];
+uint8_t volatile USB_Down_StopFlag;                                         /* Serial xUSB packet stop down flag */
+uint8_t volatile USB_Up_IngFlag;                                            /* Serial xUSB packet being uploaded flag */
+
+uint16_t volatile cdc_read_timer_ms;				// timer for user configurable timeout for cdc_read funcs
+uint16_t volatile cdc_up_force_finish_timer_ms;		// force USB upload complete if we don't get success callback when timeout
+uint16_t volatile cdc_touch_timer_ms;				// when this reaches its limit, any call to cdc library flushes the tx buffer
+uint16_t volatile cdc_flush_timer_ms;				// when this reaches its limit, the tx buffer is immediately flushed
 
 uint16_t read_timeout_ms = 0;
+uint8_t USB_Up_Pack0_Flag;                                                  /* Serial xUSB data needs to upload 0-length packet flag */
 
 //TODO: Implement timeout stuff, all functions flush when short timeout expires, re-enable down link
+
+
+// #############################
+// ######## SETUP/INIT #########
+// #############################
+/*********************************************************************
+ * @fn      UART2_ParaInit
+ *
+ * @brief   Uart2 parameters initialization
+ *          mode = 0 : Used in usb modify initialization
+ *          mode = 1 : Used in default initializations
+ * @return  none
+ */
+void UART2_ParaInit( uint8_t mode )	//still used
+{
+	cdc_read_timer_ms = 0;
+	cdc_up_force_finish_timer_ms = 0;
+	cdc_touch_timer_ms = 0;
+	cdc_flush_timer_ms = 0;
+
+	read_timeout_ms = 3;	//3 ms
+
+    USB_Up_IngFlag = 0x00;
+    USB_Up_Pack0_Flag = 0x00;
+    USB_Down_StopFlag = 0x00;
+
+    if( mode )
+    {
+        Com_Cfg[ 0 ] = (uint8_t)( DEF_UARTx_BAUDRATE );
+        Com_Cfg[ 1 ] = (uint8_t)( DEF_UARTx_BAUDRATE >> 8 );
+        Com_Cfg[ 2 ] = (uint8_t)( DEF_UARTx_BAUDRATE >> 16 );
+        Com_Cfg[ 3 ] = (uint8_t)( DEF_UARTx_BAUDRATE >> 24 );
+        Com_Cfg[ 4 ] = DEF_UARTx_STOPBIT;
+        Com_Cfg[ 5 ] = DEF_UARTx_PARITY;
+        Com_Cfg[ 6 ] = DEF_UARTx_DATABIT;
+        Com_Cfg[ 7 ] = DEF_UARTx_RX_TIMEOUT;
+    }
+}
+
 
 // #############################
 // ########## RECEIVE ##########
@@ -39,12 +87,15 @@ int16_t cdc_peek()
 
 int16_t cdc_read_byte()
 {
+	int16_t popped = -1;
+
 	if(!fifo_rc_empty())
 	{
-		return fifo_rc_pop();
+		popped = fifo_rc_pop();
+		cdc_check_down_start();
 	}
 
-	return -1;
+	return popped;
 }
 
 uint16_t cdc_read_bytes(uint8_t* dest, uint16_t num_bytes)
@@ -64,6 +115,7 @@ uint16_t cdc_read_bytes(uint8_t* dest, uint16_t num_bytes)
 		dest += num_to_read;
 	}
 
+	cdc_check_down_start();
 	return (num_bytes - num_remaining);
 }
 
@@ -84,8 +136,25 @@ uint16_t cdc_read_bytes_until(uint8_t terminator, uint8_t* dest, uint16_t num_by
 		*dest++ = popped;
 	}
 
+	cdc_check_down_start();
 	return (num_bytes - num_remaining);
 }
+
+inline void cdc_check_down_start()
+{
+	if ((USB_Down_StopFlag == 0x01) && (fifo_rc_num_used() < (DEF_USB_FS_PACK_LEN * 2)))
+	{
+		NVIC_DisableIRQ( USB_LP_CAN1_RX0_IRQn );
+		NVIC_DisableIRQ( USB_HP_CAN1_TX_IRQn );
+
+		SetEPRxValid(ENDP2);
+		USB_Down_StopFlag = 0x00;
+
+		NVIC_EnableIRQ( USB_LP_CAN1_RX0_IRQn );
+		NVIC_EnableIRQ( USB_HP_CAN1_TX_IRQn );
+	}
+}
+
 
 // ##############################
 // ########## TRANSMIT ##########
@@ -136,11 +205,10 @@ void cdc_write_bytes(uint8_t* src, uint16_t num_bytes)
 	}
 }
 
-
-bool cdc_task()
+uint8_t cdc_task()
 {
 	// if not timed-out
-	return FALSE;
+	return 0;
 }
 
 void cdc_flush()
@@ -164,17 +232,17 @@ void cdc_flush()
                 NVIC_DisableIRQ( USB_LP_CAN1_RX0_IRQn );
                 NVIC_DisableIRQ( USB_HP_CAN1_TX_IRQn );
                 USB_Up_IngFlag = 0x01;
-                USB_Up_TimeOut = 0x00;
+                cdc_up_force_finish_timer_ms = 0;
 
                 USBD_ENDPx_DataUp(ENDP3, num_to_write);
 
                 /* Start 0-length packet timeout timer */
-                if( num_to_write == DEF_UARTx_RX_BUF_LEN )
+                /*if( num_to_write == DEF_UARTx_RX_BUF_LEN )
                 {
                 	// TODO: ^ Change to == DEF_USBD_MAX_PACK_SIZE?
                 	// http://tinyurl.com/2c436fkh
                     USB_Up_Pack0_Flag = 0x01;
-                }
+                }*/
 
                 NVIC_EnableIRQ( USB_LP_CAN1_RX0_IRQn );
                 NVIC_EnableIRQ( USB_HP_CAN1_TX_IRQn );
@@ -183,7 +251,7 @@ void cdc_flush()
         else
         {
             /* Set the upload success flag directly if the upload is not successful after the timeout */
-            if( USB_Up_TimeOut >= DEF_UARTx_USB_UP_TIMEOUT )
+            if(cdc_up_force_finish_timer_ms >= DEF_UARTx_USB_UP_TIMEOUT)
             {
                 USB_Up_IngFlag = 0x00;
                 USBD_Endp3_Busy = 0;
@@ -197,12 +265,12 @@ void cdc_flush()
     {
         if( USB_Up_IngFlag == 0 )
         {
-            if( USB_Up_TimeOut >= ( DEF_UARTx_RX_TIMEOUT * 20 ) )
+            if( cdc_up_force_finish_timer_ms >= ( DEF_UARTx_RX_TIMEOUT * 20 ) )	//TODO: fix this (3 * 20)
             {
                 NVIC_DisableIRQ( USB_LP_CAN1_RX0_IRQn );
                 NVIC_DisableIRQ( USB_HP_CAN1_TX_IRQn );
                 USB_Up_IngFlag = 0x01;
-                USB_Up_TimeOut = 0x00;
+                cdc_up_force_finish_timer_ms = 0;
 
                 USBD_ENDPx_DataUp( ENDP3, 0);
 

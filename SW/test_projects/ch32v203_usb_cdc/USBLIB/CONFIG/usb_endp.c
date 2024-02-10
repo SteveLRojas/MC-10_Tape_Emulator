@@ -16,7 +16,8 @@
 #include "usb_istr.h"
 #include "usb_pwr.h"
 #include "usb_prop.h"
-#include "UART.h"
+//#include "UART.h"
+#include "cdc_serial.h"
 #include "cdc_fifo.h"
 
 uint8_t USBD_Endp3_Busy;

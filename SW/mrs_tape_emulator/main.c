@@ -18,7 +18,7 @@
 
 /* Global Variable */
 
-void gpio_init()
+void platform_init()
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_SPI1, ENABLE);
 
@@ -95,7 +95,7 @@ int main(void)
     uint8_t i = 0;
 
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-    gpio_init();
+    platform_init();
     Delay_Init();
     USART_Printf_Init(115200);
     printf("SystemClk: %d \n", SystemCoreClock);

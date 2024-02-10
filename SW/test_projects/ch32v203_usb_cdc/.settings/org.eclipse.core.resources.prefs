@@ -1,6 +1,4 @@
 eclipse.preferences.version=1
-encoding//UART/UART.c=GBK
-encoding//UART/UART.h=GBK
 encoding//UART/cdc_fifo.c=GBK
 encoding//UART/cdc_fifo.h=GBK
 encoding//UART/cdc_serial.c=GBK

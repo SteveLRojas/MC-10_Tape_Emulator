@@ -4,17 +4,14 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../UART/UART.c \
 ../UART/cdc_fifo.c \
 ../UART/cdc_serial.c 
 
 OBJS += \
-./UART/UART.o \
 ./UART/cdc_fifo.o \
 ./UART/cdc_serial.o 
 
 C_DEPS += \
-./UART/UART.d \
 ./UART/cdc_fifo.d \
 ./UART/cdc_serial.d 
 
