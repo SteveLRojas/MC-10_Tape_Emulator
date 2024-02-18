@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//Debug/ch32v203_usb_cdc.map=GBK
 encoding//UART/cdc_fifo.c=GBK
 encoding//UART/cdc_fifo.h=GBK
 encoding//UART/cdc_serial.c=GBK

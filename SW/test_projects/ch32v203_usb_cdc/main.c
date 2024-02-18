@@ -19,13 +19,12 @@
 
 
 #include "debug.h"
-#include "usb_lib.h"
 #include "cdc_serial.h"
 
 void platform_init()
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB, ENABLE);
-    RCC_APB1PeriphClockCmd( RCC_APB1Periph_USART2 | RCC_APB1Periph_TIM2, ENABLE );
+    RCC_APB1PeriphClockCmd( RCC_APB1Periph_USART2, ENABLE );
 
 	GPIO_InitTypeDef GPIO_InitStructure = {0};
 
@@ -37,39 +36,6 @@ void platform_init()
 
 	GPIO_PinRemapConfig(GPIO_Remap_SPI1, ENABLE);
 	GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE);
-}
-
-/*********************************************************************
- * @fn      TIM2_Init
- *
- * @brief   1000us Timer
- *
- * @return  none
- */
-void TIM2_Init( void )	//still used
-{
-    TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure = {0};
-
-    TIM_DeInit( TIM2 );
-
-    /* Time base configuration */
-    TIM_TimeBaseStructure.TIM_Period = 1000 - 1;	//event every 1000 us
-    TIM_TimeBaseStructure.TIM_Prescaler = SystemCoreClock / 1000000 - 1;	//get 1MHz clock for a 1 us time scale
-    TIM_TimeBaseStructure.TIM_ClockDivision = 0;	//use internal clock source
-    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;	//count up to ATRLR, reload with 0
-    TIM_TimeBaseInit( TIM2, &TIM_TimeBaseStructure );
-
-    /* Clear TIM2 update pending flag */
-    TIM_ClearFlag( TIM2, TIM_FLAG_Update );
-
-    /* TIM IT enable */
-    TIM_ITConfig( TIM2, TIM_IT_Update, ENABLE );
-
-    /* Enable Interrupt */
-    NVIC_EnableIRQ( TIM2_IRQn );
-
-    /* TIM2 enable counter */
-    TIM_Cmd( TIM2, ENABLE );
 }
 
 /*********************************************************************
@@ -93,12 +59,7 @@ int main(void)
     GPIO_WriteBit(GPIOB, GPIO_Pin_1, Bit_SET);
 	Delay_Ms(100);
 
-    TIM2_Init( );
-    UART2_ParaInit( 1 );
-    
-	Set_USBConfig(); 
-    USB_Init();	    
- 	USB_Interrupts_Config();    
+	cdc_init();
  	
 	while(1)
 	{

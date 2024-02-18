@@ -20,10 +20,10 @@
 #include "cdc_serial.h"
 #include "cdc_fifo.h"
 
-uint8_t USBD_Endp3_Busy;
-uint16_t USB_Rx_Cnt=0; 
+uint8_t volatile USBD_Endp3_Busy;
+//uint16_t USB_Rx_Cnt=0;
 
-uint8_t led_state = Bit_RESET;
+//uint8_t led_state = Bit_RESET;
 
 /*********************************************************************
  * @fn      EP2_IN_Callback
@@ -93,8 +93,8 @@ uint8_t USBD_ENDPx_DataUp( uint8_t endp, uint16_t len )
 {
 	if( endp == ENDP3 )
 	{
-		GPIO_WriteBit(GPIOB, GPIO_Pin_1, led_state);
-		led_state = ~led_state;
+//		GPIO_WriteBit(GPIOB, GPIO_Pin_1, led_state);
+//		led_state = ~led_state;
 
 		if (USBD_Endp3_Busy)
 		{

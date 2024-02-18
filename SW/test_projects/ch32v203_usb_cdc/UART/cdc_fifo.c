@@ -10,39 +10,44 @@
 #include "cdc_fifo.h"
 #include "support.h"
 
-__attribute__ ((aligned(4))) uint8_t fifo_receive_buf[CDC_BUF_SIZE] = {0};
-uint16_t fifo_rc_count = 0;
-uint16_t fifo_rc_front = 0;
-uint16_t fifo_rc_back = 0;
+__attribute__ ((aligned(4))) volatile uint8_t fifo_receive_buf[CDC_BUF_SIZE] = {0};
+volatile uint16_t fifo_rc_count = 0;
+volatile uint16_t fifo_rc_front = 0;
+volatile uint16_t fifo_rc_back = 0;
 
-__attribute__ ((aligned(4))) uint8_t fifo_transmit_buf[CDC_BUF_SIZE] = {0};
-uint16_t fifo_tm_count = 0;
-uint16_t fifo_tm_front = 0;
-uint16_t fifo_tm_back = 0;
+__attribute__ ((aligned(4))) volatile uint8_t fifo_transmit_buf[CDC_BUF_SIZE] = {0};
+volatile uint16_t fifo_tm_count = 0;
+volatile uint16_t fifo_tm_front = 0;
+volatile uint16_t fifo_tm_back = 0;
 
 // #############################
 // ########## RECEIVE ##########
 // #############################
+//no need to disable interrupts before calling
 inline uint16_t fifo_rc_num_used()
 {
 	return fifo_rc_count;
 }
 
+//disable USB interrupts before calling (from user code..)
 inline uint16_t fifo_rc_num_free()
 {
 	return (CDC_BUF_SIZE - fifo_rc_count);
 }
 
+//no need to disable USB interrupts before calling
 inline bool fifo_rc_empty()
 {
 	return fifo_rc_count == 0;
 }
 
+//disable USB interrupts before calling (from user code..)
 inline bool fifo_rc_full()
 {
 	return fifo_rc_count >= CDC_BUF_SIZE;
 }
 
+//disable USB interrupts before calling (from user code..)
 bool fifo_rc_push(uint8_t data)
 {
 	if(fifo_rc_full())
@@ -58,6 +63,7 @@ bool fifo_rc_push(uint8_t data)
 	return TRUE;
 }
 
+//disable USB interrupts before calling (from user code..)
 uint8_t fifo_rc_pop()
 {
 	if(fifo_rc_empty())
@@ -73,6 +79,7 @@ uint8_t fifo_rc_pop()
 	return data;
 }
 
+//no need to disable USB interrupts before calling
 uint8_t fifo_rc_peek()
 {
 	if(fifo_rc_empty())
@@ -83,6 +90,7 @@ uint8_t fifo_rc_peek()
 	return fifo_receive_buf[fifo_rc_front];
 }
 
+//disable USB interrupts before calling (from user code..)
 bool fifo_rc_read(uint8_t* dest, uint16_t num_bytes)
 {
 	if(num_bytes > fifo_rc_count)
@@ -141,6 +149,7 @@ bool fifo_rc_read(uint8_t* dest, uint16_t num_bytes)
 //	return TRUE;
 //}
 
+//disable USB interrupts before calling (from user code..)
 bool fifo_rc_write(uint8_t* src, uint16_t num_bytes)
 {
 	if(num_bytes > (CDC_BUF_SIZE - fifo_rc_count))
@@ -204,26 +213,31 @@ void fifo_pma_to_rc(uint16_t* src, uint16_t num_bytes)
 // ##############################
 // ########## TRANSMIT ##########
 // ##############################
+//prevent flush before calling from user code
 inline uint16_t fifo_tm_num_used()
 {
 	return fifo_tm_count;
 }
 
+//no need to disable interrupts before calling
 inline uint16_t fifo_tm_num_free()
 {
 	return (CDC_BUF_SIZE - fifo_tm_count);
 }
 
+//prevent flush before calling from user code
 inline bool fifo_tm_empty()
 {
 	return fifo_tm_count == 0;
 }
 
+//no need to disable interrupts before calling
 inline bool fifo_tm_full()
 {
 	return fifo_tm_count >= CDC_BUF_SIZE;
 }
 
+//prevent flush before calling from user code
 bool fifo_tm_push(uint8_t data)
 {
 	if(fifo_tm_full())
@@ -239,6 +253,7 @@ bool fifo_tm_push(uint8_t data)
 	return TRUE;
 }
 
+//prevent flush before calling from user code
 uint8_t fifo_tm_pop()
 {
 	if(fifo_tm_empty())
@@ -254,6 +269,7 @@ uint8_t fifo_tm_pop()
 	return data;
 }
 
+//prevent flush before calling from user code
 uint8_t fifo_tm_peek()
 {
 	if(fifo_tm_empty())
@@ -264,6 +280,7 @@ uint8_t fifo_tm_peek()
 	return fifo_transmit_buf[fifo_tm_front];
 }
 
+//prevent flush before calling from user code
 bool fifo_tm_read(uint8_t* dest, uint16_t num_bytes)
 {
 	if(num_bytes > fifo_tm_count)
@@ -285,6 +302,7 @@ bool fifo_tm_read(uint8_t* dest, uint16_t num_bytes)
 	return TRUE;
 }
 
+//prevent flush before calling from user code
 bool fifo_tm_write(uint8_t* src, uint16_t num_bytes)
 {
 	if(num_bytes > (CDC_BUF_SIZE - fifo_tm_count))

@@ -11,16 +11,16 @@
 #define CDC_BUF_SIZE 1024 // Must be power of 2
 
 // Receive
-extern __attribute__ ((aligned(4))) uint8_t fifo_receive_buf[CDC_BUF_SIZE];
-extern uint16_t fifo_rc_count;
-extern uint16_t fifo_rc_front;
-extern uint16_t fifo_rc_back;
+extern __attribute__ ((aligned(4))) volatile uint8_t fifo_receive_buf[CDC_BUF_SIZE];
+extern volatile uint16_t fifo_rc_count;
+extern volatile uint16_t fifo_rc_front;
+extern volatile uint16_t fifo_rc_back;
 
 // Transmit
-extern __attribute__ ((aligned(4))) uint8_t fifo_transmit_buf[CDC_BUF_SIZE];
-extern uint16_t fifo_tm_count;
-extern uint16_t fifo_tm_front;
-extern uint16_t fifo_tm_back;
+extern __attribute__ ((aligned(4))) volatile uint8_t fifo_transmit_buf[CDC_BUF_SIZE];
+extern volatile uint16_t fifo_tm_count;
+extern volatile uint16_t fifo_tm_front;
+extern volatile uint16_t fifo_tm_back;
 
 // Receive
 uint16_t fifo_rc_num_used();

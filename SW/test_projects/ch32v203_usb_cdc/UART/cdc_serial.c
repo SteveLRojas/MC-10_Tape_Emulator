@@ -24,10 +24,53 @@ uint16_t volatile cdc_touch_timer_ms;				// when this reaches its limit, any cal
 uint16_t volatile cdc_flush_timer_ms;				// when this reaches its limit, the tx buffer is immediately flushed
 
 uint16_t read_timeout_ms = 3; // 3ms
-uint8_t USB_Up_Pack0_Flag;                          /* Serial xUSB data needs to upload 0-length packet flag */
+volatile uint8_t USB_Up_Pack0_Flag;                          /* Serial xUSB data needs to upload 0-length packet flag */
 
-//TODO: Check what needs to be volatile, disable USB interrupts where needed
 
+/*********************************************************************
+ * @fn      TIM2_Init
+ *
+ * @brief   1000us Timer
+ *
+ * @return  none
+ */
+void TIM2_Init( void )	//still used
+{
+    TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure = {0};
+
+    TIM_DeInit( TIM2 );
+
+    /* Time base configuration */
+    TIM_TimeBaseStructure.TIM_Period = 1000 - 1;	//event every 1000 us
+    TIM_TimeBaseStructure.TIM_Prescaler = SystemCoreClock / 1000000 - 1;	//get 1MHz clock for a 1 us time scale
+    TIM_TimeBaseStructure.TIM_ClockDivision = 0;	//use internal clock source
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;	//count up to ATRLR, reload with 0
+    TIM_TimeBaseInit( TIM2, &TIM_TimeBaseStructure );
+
+    /* Clear TIM2 update pending flag */
+    TIM_ClearFlag( TIM2, TIM_FLAG_Update );
+
+    /* TIM IT enable */
+    TIM_ITConfig( TIM2, TIM_IT_Update, ENABLE );
+
+    /* Enable Interrupt */
+    NVIC_EnableIRQ( TIM2_IRQn );
+
+    /* TIM2 enable counter */
+    TIM_Cmd( TIM2, ENABLE );
+}
+
+void cdc_init()
+{
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE );
+
+	TIM2_Init( );
+	UART2_ParaInit( 1 );
+
+	Set_USBConfig();
+	USB_Init();
+	USB_Interrupts_Config();
+}
 
 // #############################
 // ######## SETUP/INIT #########
@@ -95,7 +138,12 @@ int16_t cdc_read_byte()
 	{
 		if(!fifo_rc_empty())
 		{
+            NVIC_DisableIRQ( USB_LP_CAN1_RX0_IRQn );
+            NVIC_DisableIRQ( USB_HP_CAN1_TX_IRQn );
 			popped = fifo_rc_pop();
+            NVIC_EnableIRQ( USB_LP_CAN1_RX0_IRQn );
+            NVIC_EnableIRQ( USB_HP_CAN1_TX_IRQn );
+
 			cdc_check_down_start();
 			return popped;
 		}
@@ -118,7 +166,12 @@ uint16_t cdc_read_bytes(uint8_t* dest, uint16_t num_bytes)
 			num_to_read = num_remaining;
 		}
 
+        NVIC_DisableIRQ( USB_LP_CAN1_RX0_IRQn );
+        NVIC_DisableIRQ( USB_HP_CAN1_TX_IRQn );
 		fifo_rc_read(dest, num_to_read);
+        NVIC_EnableIRQ( USB_LP_CAN1_RX0_IRQn );
+        NVIC_EnableIRQ( USB_HP_CAN1_TX_IRQn );
+
 		num_remaining -= num_to_read;
 		dest += num_to_read;
 	}
@@ -138,7 +191,12 @@ uint16_t cdc_read_bytes_until(uint8_t terminator, uint8_t* dest, uint16_t num_by
 		if(fifo_rc_empty())
 			continue;
 
+        NVIC_DisableIRQ( USB_LP_CAN1_RX0_IRQn );
+        NVIC_DisableIRQ( USB_HP_CAN1_TX_IRQn );
 		popped = fifo_rc_pop();
+        NVIC_EnableIRQ( USB_LP_CAN1_RX0_IRQn );
+        NVIC_EnableIRQ( USB_HP_CAN1_TX_IRQn );
+
 		if(popped == terminator)
 			break;
 
@@ -184,14 +242,14 @@ void cdc_write_byte(uint8_t val)
 		//touch_timeout = FALSE; // Don't want to flush twice
 	}
 
+	cdc_touch_timer_ms = 0;
+	cdc_flush_timer_ms = 0;
 	fifo_tm_push(val);
 
 	//if(touch_timeout)
 	//{
 	//	cdc_flush();
 	//}
-	cdc_touch_timer_ms = 0;
-	cdc_flush_timer_ms = 0;
 }
 
 uint16_t cdc_write_string(char* str)
@@ -207,6 +265,7 @@ void cdc_write_bytes(uint8_t* src, uint16_t num_bytes)
 
 	uint16_t num_remaining = num_bytes;
 	uint16_t num_to_write = 0;
+
 	while(num_remaining)
 	{
 		num_to_write = fifo_tm_num_free();
@@ -215,6 +274,8 @@ void cdc_write_bytes(uint8_t* src, uint16_t num_bytes)
 			num_to_write = num_remaining;
 		}
 
+		cdc_touch_timer_ms = 0;
+		cdc_flush_timer_ms = 0;
 		fifo_tm_write(src, num_to_write);
 		num_remaining -= num_to_write;
 		src += num_to_write;
@@ -231,8 +292,6 @@ void cdc_write_bytes(uint8_t* src, uint16_t num_bytes)
 	//{
 	//	cdc_flush();
 	//}
-	cdc_touch_timer_ms = 0;
-	cdc_flush_timer_ms = 0;
 }
 
 void cdc_task()
@@ -266,6 +325,7 @@ void cdc_flush()
             {
                 NVIC_DisableIRQ( USB_LP_CAN1_RX0_IRQn );
                 NVIC_DisableIRQ( USB_HP_CAN1_TX_IRQn );
+
                 USB_Up_IngFlag = 0x01;
                 cdc_up_force_finish_timer_ms = 0;
 

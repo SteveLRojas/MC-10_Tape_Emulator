@@ -23,7 +23,7 @@
 #define NOT_TIMEDOUT(timer_val, timeout_val) ((timer_val < timeout_val) || (!timeout_val))
 
 extern uint16_t read_timeout_ms;
-extern uint8_t  USB_Up_Pack0_Flag;				/* Serial xUSB data needs to upload 0-length packet flag */
+extern volatile uint8_t  USB_Up_Pack0_Flag;				/* Serial xUSB data needs to upload 0-length packet flag */
 
 extern volatile uint8_t  USB_Up_IngFlag;		/* Serial xUSB packet being uploaded flag */
 extern volatile uint8_t  USB_Down_StopFlag;		/* Serial xUSB packet stop down flag */
@@ -35,7 +35,8 @@ uint16_t volatile cdc_touch_timer_ms;				// when this reaches its limit, any cal
 uint16_t volatile cdc_flush_timer_ms;				// when this reaches its limit, the tx buffer is immediately flushed
 
 // Setup/Init
-extern void UART2_ParaInit( uint8_t mode );		/* Serial port parameter initialization */
+void cdc_init();
+void UART2_ParaInit( uint8_t mode );		/* Serial port parameter initialization */
 
 
 // Receive
