@@ -1,0 +1,12 @@
+eclipse.preferences.version=1
+encoding//Peripheral/inc/ch32v20x.h=GBK
+encoding//Peripheral/src/ch32v20x_i2c.c=GBK
+encoding//Peripheral/src/ch32v20x_rcc.c=GBK
+encoding//User/Host_UDisk/UDisk_HW.c=GBK
+encoding//User/Host_UDisk/Udisk_Func_BasicOp.c=GBK
+encoding//User/USB_Host/ch32v20x_usbfs_host.c=GBK
+encoding//User/USB_Host/ch32v20x_usbfs_host.h=GBK
+encoding//User/USB_Host/usb_host_config.h=GBK
+encoding//User/Udisk_Lib/CH32V103UFI.c=GBK
+encoding//User/Udisk_Lib/CHRV3UFI.h=GBK
+encoding//User/main.c=GBK

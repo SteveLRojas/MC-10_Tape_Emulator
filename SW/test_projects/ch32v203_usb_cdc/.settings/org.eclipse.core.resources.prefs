@@ -34,6 +34,7 @@ encoding/ch32v20x_gpio.c=GBK
 encoding/ch32v20x_gpio.h=GBK
 encoding/ch32v20x_it.c=GBK
 encoding/ch32v20x_it.h=GBK
+encoding/ch32v20x_misc.c=GBK
 encoding/ch32v20x_tim.c=GBK
 encoding/ch32v20x_tim.h=GBK
 encoding/ch32v20x_usart.c=GBK
