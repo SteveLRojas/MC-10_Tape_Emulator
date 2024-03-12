@@ -88,140 +88,134 @@ void Udisk_USBH_Initialization( void )
  */
 uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
 {
-    uint8_t  s;
+    uint8_t  success_cnt;
     uint8_t  enum_cnt;
     uint8_t  cfg_val;
     uint16_t i;
     uint16_t len;
+    uint8_t enum_result;
 
     DUG_PRINTF( "Enum:\r\n" );
 
     enum_cnt = 0;
-ENUM_START:
-    /* Delay and wait for the device to stabilize */
-    Delay_Ms( 100 );
-    enum_cnt++;
-    Delay_Ms( 8 << enum_cnt );
+    while(enum_cnt < 6)
+    {
+		/* Delay and wait for the device to stabilize */
+		Delay_Ms( 100 );
+		enum_cnt++;
+		Delay_Ms( 8 << enum_cnt );
 
-    /* Reset the USB device and wait for the USB device to reconnect */
-    USBFSH_ResetRootHubPort( 0 );
-    for( i = 0, s = 0; i < DEF_RE_ATTACH_TIMEOUT; i++ )
-    {
-        if( USBFSH_EnableRootHubPort( &RootHubDev[ usb_port ].bSpeed ) == ERR_SUCCESS )
-        {
-            i = 0;
-            s++;
-            if( s > 6 )
-            {
-                break;
-            }
-        }
-        Delay_Ms( 1 );
-    }
-    if( i )
-    {
-        /* Determine whether the maximum number of retries has been reached, and retry if not reached */
-        if( enum_cnt <= 5 )
-        {
-            goto ENUM_START;
-        }
-        return ERR_USB_DISCON;
-    }
+		/* Reset the USB device and wait for the USB device to reconnect */
+		USBFSH_ResetRootHubPort( 0 );
+		for( i = 0, success_cnt = 0; i < DEF_RE_ATTACH_TIMEOUT; i++ )
+		{
+			if( USBFSH_EnableRootHubPort( &RootHubDev[ usb_port ].bSpeed ) == ERR_SUCCESS )
+			{
+				i = 0;
+				success_cnt++;
+				if( success_cnt > 6 )
+				{
+					break;
+				}
+			}
+			Delay_Ms( 1 );
+		}
+		if( i )
+		{
+			enum_result = ERR_USB_DISCON;
+			continue;
+		}
 
-    /* Select USB speed */
-    USBFSH_SetSelfSpeed( RootHubDev[ usb_port].bSpeed );
+		/* Select USB speed */
+		USBFSH_SetSelfSpeed( RootHubDev[ usb_port].bSpeed );
 
-    /* Get USB device device descriptor */
-    DUG_PRINTF("Get DevDesc: ");
-    s = USBFSH_GetDeviceDescr( &RootHubDev[ usb_port ].bEp0MaxPks, DevDesc_Buf );
-    if( s == ERR_SUCCESS )
-    {
-        /* Print USB device device descriptor */
-#if DEF_DEBUG_PRINTF
-        for( i = 0; i < 18; i++ )
-        {
-            DUG_PRINTF( "%02x ", DevDesc_Buf[ i ] );
-        }
-        DUG_PRINTF("\n");
-#endif
-    }
-    else
-    {
-        /* Determine whether the maximum number of retries has been reached, and retry if not reached */
-        DUG_PRINTF( "Err(%02x)\n", s );
-        if( enum_cnt <= 5 )
-        {
-            goto ENUM_START;
-        }
-        return DEF_DEV_DESCR_GETFAIL;
-    }
+		/* Get USB device device descriptor */
+		printf("getting device descriptor\n");
+		uint8_t get_device_desc_result = USBFSH_GetDeviceDescr( &RootHubDev[ usb_port ].bEp0MaxPks, DevDesc_Buf );
+		if( get_device_desc_result == ERR_SUCCESS )
+		{
+			//print device descriptor
+			printf("bLength: %02X\n", DevDesc_Buf[0]);
+			printf("bDescriptorType: %02X\n", DevDesc_Buf[1]);
+			printf("bcdUSB: %04X\n", *((uint16_t*)(DevDesc_Buf + 2)));
+			printf("bDeviceClass: %02X\n", DevDesc_Buf[4]);
+			printf("bDeviceSubClass: %02X\n", DevDesc_Buf[5]);
+			printf("bDeviceProtocol: %02X\n", DevDesc_Buf[6]);
+			printf("bMaxPacketSize0: %02X\n", DevDesc_Buf[7]);
+			printf("idVendor: %04X\n", *((uint16_t*)(DevDesc_Buf + 8)));
+			printf("idProduct: %04X\n", *((uint16_t*)(DevDesc_Buf + 10)));
+			printf("bcdDevice: %04X\n", *((uint16_t*)(DevDesc_Buf + 12)));
+			printf("iManufacturer: %02X\n", DevDesc_Buf[14]);
+			printf("iProduct: %02X\n", DevDesc_Buf[15]);
+			printf("iSerialNumber: %02X\n", DevDesc_Buf[16]);
+			printf("bNumConfigurations: %02X\n\n", DevDesc_Buf[17]);
+		}
+		else
+		{
+			DUG_PRINTF( "Err(%02x)\n", get_device_desc_result );
+			enum_result = DEF_DEV_DESCR_GETFAIL;
+			continue;
+		}
 
-    /* Set the USB device address */
-    DUG_PRINTF("Set DevAddr: ");
-    RootHubDev[ usb_port ].bAddress = (uint8_t)( DEF_USB_PORT_FS + USB_DEVICE_ADDR );
-    s = USBFSH_SetUsbAddress( RootHubDev[ usb_port ].bEp0MaxPks, RootHubDev[ usb_port ].bAddress );
-    if( s == ERR_SUCCESS )
-    {
-        DUG_PRINTF( "OK\n" );
-    }
-    else
-    {
-        /* Determine whether the maximum number of retries has been reached, and retry if not reached */
-        DUG_PRINTF( "Err(%02x)\n", s );
-        if( enum_cnt <= 5 )
-        {
-            goto ENUM_START;
-        }
-        return DEF_DEV_ADDR_SETFAIL;
-    }
-    Delay_Ms( 5 );
+		/* Set the USB device address */
+		DUG_PRINTF("Set DevAddr: ");
+		RootHubDev[ usb_port ].bAddress = (uint8_t)( DEF_USB_PORT_FS + USB_DEVICE_ADDR );
+		uint8_t set_usb_addr_result = USBFSH_SetUsbAddress( RootHubDev[ usb_port ].bEp0MaxPks, RootHubDev[ usb_port ].bAddress );
+		if( set_usb_addr_result == ERR_SUCCESS )
+		{
+			DUG_PRINTF( "OK\n" );
+		}
+		else
+		{
+			DUG_PRINTF( "Err(%02x)\n", set_usb_addr_result );
+			enum_result = DEF_DEV_ADDR_SETFAIL;
+			continue;
+		}
+		Delay_Ms( 5 );
 
-    /* Get the USB device configuration descriptor */
-    DUG_PRINTF("Get CfgDesc: ");
-    s = USBFSH_GetConfigDescr( RootHubDev[ usb_port ].bEp0MaxPks, Com_Buffer, DEF_COM_BUF_LEN, &len );
-    if( s == ERR_SUCCESS )
-    {
-        cfg_val = ( (PUSB_CFG_DESCR)Com_Buffer )->bConfigurationValue;
+		/* Get the USB device configuration descriptor */
+		DUG_PRINTF("Get CfgDesc: ");
+		uint8_t get_config_desc_result = USBFSH_GetConfigDescr( RootHubDev[ usb_port ].bEp0MaxPks, Com_Buffer, DEF_COM_BUF_LEN, &len );
+		if( get_config_desc_result == ERR_SUCCESS )
+		{
+			cfg_val = ( (PUSB_CFG_DESCR)Com_Buffer )->bConfigurationValue;
 
-        /* Print USB device configuration descriptor  */
-#if DEF_DEBUG_PRINTF
-        for( i = 0; i < len; i++ )
-        {
-            DUG_PRINTF( "%02x ", Com_Buffer[ i ] );
-        }
-        DUG_PRINTF("\n");
-#endif
-    }
-    else
-    {
-        /* Determine whether the maximum number of retries has been reached, and retry if not reached */
-        DUG_PRINTF( "Err(%02x)\n", s );
-        if( enum_cnt <= 5 )
-        {
-            goto ENUM_START;
-        }
-        return DEF_CFG_DESCR_GETFAIL;
-    }
+			/* Print USB device configuration descriptor  */
+			for( i = 0; i < len; i++ )
+			{
+				//TODO: make this nice
+				DUG_PRINTF( "%02x ", Com_Buffer[ i ] );
+			}
+			DUG_PRINTF("\n");
+		}
+		else
+		{
+			DUG_PRINTF( "Err(%02x)\n", get_config_desc_result );
+			enum_result = DEF_CFG_DESCR_GETFAIL;
+			continue;
+		}
 
-    /* Set USB device configuration value */
-    DUG_PRINTF("Set Cfg: ");
-    s = USBFSH_SetUsbConfig( RootHubDev[ usb_port ].bEp0MaxPks, cfg_val );
-    if( s == ERR_SUCCESS )
-    {
-        DUG_PRINTF( "OK\n" );
-    }
-    else
-    {
-        /* Determine whether the maximum number of retries has been reached, and retry if not reached */
-        DUG_PRINTF( "Err(%02x)\n", s );
-        if( enum_cnt <= 5 )
-        {
-            goto ENUM_START;
-        }
-        return ERR_USB_UNSUPPORT;
+		/* Set USB device configuration value */
+		DUG_PRINTF("Set Cfg: ");
+		uint8_t set_usb_config_result = USBFSH_SetUsbConfig( RootHubDev[ usb_port ].bEp0MaxPks, cfg_val );
+		if( set_usb_config_result == ERR_SUCCESS )
+		{
+			DUG_PRINTF( "OK\n" );
+		}
+		else
+		{
+			DUG_PRINTF( "Err(%02x)\n", set_usb_config_result );
+			enum_result = ERR_USB_UNSUPPORT;
+			continue;
+		}
+
+		//TODO: get interface and endpoint descriptors
+
+		enum_result = ERR_SUCCESS;
+		break;
     }
 
-    return ERR_SUCCESS;
+    return enum_result;
 }
 
 

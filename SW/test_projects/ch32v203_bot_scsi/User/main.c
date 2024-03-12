@@ -33,14 +33,8 @@
 #include "stdio.h"
 #include "string.h"
 #include "Udisk_Operation.h"
+#include "usbh_msc_bot.h"
 
-/* Switches for code demonstration, 1:Enable 0:Disable */
-#define  DEF_TEST_FUNC_NUM                DEF_TEST_FUNC_1
-#define  DEF_TEST_FUNC_1                  1                          /* Test 1 , Operation for Open/Read/Modify/Delete a file by bytes */
-#define  DEF_TEST_FUNC_6                  6                          /* Test 6 , Operation for Open/Read/Modify/Delete a file by sectors */
-#define  DEF_TEST_FUNC_9                  9                          /* Test 9 , Operation for creating folders */
-#define  DEF_TEST_FUNC_11                 11                         /* Test 11 , Operation for enumeration of the first 1000 files */
-#define  DEF_TEST_FUNC_13                 13                         /* Test 13 , Operation for creating long filename files */
 
 /*********************************************************************
  * @fn      main
@@ -54,15 +48,23 @@ int main(void)
     USART_Printf_Init( 115200 );
     Delay_Init( );
     printf( "SystemClk:%d\r\n", SystemCoreClock );
-    printf( "USBFS HOST Test EXAM %d\r\n", DEF_TEST_FUNC_NUM ); 
+    printf("booba\n");
 
     /* General USB Host UDisk Operation Initialization */
     Udisk_USBH_Initialization( );
 
     while(1)
     {
-    	Delay_Ms(1000);
-    	printf("Beep\n");
+    	Udisk_USBH_EnumRootDevice(0);
+
+    	USBH_MSC_BOT_REQ_Reset();
+    	Delay_Ms(10);
+    	uint8_t max_lun;
+    	USBH_MSC_BOT_REQ_GetMaxLUN(&max_lun);
+    	printf("Max LUN is: %02x\n", max_lun);
+
+        printf("\nDone.\n\n");
+    	Delay_Ms(10000);
     }
 }
 
