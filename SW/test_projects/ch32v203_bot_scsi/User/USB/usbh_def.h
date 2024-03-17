@@ -27,18 +27,6 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "usbh_conf.h"
 
-/** @addtogroup USBH_LIB
-  * @{
-  */
-
-/** @addtogroup USBH_LIB_CORE
-  * @{
-  */
-
-/** @defgroup USBH_DEF
-  * @brief This file is includes USB descriptors
-  * @{
-  */
 
 #ifndef USBH_DEV_RESET_TIMEOUT
 #define USBH_DEV_RESET_TIMEOUT                        1000U
@@ -181,11 +169,6 @@ extern "C" {
 #if (USBH_USE_OS == 1U)
 #define MSGQUEUE_OBJECTS                                   0x10U
 #endif
-
-
-/**
-  * @}
-  */
 
 
 #define USBH_CONFIGURATION_DESCRIPTOR_SIZE (USB_CONFIGURATION_DESC_SIZE \

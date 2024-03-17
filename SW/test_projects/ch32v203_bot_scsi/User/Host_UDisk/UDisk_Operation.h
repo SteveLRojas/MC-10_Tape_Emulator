@@ -22,11 +22,11 @@
 
 /*******************************************************************************/
 /* Public Extern Variables */
-extern volatile uint8_t          UDisk_Opeation_Flag;
+//extern volatile uint8_t          UDisk_Opeation_Flag;
 extern struct   _ROOT_HUB_DEVICE RootHubDev[ DEF_TOTAL_ROOT_HUB ];
 extern struct   __HOST_CTL       HostCtl[ DEF_TOTAL_ROOT_HUB * DEF_ONE_USB_SUP_DEV_TOTAL ];
-extern volatile uint8_t          UDisk_Opeation_Flag;
-extern uint8_t  *pCodeStr;
+//extern volatile uint8_t          UDisk_Opeation_Flag;
+//extern uint8_t  *pCodeStr;
 
 extern __attribute__((aligned(4)))  uint8_t  Com_Buffer[ DEF_COM_BUF_LEN ];     // even address , used for host enumcation and udisk operation
 extern __attribute__((aligned(4)))  uint8_t  DevDesc_Buf[ 18 ];                 // Device Descriptor Buffer
@@ -34,21 +34,21 @@ extern __attribute__((aligned(4)))  uint8_t  DevDesc_Buf[ 18 ];                 
 /*******************************************************************************/
 /* 长文件名相关的宏定义极其全局变量 */
 // 长文件名缓冲区从(0到20)*26
-#define     LONG_NAME_BUF_LEN       (20*26)
-#define     UNICODE_ENDIAN          0           // 1为UNICDOE大端编码 0为小端
+//#define     LONG_NAME_BUF_LEN       (20*26)
+//#define     UNICODE_ENDIAN          0           // 1为UNICDOE大端编码 0为小端
 // 长文件名存放缓冲区(Unicode编码)
-extern uint8_t LongNameBuf[ ];
+//extern uint8_t LongNameBuf[ ];
 // 长文件名(Unicode编码)
-extern uint8_t LongName[ ];
-#define     LongName_Len            124
-#define     TRUE                    1
-#define     FALSE                   0
+//extern uint8_t LongName[ ];
+//#define     LongName_Len            124
+//#define     TRUE                    1
+//#define     FALSE                   0
 
 // 函数返回
-#define     ERR_NO_NAME             0X44        // 此短文件名没有长文件名或错误的长文件
-#define     ERR_BUF_OVER            0X45        // 长文件缓冲区溢出
-#define     ERR_LONG_NAME           0X46        // 错误的长文件名
-#define     ERR_NAME_EXIST          0X47        // 此短文件名存在
+//#define     ERR_NO_NAME             0X44        // 此短文件名没有长文件名或错误的长文件
+//#define     ERR_BUF_OVER            0X45        // 长文件缓冲区溢出
+//#define     ERR_LONG_NAME           0X46        // 错误的长文件名
+//#define     ERR_NAME_EXIST          0X47        // 此短文件名存在
 
 /*******************************************************************************/
 /* Extern UDisk Operation Functions */

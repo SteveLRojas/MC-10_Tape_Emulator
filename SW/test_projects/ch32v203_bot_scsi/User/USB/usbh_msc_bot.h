@@ -1,32 +1,33 @@
-/**
-  ******************************************************************************
-  * @file    usbh_msc_bot.h
-  * @author  MCD Application Team
-  * @brief   Header file for usbh_msc_bot.c
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2015 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
-
-/* Define to prevent recursive  ----------------------------------------------*/
 #ifndef __USBH_MSC_BOT_H
 #define __USBH_MSC_BOT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-/* Includes ------------------------------------------------------------------*/
 #include "usbh_def.h"
 
+#define BOT_CBW_SIGNATURE            0x43425355U
+#define BOT_CBW_TAG                  0x20304050U
+#define BOT_CSW_SIGNATURE            0x53425355U
+#define BOT_CBW_LENGTH               31U
+#define BOT_CSW_LENGTH               13U
+
+
+#define BOT_SEND_CSW_DISABLE         0U
+#define BOT_SEND_CSW_ENABLE          1U
+
+#define BOT_DIR_IN                   0U
+#define BOT_DIR_OUT                  1U
+#define BOT_DIR_BOTH                 2U
+
+#define BOT_PAGE_LENGTH              512U
+
+
+#define BOT_CBW_CB_LENGTH            16U
+
+
+#define MAX_BULK_STALL_COUNT_LIMIT       0x04U   /* If STALL is seen on Bulk
+                                         Endpoint continuously, this means
+                                         that device and Host has phase error
+                                         Hence a Reset is needed */
 
 typedef enum
 {
@@ -114,53 +115,19 @@ typedef struct
 }
 BOT_HandleTypeDef;
 
-/**
-  * @}
-  */
 
-
-
-/** @defgroup USBH_MSC_BOT_Exported_Defines
-  * @{
-  */
-#define BOT_CBW_SIGNATURE            0x43425355U
-#define BOT_CBW_TAG                  0x20304050U
-#define BOT_CSW_SIGNATURE            0x53425355U
-#define BOT_CBW_LENGTH               31U
-#define BOT_CSW_LENGTH               13U
-
-
-
-#define BOT_SEND_CSW_DISABLE         0U
-#define BOT_SEND_CSW_ENABLE          1U
-
-#define BOT_DIR_IN                   0U
-#define BOT_DIR_OUT                  1U
-#define BOT_DIR_BOTH                 2U
-
-#define BOT_PAGE_LENGTH              512U
-
-
-#define BOT_CBW_CB_LENGTH            16U
-
-
-#define MAX_BULK_STALL_COUNT_LIMIT       0x04U   /* If STALL is seen on Bulk
-                                         Endpoint continuously, this means
-                                         that device and Host has phase error
-                                         Hence a Reset is needed */
+extern BOT_HandleTypeDef hbot;
+extern uint8_t endp_tog_out;
+extern uint8_t endp_tog_in;
 
 
 uint8_t USBH_MSC_BOT_REQ_Reset();
 uint8_t USBH_MSC_BOT_REQ_GetMaxLUN(uint8_t* Maxlun);
+USBH_StatusTypeDef USBH_MSC_BOT_Init();
+uint8_t USBH_MSC_BOT_Command(uint8_t lun);
 
-//USBH_StatusTypeDef USBH_MSC_BOT_Init(USBH_HandleTypeDef *phost);
 //USBH_StatusTypeDef USBH_MSC_BOT_Process(USBH_HandleTypeDef *phost, uint8_t lun);
 //USBH_StatusTypeDef USBH_MSC_BOT_Error(USBH_HandleTypeDef *phost, uint8_t lun);
-
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif  /* __USBH_MSC_BOT_H__ */
 

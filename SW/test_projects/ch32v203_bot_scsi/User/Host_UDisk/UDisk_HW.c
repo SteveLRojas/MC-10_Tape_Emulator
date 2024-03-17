@@ -12,7 +12,7 @@
 
 /*******************************************************************************/
 /* Header File */
-#include "Udisk_Operation.h"
+#include "UDisk_HW.h"
 
 /*******************************************************************************/
 /* Variable Definition */
@@ -64,16 +64,14 @@ void mStopIfError( uint8_t iError )
 void Udisk_USBH_Initialization( void )
 {
 	/* USB Host Initialization */
-    printf( "USB Host & UDisk Lib Initialization. \r\n" );
     /* Initialize USBFS host */
-    DUG_PRINTF( "USBFS Host Init\r\n" );
     USBFS_RCC_Init( );
     USBFS_Host_Init( ENABLE );
     memset( &RootHubDev[ DEF_USB_PORT_FS ].bStatus, 0, sizeof( struct _ROOT_HUB_DEVICE ) );
     memset( &HostCtl[ DEF_USB_PORT_FS ].InterfaceNum, 0, sizeof( struct __HOST_CTL ) );
 	
 	/* USB Libs Initialization */
-    printf( "UDisk library Initialization. \r\n" );
+    //printf( "UDisk library Initialization. \r\n" );
     //CHRV3LibInit( );
 }
 
@@ -94,8 +92,6 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
     uint16_t i;
     uint16_t len;
     uint8_t enum_result;
-
-    DUG_PRINTF( "Enum:\r\n" );
 
     enum_cnt = 0;
     while(enum_cnt < 6)
@@ -152,29 +148,29 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
 		}
 		else
 		{
-			DUG_PRINTF( "Err(%02x)\n", get_device_desc_result );
+			printf( "Err(%02x)\n", get_device_desc_result );
 			enum_result = DEF_DEV_DESCR_GETFAIL;
 			continue;
 		}
 
 		/* Set the USB device address */
-		DUG_PRINTF("Set DevAddr: ");
+		printf("Set DevAddr: ");
 		RootHubDev[ usb_port ].bAddress = (uint8_t)( DEF_USB_PORT_FS + USB_DEVICE_ADDR );
 		uint8_t set_usb_addr_result = USBFSH_SetUsbAddress( RootHubDev[ usb_port ].bEp0MaxPks, RootHubDev[ usb_port ].bAddress );
 		if( set_usb_addr_result == ERR_SUCCESS )
 		{
-			DUG_PRINTF( "OK\n" );
+			printf( "OK\n" );
 		}
 		else
 		{
-			DUG_PRINTF( "Err(%02x)\n", set_usb_addr_result );
+			printf( "Err(%02x)\n", set_usb_addr_result );
 			enum_result = DEF_DEV_ADDR_SETFAIL;
 			continue;
 		}
 		Delay_Ms( 5 );
 
 		/* Get the USB device configuration descriptor */
-		DUG_PRINTF("Get CfgDesc: ");
+		printf("Get CfgDesc: ");
 		uint8_t get_config_desc_result = USBFSH_GetConfigDescr( RootHubDev[ usb_port ].bEp0MaxPks, Com_Buffer, DEF_COM_BUF_LEN, &len );
 		if( get_config_desc_result == ERR_SUCCESS )
 		{
@@ -184,27 +180,27 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
 			for( i = 0; i < len; i++ )
 			{
 				//TODO: make this nice
-				DUG_PRINTF( "%02x ", Com_Buffer[ i ] );
+				printf( "%02x ", Com_Buffer[ i ] );
 			}
-			DUG_PRINTF("\n");
+			printf("\n");
 		}
 		else
 		{
-			DUG_PRINTF( "Err(%02x)\n", get_config_desc_result );
+			printf( "Err(%02x)\n", get_config_desc_result );
 			enum_result = DEF_CFG_DESCR_GETFAIL;
 			continue;
 		}
 
 		/* Set USB device configuration value */
-		DUG_PRINTF("Set Cfg: ");
+		printf("Set Cfg: ");
 		uint8_t set_usb_config_result = USBFSH_SetUsbConfig( RootHubDev[ usb_port ].bEp0MaxPks, cfg_val );
 		if( set_usb_config_result == ERR_SUCCESS )
 		{
-			DUG_PRINTF( "OK\n" );
+			printf( "OK\n" );
 		}
 		else
 		{
-			DUG_PRINTF( "Err(%02x)\n", set_usb_config_result );
+			printf( "Err(%02x)\n", set_usb_config_result );
 			enum_result = ERR_USB_UNSUPPORT;
 			continue;
 		}

@@ -1,0 +1,12 @@
+HAL: Hardware Abstraction Layer
+HCD: USB Host Controller Driver
+NVIC: Nested Vectored Interrupt Controller
+RCC: Reset and Clock Controller
+URB: USB Request Block
+
+
+The WCH provided USB mass storage code uses a precompiled, not documented library (the Terrible Library). It must not be used. ST provides nice USB host examples for their microcontrollers, we will use that instead.
+
+The ST provided USB mass storage code uses state machines for efficient, non blocking USB communication. Nice. But it requires the low level USB driver to also have such non-blocking functions. Sadly the WCH provided USB driver is Trash and provides only blocking functions (it does not even use interrupts).
+
+The next step is to rewrite the low level driver based on the ST provided code and WCH datasheets.

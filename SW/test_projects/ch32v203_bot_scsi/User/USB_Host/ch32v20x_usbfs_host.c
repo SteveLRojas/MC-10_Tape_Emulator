@@ -250,7 +250,7 @@ uint8_t USBFSH_EnableRootHubPort( uint8_t *pspeed )
  */
 uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t endp_tog, uint16_t timeout )
 {
-    uint8_t  r, trans_rerty;
+    uint8_t  reply, trans_rerty;
     uint16_t i;
 
     USBOTG_H_FS->HOST_TX_CTRL = USBOTG_H_FS->HOST_RX_CTRL = endp_tog;
@@ -266,6 +266,7 @@ uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t endp_tog, uint16_t timeout )
         USBOTG_H_FS->HOST_EP_PID = 0x00;  // Stop USB transfer
         if( ( USBOTG_H_FS->INT_FG & USBFS_UIF_TRANSFER ) == 0 )
         {
+        	printf("Transact: transfer did not happen\n");
             return ERR_USB_UNKNOWN;
         }
         else
@@ -275,16 +276,24 @@ uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t endp_tog, uint16_t timeout )
             {
                 return ERR_SUCCESS;
             }
-            r = USBOTG_H_FS->INT_ST & USBFS_UIS_H_RES_MASK;  // USB device answer status
-            if( r == USB_PID_STALL )
+
+            reply = USBOTG_H_FS->INT_ST & USBFS_UIS_H_RES_MASK;  // USB device answer status
+            if( reply == USB_PID_STALL )
             {
-                return ( r | ERR_USB_TRANSFER );
+                return ( reply | ERR_USB_TRANSFER );
             }
-            if( r == USB_PID_NAK )
+            else if(reply == USB_PID_ACK)
+            {
+            	printf("Transact: got ACK\n");
+            	return ERR_SUCCESS;
+            }
+
+            if( reply == USB_PID_NAK )
             {
                 if( timeout == 0 )
                 {
-                    return ( r | ERR_USB_TRANSFER );
+                	printf("Transact timeout!\n");
+                    return ( reply | ERR_USB_TRANSFER );
                 }
                 if( timeout < 0xFFFF )
                 {
@@ -296,19 +305,19 @@ uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t endp_tog, uint16_t timeout )
             {
                 case USB_PID_SETUP:
                 case USB_PID_OUT:
-                    if( r ) 
+                    if( reply )
                     {
-                        return ( r | ERR_USB_TRANSFER );
+                        return ( reply | ERR_USB_TRANSFER );
                     }
                     break;
                 case USB_PID_IN:
-                    if( ( r == USB_PID_DATA0 ) && ( r == USB_PID_DATA1 ) )
+                    if( ( reply == USB_PID_DATA0 ) && ( reply == USB_PID_DATA1 ) )	//TODO: this is never true?
                     {
                         ;
                     }
-                    else if( r )
+                    else if( reply )
                     {
-                        return ( r | ERR_USB_TRANSFER );
+                        return ( reply | ERR_USB_TRANSFER );
                     }
                     break;
                 default:
@@ -326,6 +335,7 @@ uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t endp_tog, uint16_t timeout )
         }
     }while( ++trans_rerty < 10 );
 
+    printf("Reached end of Transact\n");
     return ERR_USB_TRANSFER; // Reply timeout
 }
 
@@ -383,7 +393,7 @@ uint8_t USBFSH_CtrlTransfer( uint8_t ep0_size, uint8_t *pbuf, uint16_t *plen )
                     pbuf++;
                 }
 
-                if( ( USBOTG_H_FS->RX_LEN == 0 ) || ( USBOTG_H_FS->RX_LEN & ( ep0_size - 1 ) ) )
+                if( ( USBOTG_H_FS->RX_LEN == 0 ) || ( USBOTG_H_FS->RX_LEN & ( ep0_size - 1 ) ) )	//TODO: this only works for powers of 2?
                 {
                     break; // Short package
                 }
@@ -599,6 +609,84 @@ uint8_t USBFSH_ClearEndpStall( uint8_t ep0_size, uint8_t endp_num )
     return USBFSH_CtrlTransfer( ep0_size, NULL, NULL );
 }
 
+/**
+  * @brief  USBH_SetFeature
+  *         The command sets the device features (remote wakeup feature,..)
+  * @param  pdev: Selected device
+  * @param  itf_idx
+  * @retval Status
+  */
+uint8_t USBH_SetFeature(uint8_t wValue, uint8_t wIndex)
+{
+//		phost->Control.setup.b.bmRequestType = USB_H2D | USB_REQ_RECIPIENT_DEVICE
+//											   | USB_REQ_TYPE_STANDARD;
+//		phost->Control.setup.b.bRequest = USB_REQ_SET_FEATURE;
+//		phost->Control.setup.b.wValue.w = wValue;
+//		phost->Control.setup.b.wIndex.w = 0U;
+//		phost->Control.setup.b.wLength.w = 0U;
+
+	uint8_t usb_req_recipient = USB_REQ_RECIP_OTHER;
+	if(wValue == 0)
+	{
+		usb_req_recipient = USB_REQ_RECIP_ENDP;
+	}
+	if((wValue == 1) || (wValue == 2))
+	{
+		usb_req_recipient = USB_REQ_RECIP_DEVICE;
+	}
+
+	pUSBFS_SetupRequest->bRequestType = USB_REQ_TYP_OUT | usb_req_recipient | USB_REQ_TYP_STANDARD;
+	pUSBFS_SetupRequest->bRequest = USB_SET_FEATURE;
+	pUSBFS_SetupRequest->wValue = wValue;
+	pUSBFS_SetupRequest->wIndex = wIndex; // zero/interface/endpoint
+	pUSBFS_SetupRequest->wLength = 0U;
+
+//	return USBH_CtlReq(phost, NULL, 0U);
+	return USBFSH_CtrlTransfer(0, NULL, NULL);
+}
+
+
+/**
+  * @brief  USBH_ClrFeature
+  *         This request is used to clear or disable a specific feature.
+  * @param  phost: Host Handle
+  * @param  ep_num: endpoint number
+  * @param  hc_num: Host channel number
+  * @retval USBH Status
+  */
+uint8_t USBH_ClrFeature(uint8_t wValue, uint8_t wIndex)
+{
+//	if (phost->RequestState == CMD_SEND)
+//	{
+//		phost->Control.setup.b.bmRequestType = USB_H2D | USB_REQ_RECIPIENT_ENDPOINT
+//											   | USB_REQ_TYPE_STANDARD;
+//		phost->Control.setup.b.bRequest = USB_REQ_CLEAR_FEATURE;
+//		phost->Control.setup.b.wValue.w = FEATURE_SELECTOR_ENDPOINT;
+//		phost->Control.setup.b.wIndex.w = ep_num;
+//		phost->Control.setup.b.wLength.w = 0U;
+
+	uint8_t usb_req_recipient = USB_REQ_RECIP_OTHER;
+	if(wValue == 0)
+	{
+		usb_req_recipient = USB_REQ_RECIP_ENDP;
+	}
+	if((wValue == 1) || (wValue == 2))
+	{
+		usb_req_recipient = USB_REQ_RECIP_DEVICE;
+	}
+
+	pUSBFS_SetupRequest->bRequestType = USB_REQ_TYP_OUT | usb_req_recipient | USB_REQ_TYP_STANDARD;
+	pUSBFS_SetupRequest->bRequest = USB_CLEAR_FEATURE;
+	pUSBFS_SetupRequest->wValue = wValue;
+	pUSBFS_SetupRequest->wIndex = wIndex; // zero/interface/endpoint
+	pUSBFS_SetupRequest->wLength = 0U;
+//	}
+
+//	return USBH_CtlReq(phost, NULL, 0U);
+	return USBFSH_CtrlTransfer(0, NULL, NULL);
+}
+
+
 /*********************************************************************
  * @fn      USBFSH_GetEndpData
  *
@@ -607,11 +695,11 @@ uint8_t USBFSH_ClearEndpStall( uint8_t ep0_size, uint8_t endp_num )
  * @para    endp_num: Endpoint number
  *          pendp_tog: Endpoint toggle
  *          pbuf: Data Buffer
- *          plen: Data length
+ *          rx_len: Data length
  *
  * @return  The result of getting data.
  */
-uint8_t USBFSH_GetEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf, uint16_t *plen )
+uint8_t USBFSH_GetEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf, uint16_t *rx_len, uint16_t max_len )
 {
     uint8_t  s;
     
@@ -619,8 +707,12 @@ uint8_t USBFSH_GetEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf,
     if( s == ERR_SUCCESS )
     {
         *pendp_tog ^= USBFS_UH_T_TOG | USBFS_UH_R_TOG;
-        *plen = USBOTG_H_FS->RX_LEN;
-        memcpy( pbuf, USBFS_RX_Buf, *plen );
+        *rx_len = USBOTG_H_FS->RX_LEN;
+
+        uint16_t n_copy = *rx_len;
+        if(n_copy > max_len)
+        	n_copy = max_len;
+        memcpy( pbuf, USBFS_RX_Buf, n_copy );
     }
     
     return s;
@@ -638,12 +730,12 @@ uint8_t USBFSH_GetEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf,
  *
  * @return  The result of sending data.
  */
-uint8_t USBFSH_SendEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf, uint16_t len )
+uint8_t USBFSH_SendEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf, uint16_t tx_len )
 {
     uint8_t  s;
     
-    memcpy( USBFS_TX_Buf, pbuf, len );
-    USBOTG_H_FS->HOST_TX_LEN = len;
+    memcpy( USBFS_TX_Buf, pbuf, tx_len );
+    USBOTG_H_FS->HOST_TX_LEN = tx_len;
     
     s = USBFSH_Transact( ( USB_PID_OUT << 4 ) | endp_num, *pendp_tog, 0 );
     if( s == ERR_SUCCESS )

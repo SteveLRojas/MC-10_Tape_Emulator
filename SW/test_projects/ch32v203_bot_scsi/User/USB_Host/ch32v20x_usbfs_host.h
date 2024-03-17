@@ -96,8 +96,11 @@ extern uint8_t USBFSH_GetStrDescr( uint8_t ep0_size, uint8_t str_num, uint8_t *p
 extern uint8_t USBFSH_SetUsbAddress( uint8_t ep0_size, uint8_t addr );
 extern uint8_t USBFSH_SetUsbConfig( uint8_t ep0_size, uint8_t cfg_val );
 extern uint8_t USBFSH_ClearEndpStall( uint8_t ep0_size, uint8_t endp_num );
-extern uint8_t USBFSH_GetEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf, uint16_t *plen );
-extern uint8_t USBFSH_SendEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf, uint16_t len );
+uint8_t USBH_SetFeature(uint8_t wValue, uint8_t wIndex);
+uint8_t USBH_ClrFeature(uint8_t wValue, uint8_t wIndex);
+
+extern uint8_t USBFSH_GetEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf, uint16_t *rx_len, uint16_t max_len );
+extern uint8_t USBFSH_SendEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf, uint16_t tx_len );
 extern uint8_t USBFSH_PortDetect( uint8_t status );
 
 #endif
