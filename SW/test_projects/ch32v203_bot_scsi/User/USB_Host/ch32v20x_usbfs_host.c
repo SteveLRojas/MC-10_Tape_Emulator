@@ -243,17 +243,17 @@ uint8_t USBFSH_EnableRootHubPort( uint8_t *pspeed )
  * @brief   Perform USB transaction.
  *
  * @para    endp_pid: Token PID.
- *          endp_tog: Toggle
+ *          host_ctrl: USBOTG_H_FS->HOST_TX_CTRL = USBOTG_H_FS->HOST_RX_CTRL
  *          timeout: Timeout time.
  *
  * @return  USB transfer result.
  */
-uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t endp_tog, uint16_t timeout )
+uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t host_ctrl, uint16_t timeout )
 {
     uint8_t  reply, trans_rerty;
     uint16_t i;
 
-    USBOTG_H_FS->HOST_TX_CTRL = USBOTG_H_FS->HOST_RX_CTRL = endp_tog;
+    USBOTG_H_FS->HOST_TX_CTRL = USBOTG_H_FS->HOST_RX_CTRL = host_ctrl;
     trans_rerty = 0;
     do
     {
@@ -317,6 +317,7 @@ uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t endp_tog, uint16_t timeout )
                     }
                     else if( reply )
                     {
+                    	printf("Transact: case USB_PID_IN\n");
                         return ( reply | ERR_USB_TRANSFER );
                     }
                     break;

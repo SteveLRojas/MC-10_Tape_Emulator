@@ -13,6 +13,7 @@
 /*******************************************************************************/
 /* Header File */
 #include "UDisk_HW.h"
+#include "usbh_msc_bot.h"
 
 /*******************************************************************************/
 /* Variable Definition */
@@ -204,6 +205,9 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
 			enum_result = ERR_USB_UNSUPPORT;
 			continue;
 		}
+		//reset toggles after set configuration
+		endp_tog_out = 0x00;
+		endp_tog_in = 0x00;
 
 		//TODO: get interface and endpoint descriptors
 

@@ -16,8 +16,8 @@
 
 //TODO: initialize this
 BOT_HandleTypeDef hbot;
-uint8_t endp_tog_out = 0x01;
-uint8_t endp_tog_in = 0x01;
+uint8_t endp_tog_out = 0x00;	//set to 1 for magic
+uint8_t endp_tog_in = 0x00;
 
 
 uint8_t USBH_MSC_BOT_REQ_Reset()
