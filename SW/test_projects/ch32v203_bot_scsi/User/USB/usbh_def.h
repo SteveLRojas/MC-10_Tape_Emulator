@@ -85,6 +85,7 @@ extern "C" {
 #define  USB_LEN_SETUP_PKT                                 0x08U
 
 /* bmRequestType :D7 Data Phase Transfer Direction  */
+//TODO: remove these? see USB_EP_DIR_MSK below
 #define  USB_REQ_DIR_MASK                                  0x80U
 #define  USB_H2D                                           0x00U
 #define  USB_D2H                                           0x80U

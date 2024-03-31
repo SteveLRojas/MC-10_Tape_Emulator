@@ -82,7 +82,7 @@ uint8_t USBH_MSC_SCSI_TestUnitReady(uint8_t lun);
 
 //USBH_StatusTypeDef USBH_MSC_SCSI_ReadCapacity(USBH_HandleTypeDef *phost, uint8_t lun, SCSI_CapacityTypeDef *capacity);
 
-//USBH_StatusTypeDef USBH_MSC_SCSI_Inquiry(USBH_HandleTypeDef *phost, uint8_t lun, SCSI_StdInquiryDataTypeDef *inquiry);
+uint8_t USBH_MSC_SCSI_Inquiry(uint8_t lun, SCSI_StdInquiryDataTypeDef *inquiry);
 
 //USBH_StatusTypeDef USBH_MSC_SCSI_RequestSense(USBH_HandleTypeDef *phost, uint8_t lun, SCSI_SenseTypeDef *sense_data);
 

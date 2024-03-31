@@ -1,3 +1,4 @@
+#include "usb_host_config.h"
 #include "usbh_msc.h"
 #include "usbh_msc_scsi.h"
 #include "usbh_msc_bot.h"
@@ -85,68 +86,50 @@ uint8_t USBH_MSC_SCSI_TestUnitReady(uint8_t lun)
   * @param  capacity: pointer to the inquiry structure
   * @retval USBH Status
   */
-//USBH_StatusTypeDef USBH_MSC_SCSI_Inquiry(USBH_HandleTypeDef *phost, uint8_t lun,
-//                                         SCSI_StdInquiryDataTypeDef *inquiry)
-//{
-//  USBH_StatusTypeDef error = USBH_FAIL;
-//  MSC_HandleTypeDef *MSC_Handle = (MSC_HandleTypeDef *) phost->pActiveClass->pData;
-//
-//  switch (MSC_Handle->hbot.cmd_state)
-//  {
-//    case BOT_CMD_SEND:
-//
-//      /*Prepare the CBW and relevant field*/
-//      MSC_Handle->hbot.cbw.field.DataTransferLength = DATA_LEN_INQUIRY;
-//      MSC_Handle->hbot.cbw.field.Flags = USB_EP_DIR_IN;
-//      MSC_Handle->hbot.cbw.field.CBLength = CBW_LENGTH;
-//
-//      (void)USBH_memset(MSC_Handle->hbot.cbw.field.CB, 0, CBW_LENGTH);
-//      MSC_Handle->hbot.cbw.field.CB[0]  = OPCODE_INQUIRY;
-//      MSC_Handle->hbot.cbw.field.CB[1]  = (lun << 5);
-//      MSC_Handle->hbot.cbw.field.CB[2]  = 0U;
-//      MSC_Handle->hbot.cbw.field.CB[3]  = 0U;
-//      MSC_Handle->hbot.cbw.field.CB[4]  = 0x24U;
-//      MSC_Handle->hbot.cbw.field.CB[5]  = 0U;
-//
-//      MSC_Handle->hbot.state = BOT_SEND_CBW;
-//
-//      MSC_Handle->hbot.cmd_state = BOT_CMD_WAIT;
-//      MSC_Handle->hbot.pbuf = (uint8_t *)(void *)MSC_Handle->hbot.data;
-//      error = USBH_BUSY;
-//      break;
-//
-//    case BOT_CMD_WAIT:
-//
-//      error = USBH_MSC_BOT_Process(phost, lun);
-//
-//      if (error == USBH_OK)
-//      {
-//        (void)USBH_memset(inquiry, 0, sizeof(SCSI_StdInquiryDataTypeDef));
-//        /*assign Inquiry Data */
-//        inquiry->DeviceType = MSC_Handle->hbot.pbuf[0] & 0x1FU;
-//        inquiry->PeripheralQualifier = MSC_Handle->hbot.pbuf[0] >> 5U;
-//
-//        if (((uint32_t)MSC_Handle->hbot.pbuf[1] & 0x80U) == 0x80U)
-//        {
-//          inquiry->RemovableMedia = 1U;
-//        }
-//        else
-//        {
-//          inquiry->RemovableMedia = 0U;
-//        }
-//
-//        (void)USBH_memcpy(inquiry->vendor_id, &MSC_Handle->hbot.pbuf[8], 8U);
-//        (void)USBH_memcpy(inquiry->product_id, &MSC_Handle->hbot.pbuf[16], 16U);
-//        (void)USBH_memcpy(inquiry->revision_id, &MSC_Handle->hbot.pbuf[32], 4U);
-//      }
-//      break;
-//
-//    default:
-//      break;
-//  }
-//
-//  return error;
-//}
+uint8_t USBH_MSC_SCSI_Inquiry(uint8_t lun, SCSI_StdInquiryDataTypeDef *inquiry)
+{
+	uint8_t error;
+
+	/*Prepare the CBW and relevant field*/
+	hbot.cbw.field.DataTransferLength = DATA_LEN_INQUIRY;
+	hbot.cbw.field.Flags = USB_EP_DIR_IN;
+	hbot.cbw.field.CBLength = CBW_LENGTH;
+
+	(void)USBH_memset(hbot.cbw.field.CB, 0, CBW_LENGTH);
+	hbot.cbw.field.CB[0]  = OPCODE_INQUIRY;
+	hbot.cbw.field.CB[1]  = (lun << 5);
+	hbot.cbw.field.CB[2]  = 0U;
+	hbot.cbw.field.CB[3]  = 0U;
+	hbot.cbw.field.CB[4]  = 0x24U;
+	hbot.cbw.field.CB[5]  = 0U;
+
+	hbot.pbuf = (uint8_t *)(void *)hbot.data;
+
+	// Do Command
+	error = USBH_MSC_BOT_Command(lun);
+	if(error == ERR_SUCCESS)
+	{
+		(void)USBH_memset(inquiry, 0, sizeof(SCSI_StdInquiryDataTypeDef));
+		/*assign Inquiry Data */
+		inquiry->DeviceType = hbot.pbuf[0] & 0x1FU;
+		inquiry->PeripheralQualifier = hbot.pbuf[0] >> 5U;
+
+		if (((uint32_t)hbot.pbuf[1] & 0x80U) == 0x80U)
+		{
+			inquiry->RemovableMedia = 1U;
+		}
+		else
+		{
+			inquiry->RemovableMedia = 0U;
+		}
+
+		(void)USBH_memcpy(inquiry->vendor_id, &hbot.pbuf[8], 8U);
+		(void)USBH_memcpy(inquiry->product_id, &hbot.pbuf[16], 16U);
+		(void)USBH_memcpy(inquiry->revision_id, &hbot.pbuf[32], 4U);
+	}
+
+	return error;
+}
 
 /**
   * @brief  USBH_MSC_SCSI_RequestSense

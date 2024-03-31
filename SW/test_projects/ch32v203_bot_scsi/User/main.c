@@ -4,6 +4,7 @@
 #include "UDisk_HW.h"
 #include "usbh_msc_bot.h"
 #include "usbh_msc_scsi.h"
+#include "display.h"
 
 #define PIN_LED GPIO_Pin_1
 #define PIN_SW0 GPIO_Pin_13
@@ -13,17 +14,28 @@
 
 void platform_init()
 {
+	GPIO_InitTypeDef GPIO_InitStructure = {0};
+
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO | RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_GPIOC | RCC_APB2Periph_SPI1, ENABLE);
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_BKP | RCC_APB1Periph_PWR, ENABLE);
 	PWR_BackupAccessCmd(ENABLE);
 
-	GPIO_InitTypeDef GPIO_InitStructure = {0};
-
-	// Init PORTB (LCD_CTRL)
-	GPIO_InitStructure.GPIO_Pin = (PIN_LED);
+	// Init PORTA (LCD_BUS)
+	GPIO_InitStructure.GPIO_Pin = (0x00FF);
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_Init(PORT_LED, &GPIO_InitStructure);
+	GPIO_Init(PORT_LCD_BUS, &GPIO_InitStructure);
+
+	// Init PORTB (LCD_CTRL)
+	GPIO_InitStructure.GPIO_Pin = (PIN_LED | PIN_LCD_CTRL_RW | PIN_LCD_CTRL_E | PIN_LCD_CTRL_RS);
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(PORT_LCD_CTRL, &GPIO_InitStructure);
+
+	// Init display control signals to 0
+	GPIO_WriteBit(PORT_LCD_CTRL, PIN_LCD_CTRL_RW, Bit_RESET);
+	GPIO_WriteBit(PORT_LCD_CTRL, PIN_LCD_CTRL_E, Bit_RESET);
+	GPIO_WriteBit(PORT_LCD_CTRL, PIN_LCD_CTRL_RS, Bit_RESET);
 
 	GPIO_InitStructure.GPIO_Pin = PIN_SW0 | PIN_SW1;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
@@ -38,8 +50,10 @@ int main(void)
 	platform_init();
     USART_Printf_Init( 115200 );
     Delay_Init( );
-    printf( "SystemClk:%d\r\n", SystemCoreClock );
-    printf("booba\n");
+    printf( "SystemClk:%d\n", SystemCoreClock );
+    lcd_init();
+    lcd_cursor_home();
+    lcd_print_string("booba");
 
     /* General USB Host UDisk Operation Initialization */
     Udisk_USBH_Initialization( );
@@ -93,6 +107,14 @@ int main(void)
 				printf("Status...............[%02X]\n", hbot.csw.field.Status);
 
 				printf("\nDone.\n\n");
+
+				SCSI_StdInquiryDataTypeDef inquiry;
+				USBH_MSC_SCSI_Inquiry(0, &inquiry);
+				printf("\n---SCSI Inquiry---\n");
+				printf("Inquiry Vendor  : %s\n", inquiry.vendor_id);
+				printf("Inquiry Product : %s\n", inquiry.product_id);
+				printf("Inquiry Version : %s\n", inquiry.revision_id);
+
 				usb_state = 3;
 				break;
 			case 3:

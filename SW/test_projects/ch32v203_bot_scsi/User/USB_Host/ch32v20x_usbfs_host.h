@@ -88,7 +88,7 @@ extern void USBFSH_SetSelfAddr( uint8_t addr );
 extern void USBFSH_SetSelfSpeed( uint8_t speed );
 extern void USBFSH_ResetRootHubPort( uint8_t mode );
 extern uint8_t USBFSH_EnableRootHubPort( uint8_t *pspeed );
-extern uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t endp_tog, uint16_t timeout );
+extern uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t host_ctrl, uint16_t nak_retries );
 extern uint8_t USBFSH_CtrlTransfer( uint8_t ep0_size, uint8_t *pbuf, uint16_t *plen );
 extern uint8_t USBFSH_GetDeviceDescr( uint8_t *pep0_size, uint8_t *pbuf );
 extern uint8_t USBFSH_GetConfigDescr( uint8_t ep0_size, uint8_t *pbuf, uint16_t buf_len, uint16_t *pcfg_len );

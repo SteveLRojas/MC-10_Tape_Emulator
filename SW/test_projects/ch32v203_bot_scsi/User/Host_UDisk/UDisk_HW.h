@@ -22,4 +22,9 @@ void mStopIfError( uint8_t iError );
 void Udisk_USBH_Initialization( void );
 uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port );
 
+void usb_print_device_descriptor(USB_DEV_DESCR* descriptor);
+void usb_print_configuration_descriptor(USB_CFG_DESCR* descriptor);
+void usb_print_interface_descriptor(USB_ITF_DESCR* descriptor);
+void usb_print_endpoint_descriptor(USB_ENDP_DESCR* descriptor);
+
 #endif /* USER_HOST_UDISK_UDISK_HW_H_ */

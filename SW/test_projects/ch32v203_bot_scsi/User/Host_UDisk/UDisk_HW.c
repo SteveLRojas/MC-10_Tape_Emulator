@@ -12,6 +12,7 @@
 
 /*******************************************************************************/
 /* Header File */
+#include "ch32v20x.h"
 #include "UDisk_HW.h"
 #include "usbh_msc_bot.h"
 
@@ -89,7 +90,7 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
 {
     uint8_t  success_cnt;
     uint8_t  enum_cnt;
-    uint8_t  cfg_val;
+    uint8_t  cfg_val = 0;
     uint16_t i;
     uint16_t len;
     uint8_t enum_result;
@@ -132,20 +133,7 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
 		if( get_device_desc_result == ERR_SUCCESS )
 		{
 			//print device descriptor
-			printf("bLength: %02X\n", DevDesc_Buf[0]);
-			printf("bDescriptorType: %02X\n", DevDesc_Buf[1]);
-			printf("bcdUSB: %04X\n", *((uint16_t*)(DevDesc_Buf + 2)));
-			printf("bDeviceClass: %02X\n", DevDesc_Buf[4]);
-			printf("bDeviceSubClass: %02X\n", DevDesc_Buf[5]);
-			printf("bDeviceProtocol: %02X\n", DevDesc_Buf[6]);
-			printf("bMaxPacketSize0: %02X\n", DevDesc_Buf[7]);
-			printf("idVendor: %04X\n", *((uint16_t*)(DevDesc_Buf + 8)));
-			printf("idProduct: %04X\n", *((uint16_t*)(DevDesc_Buf + 10)));
-			printf("bcdDevice: %04X\n", *((uint16_t*)(DevDesc_Buf + 12)));
-			printf("iManufacturer: %02X\n", DevDesc_Buf[14]);
-			printf("iProduct: %02X\n", DevDesc_Buf[15]);
-			printf("iSerialNumber: %02X\n", DevDesc_Buf[16]);
-			printf("bNumConfigurations: %02X\n\n", DevDesc_Buf[17]);
+			usb_print_device_descriptor((USB_DEV_DESCR*)DevDesc_Buf);
 		}
 		else
 		{
@@ -175,15 +163,68 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
 		uint8_t get_config_desc_result = USBFSH_GetConfigDescr( RootHubDev[ usb_port ].bEp0MaxPks, Com_Buffer, DEF_COM_BUF_LEN, &len );
 		if( get_config_desc_result == ERR_SUCCESS )
 		{
-			cfg_val = ( (PUSB_CFG_DESCR)Com_Buffer )->bConfigurationValue;
-
-			/* Print USB device configuration descriptor  */
-			for( i = 0; i < len; i++ )
+			uint16_t total_length = ((uint16_t*)Com_Buffer)[1];
+			uint8_t* config_data = Com_Buffer;
+			uint8_t descriptor_length;
+			uint8_t descriptor_type;
+			uint8_t bot_scsi_iface;
+			printf("Config descriptor total length: %d\n", total_length);
+			while(config_data < (Com_Buffer + total_length))
 			{
-				//TODO: make this nice
-				printf( "%02x ", Com_Buffer[ i ] );
+				descriptor_length = config_data[0];
+				descriptor_type = config_data[1];
+				switch(descriptor_type)
+				{
+					case USB_DESC_TYPE_CONFIGURATION:
+						usb_print_configuration_descriptor((USB_CFG_DESCR*)((void*)config_data));
+						cfg_val = config_data[5];   //keep track of which configuration we are parsing
+						break;
+					case USB_DESC_TYPE_INTERFACE:
+						//use interface descriptor to determine if the device is a keyboard
+						if(config_data[5] == 8)    //class code is mass storage
+						{
+							if(config_data[6] == 6)    //subclass is SCSI transparent command
+							{
+								if(config_data[7] == 0x50)    //protocol code bulk-only transport
+								{
+									printf("Found flash drive interface\n");
+									bot_scsi_iface = config_data[2];   //keep track of this interface
+									/* Set USB device configuration value */
+									printf("Set Cfg: \n");
+									uint8_t set_usb_config_result = USBFSH_SetUsbConfig( RootHubDev[ usb_port ].bEp0MaxPks, cfg_val );
+									if( set_usb_config_result == ERR_SUCCESS )
+									{
+										printf( "OK\n" );
+									}
+									else
+									{
+										printf( "Err(%02x)\n", set_usb_config_result );
+										enum_result = ERR_USB_UNSUPPORT;
+										continue;
+									}
+									//reset toggles after set configuration
+									endp_tog_out = 0x00;
+									endp_tog_in = 0x00;
+									//TODO: set protocol
+									//usb_ctrlReq(1, 0, bmREQ_HID_OUT, HID_REQUEST_SET_PROTOCOL, USB_HID_BOOT_PROTOCOL, 0x00, boot_iface, 0x0000, NULL);
+									//TODO: need set idle?
+									//usb_ctrlReq(1, 0, bmREQ_HID_OUT, HID_REQUEST_SET_IDLE, 0, 0, boot_iface, 0x0000, NULL);
+									//TODO: set interface?
+									printf("Device configured\n");
+								}
+							}
+						}
+						usb_print_interface_descriptor((USB_ITF_DESCR*)((void*)config_data));
+						break;
+					case USB_DESC_TYPE_ENDPOINT:
+						usb_print_endpoint_descriptor((USB_ENDP_DESCR*)((void*)config_data));
+						break;
+					default:
+						printf("Got an unknown descriptor: %02X\n", descriptor_type);
+						break;
+				}
+				config_data = config_data + descriptor_length;
 			}
-			printf("\n");
 		}
 		else
 		{
@@ -192,25 +233,6 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
 			continue;
 		}
 
-		/* Set USB device configuration value */
-		printf("Set Cfg: ");
-		uint8_t set_usb_config_result = USBFSH_SetUsbConfig( RootHubDev[ usb_port ].bEp0MaxPks, cfg_val );
-		if( set_usb_config_result == ERR_SUCCESS )
-		{
-			printf( "OK\n" );
-		}
-		else
-		{
-			printf( "Err(%02x)\n", set_usb_config_result );
-			enum_result = ERR_USB_UNSUPPORT;
-			continue;
-		}
-		//reset toggles after set configuration
-		endp_tog_out = 0x00;
-		endp_tog_in = 0x00;
-
-		//TODO: get interface and endpoint descriptors
-
 		enum_result = ERR_SUCCESS;
 		break;
     }
@@ -218,4 +240,60 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
     return enum_result;
 }
 
+void usb_print_device_descriptor(USB_DEV_DESCR* descriptor)
+{
+    printf("Device descriptor:\n");
+	//print device descriptor
+	printf("bLength: %02X\n", descriptor->bLength);
+	printf("bDescriptorType: %02X\n", descriptor->bDescriptorType);
+	printf("bcdUSB: %04X\n", descriptor->bcdUSB);
+	printf("bDeviceClass: %02X\n", descriptor->bDeviceClass);
+	printf("bDeviceSubClass: %02X\n", descriptor->bDeviceSubClass);
+	printf("bDeviceProtocol: %02X\n", descriptor->bDeviceProtocol);
+	printf("bMaxPacketSize0: %02X\n", descriptor->bMaxPacketSize0);
+	printf("idVendor: %04X\n", descriptor->idVendor);
+	printf("idProduct: %04X\n", descriptor->idProduct);
+	printf("bcdDevice: %04X\n", descriptor->bcdDevice);
+	printf("iManufacturer: %02X\n", descriptor->iManufacturer);
+	printf("iProduct: %02X\n", descriptor->iProduct);
+	printf("iSerialNumber: %02X\n", descriptor->iSerialNumber);
+	printf("bNumConfigurations: %02X\n\n", descriptor->bNumConfigurations);
+}
+
+void usb_print_configuration_descriptor(USB_CFG_DESCR* descriptor)
+{
+    printf("Configuration descriptor:\n");
+	printf("bLength: %02X\n", descriptor->bLength);
+	printf("bDescriptorType: %02X\n", descriptor->bDescriptorType);
+	printf("wTotalLength: %04X\n", descriptor->wTotalLength);
+	printf("bNumInterfaces: %02X\n", descriptor->bNumInterfaces);
+	printf("bConfigurationValue: %02X\n", descriptor->bConfigurationValue);
+	printf("iConfiguration: %02X\n", descriptor->iConfiguration);
+	printf("bmAttributes: %02X\n", descriptor->bmAttributes);
+	printf("MaxPower: %02X\n\n", descriptor->MaxPower);
+}
+
+void usb_print_interface_descriptor(USB_ITF_DESCR* descriptor)
+{
+    printf("Interface descriptor:\n");
+	printf("bLength: %02X\n", descriptor->bLength);
+	printf("bInterfaceNumber: %02X\n", descriptor->bInterfaceNumber);
+	printf("bAlternateSetting: %02X\n", descriptor->bAlternateSetting);
+	printf("bNumEndpoints: %02X\n", descriptor->bNumEndpoints);
+	printf("bInterfaceClass: %02X\n", descriptor->bInterfaceClass);
+	printf("bInterfaceSubClass: %02X\n", descriptor->bInterfaceSubClass);
+	printf("bInterfaceProtocol: %02X\n", descriptor->bInterfaceProtocol);
+	printf("iInterface: %02X\n\n", descriptor->iInterface);
+}
+
+void usb_print_endpoint_descriptor(USB_ENDP_DESCR* descriptor)
+{
+    printf("Endpoint descriptor:\n");
+	printf("bLength: %02X\n", descriptor->bLength);
+	printf("bDescriptorType: %02X\n", descriptor->bDescriptorType);
+	printf("bEndpointAddress: %02X\n", descriptor->bEndpointAddress);
+	printf("bmAttributes: %02X\n", descriptor->bmAttributes);
+	printf("wMaxPacketSize: %04X\n", descriptor->wMaxPacketSize);
+	printf("bInterval: %02X\n\n", descriptor->bInterval);
+}
 

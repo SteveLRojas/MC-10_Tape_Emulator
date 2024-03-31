@@ -248,7 +248,7 @@ uint8_t USBFSH_EnableRootHubPort( uint8_t *pspeed )
  *
  * @return  USB transfer result.
  */
-uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t host_ctrl, uint16_t timeout )
+uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t host_ctrl, uint16_t nak_retries )
 {
     uint8_t  reply, trans_rerty;
     uint16_t i;
@@ -290,14 +290,14 @@ uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t host_ctrl, uint16_t timeout )
 
             if( reply == USB_PID_NAK )
             {
-                if( timeout == 0 )
+                if( nak_retries == 0 )
                 {
                 	printf("Transact timeout!\n");
                     return ( reply | ERR_USB_TRANSFER );
                 }
-                if( timeout < 0xFFFF )
+                if( nak_retries < 0xFFFF )
                 {
-                    timeout--;
+                    nak_retries--;
                 }
                 --trans_rerty;
             }
@@ -311,7 +311,7 @@ uint8_t USBFSH_Transact( uint8_t endp_pid, uint8_t host_ctrl, uint16_t timeout )
                     }
                     break;
                 case USB_PID_IN:
-                    if( ( reply == USB_PID_DATA0 ) && ( reply == USB_PID_DATA1 ) )	//TODO: this is never true?
+                    if( ( reply == USB_PID_DATA0 ) || ( reply == USB_PID_DATA1 ) )	//TODO: this is never true?
                     {
                         ;
                     }
@@ -704,7 +704,7 @@ uint8_t USBFSH_GetEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf,
 {
     uint8_t  s;
     
-    s = USBFSH_Transact( ( USB_PID_IN << 4 ) | endp_num, *pendp_tog, 0 );
+    s = USBFSH_Transact( ( USB_PID_IN << 4 ) | endp_num, *pendp_tog, 0xFFFF );
     if( s == ERR_SUCCESS )
     {
         *pendp_tog ^= USBFS_UH_T_TOG | USBFS_UH_R_TOG;
@@ -738,7 +738,7 @@ uint8_t USBFSH_SendEndpData( uint8_t endp_num, uint8_t *pendp_tog, uint8_t *pbuf
     memcpy( USBFS_TX_Buf, pbuf, tx_len );
     USBOTG_H_FS->HOST_TX_LEN = tx_len;
     
-    s = USBFSH_Transact( ( USB_PID_OUT << 4 ) | endp_num, *pendp_tog, 0 );
+    s = USBFSH_Transact( ( USB_PID_OUT << 4 ) | endp_num, *pendp_tog, 0xFFFF );
     if( s == ERR_SUCCESS )
     {
         *pendp_tog ^= USBFS_UH_T_TOG | USBFS_UH_R_TOG;

@@ -470,8 +470,7 @@ typedef struct __attribute__((packed)) _USB_ENDPOINT_DESCR
     uint8_t  bDescriptorType;
     uint8_t  bEndpointAddress;
     uint8_t  bmAttributes;
-    uint8_t  wMaxPacketSizeL;
-    uint8_t  wMaxPacketSizeH;
+    uint16_t  wMaxPacketSize;
     uint8_t  bInterval;
 } USB_ENDP_DESCR, *PUSB_ENDP_DESCR;
 
