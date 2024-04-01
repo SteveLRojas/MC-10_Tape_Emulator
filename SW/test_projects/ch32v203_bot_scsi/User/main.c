@@ -108,12 +108,18 @@ int main(void)
 
 				printf("\nDone.\n\n");
 
+				printf("\n---SCSI Inquiry---\n");
 				SCSI_StdInquiryDataTypeDef inquiry;
 				USBH_MSC_SCSI_Inquiry(0, &inquiry);
-				printf("\n---SCSI Inquiry---\n");
 				printf("Inquiry Vendor  : %s\n", inquiry.vendor_id);
 				printf("Inquiry Product : %s\n", inquiry.product_id);
 				printf("Inquiry Version : %s\n", inquiry.revision_id);
+
+				printf("\nSCSI ReadCapacity:\n");
+				SCSI_CapacityTypeDef size_info;
+				USBH_MSC_SCSI_ReadCapacity(0, &size_info);
+				printf("block_nbr: %u\n", size_info.block_nbr);
+				printf("block_size: %hu\n", size_info.block_size);
 
 				usb_state = 3;
 				break;

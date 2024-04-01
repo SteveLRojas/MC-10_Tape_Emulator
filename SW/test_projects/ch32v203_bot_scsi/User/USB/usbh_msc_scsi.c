@@ -30,53 +30,34 @@ uint8_t USBH_MSC_SCSI_TestUnitReady(uint8_t lun)
   * @param  capacity: pointer to the capacity structure
   * @retval USBH Status
   */
-//USBH_StatusTypeDef USBH_MSC_SCSI_ReadCapacity(USBH_HandleTypeDef *phost,
-//                                              uint8_t lun,
-//                                              SCSI_CapacityTypeDef *capacity)
-//{
-//  USBH_StatusTypeDef    error = USBH_BUSY;
-//  MSC_HandleTypeDef *MSC_Handle = (MSC_HandleTypeDef *) phost->pActiveClass->pData;
-//
-//  switch (MSC_Handle->hbot.cmd_state)
-//  {
-//    case BOT_CMD_SEND:
-//
-//      /*Prepare the CBW and relevant field*/
-//      MSC_Handle->hbot.cbw.field.DataTransferLength = DATA_LEN_READ_CAPACITY10;
-//      MSC_Handle->hbot.cbw.field.Flags = USB_EP_DIR_IN;
-//      MSC_Handle->hbot.cbw.field.CBLength = CBW_LENGTH;
-//
-//      (void)USBH_memset(MSC_Handle->hbot.cbw.field.CB, 0, CBW_CB_LENGTH);
-//      MSC_Handle->hbot.cbw.field.CB[0]  = OPCODE_READ_CAPACITY10;
-//
-//      MSC_Handle->hbot.state = BOT_SEND_CBW;
-//
-//      MSC_Handle->hbot.cmd_state = BOT_CMD_WAIT;
-//      MSC_Handle->hbot.pbuf = (uint8_t *)(void *)MSC_Handle->hbot.data;
-//      error = USBH_BUSY;
-//      break;
-//
-//    case BOT_CMD_WAIT:
-//
-//      error = USBH_MSC_BOT_Process(phost, lun);
-//
-//      if (error == USBH_OK)
-//      {
-//        /*assign the capacity*/
-//        capacity->block_nbr = MSC_Handle->hbot.pbuf[3] | ((uint32_t)MSC_Handle->hbot.pbuf[2] << 8U) | \
-//                              ((uint32_t)MSC_Handle->hbot.pbuf[1] << 16U) | ((uint32_t)MSC_Handle->hbot.pbuf[0] << 24U);
-//
-//        /*assign the page length*/
-//        capacity->block_size = (uint16_t)(MSC_Handle->hbot.pbuf[7] | ((uint32_t)MSC_Handle->hbot.pbuf[6] << 8U));
-//      }
-//      break;
-//
-//    default:
-//      break;
-//  }
-//
-//  return error;
-//}
+uint8_t USBH_MSC_SCSI_ReadCapacity(uint8_t lun, SCSI_CapacityTypeDef *capacity)
+{
+	uint8_t error;
+
+	/*Prepare the CBW and relevant field*/
+	hbot.cbw.field.DataTransferLength = DATA_LEN_READ_CAPACITY10;
+	hbot.cbw.field.Flags = USB_EP_DIR_IN;
+	hbot.cbw.field.CBLength = CBW_LENGTH;
+
+	(void)USBH_memset(hbot.cbw.field.CB, 0, CBW_CB_LENGTH);
+	hbot.cbw.field.CB[0]  = OPCODE_READ_CAPACITY10;
+
+	hbot.pbuf = (uint8_t *)(void *)hbot.data;
+
+	// Do Command
+	error = USBH_MSC_BOT_Command(lun);
+
+	if (error == ERR_SUCCESS)
+	{
+		/*assign the capacity*/
+		capacity->block_nbr = hbot.pbuf[3] | ((uint32_t)hbot.pbuf[2] << 8U) | ((uint32_t)hbot.pbuf[1] << 16U) | ((uint32_t)hbot.pbuf[0] << 24U);
+
+		/*assign the page length*/
+		capacity->block_size = (uint16_t)(hbot.pbuf[7] | ((uint32_t)hbot.pbuf[6] << 8U));
+	}
+
+	return error;
+}
 
 /**
   * @brief  USBH_MSC_SCSI_Inquiry

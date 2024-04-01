@@ -79,8 +79,7 @@ typedef struct
 
 
 uint8_t USBH_MSC_SCSI_TestUnitReady(uint8_t lun);
-
-//USBH_StatusTypeDef USBH_MSC_SCSI_ReadCapacity(USBH_HandleTypeDef *phost, uint8_t lun, SCSI_CapacityTypeDef *capacity);
+uint8_t USBH_MSC_SCSI_ReadCapacity(uint8_t lun, SCSI_CapacityTypeDef *capacity);
 
 uint8_t USBH_MSC_SCSI_Inquiry(uint8_t lun, SCSI_StdInquiryDataTypeDef *inquiry);
 
