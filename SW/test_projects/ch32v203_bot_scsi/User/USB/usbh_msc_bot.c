@@ -12,11 +12,10 @@
 #include "debug.h"
 #include "UDisk_HW.h"
 
-#define MSC_USB_ENDPOINT_1 0x01
-
-//TODO: initialize this
 BOT_HandleTypeDef hbot;
-uint8_t endp_tog_out = 0x00;	//set to 1 for magic
+uint8_t endp_addr_out = 0xFF;
+uint8_t endp_addr_in = 0xFF;
+uint8_t endp_tog_out = 0x00;
 uint8_t endp_tog_in = 0x00;
 
 
@@ -86,7 +85,7 @@ uint8_t USBH_MSC_BOT_Command(uint8_t lun)
 {
 	// ----- SEND_CBW
 	hbot.cbw.field.LUN = lun;
-	uint8_t send_cbw_status = USBFSH_SendEndpData(MSC_USB_ENDPOINT_1, &endp_tog_out, hbot.cbw.data, BOT_CBW_LENGTH);
+	uint8_t send_cbw_status = USBFSH_SendEndpData(endp_addr_out, &endp_tog_out, hbot.cbw.data, BOT_CBW_LENGTH);
 
 	if(send_cbw_status != ERR_SUCCESS)
 	{
@@ -104,7 +103,7 @@ uint8_t USBH_MSC_BOT_Command(uint8_t lun)
 		{
 			/* Data Direction is IN */
 			uint16_t data_in_rx_len = 0;
-			uint8_t data_in_status = USBFSH_GetEndpData(MSC_USB_ENDPOINT_1, &endp_tog_in, hbot.pbuf, &data_in_rx_len, hbot.cbw.field.DataTransferLength);
+			uint8_t data_in_status = USBFSH_GetEndpData(endp_addr_in, &endp_tog_in, hbot.pbuf, &data_in_rx_len, hbot.cbw.field.DataTransferLength);
 
 			if(data_in_status != ERR_SUCCESS)
 			{
@@ -127,7 +126,7 @@ uint8_t USBH_MSC_BOT_Command(uint8_t lun)
 
 	// ----- RECEIVE_CSW
 	uint16_t get_csw_rx_len = 0;
-	uint8_t get_csw_status = USBFSH_GetEndpData(MSC_USB_ENDPOINT_1, &endp_tog_in, hbot.csw.data, &get_csw_rx_len, BOT_CSW_LENGTH);
+	uint8_t get_csw_status = USBFSH_GetEndpData(endp_addr_in, &endp_tog_in, hbot.csw.data, &get_csw_rx_len, BOT_CSW_LENGTH);
 
 	if(get_csw_status != ERR_SUCCESS)
 	{

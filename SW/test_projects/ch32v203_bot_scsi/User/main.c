@@ -74,7 +74,7 @@ int main(void)
 				}
 				break;
 			case 1:
-				Udisk_USBH_EnumRootDevice(0);
+				printf("EnumRootDevice result: %02X\n", Udisk_USBH_EnumRootDevice(0));
 				usb_state = 2;
 				break;
 			case 2:

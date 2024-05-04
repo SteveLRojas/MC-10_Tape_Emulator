@@ -93,7 +93,7 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
     uint8_t  cfg_val = 0;
     uint16_t i;
     uint16_t len;
-    uint8_t enum_result;
+    uint8_t enum_result = ERR_USB_UNSUPPORT;
 
     enum_cnt = 0;
     while(enum_cnt < 6)
@@ -167,7 +167,9 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
 			uint8_t* config_data = Com_Buffer;
 			uint8_t descriptor_length;
 			uint8_t descriptor_type;
-			uint8_t bot_scsi_iface;
+			uint8_t bot_scsi_iface = 0xFF;
+			uint8_t current_iface = 0x00;
+			uint8_t ep_addr;
 			printf("Config descriptor total length: %d\n", total_length);
 			while(config_data < (Com_Buffer + total_length))
 			{
@@ -180,6 +182,8 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
 						cfg_val = config_data[5];   //keep track of which configuration we are parsing
 						break;
 					case USB_DESC_TYPE_INTERFACE:
+						current_iface = config_data[2];   //keep track of this interface
+
 						//use interface descriptor to determine if the device is a keyboard
 						if(config_data[5] == 8)    //class code is mass storage
 						{
@@ -188,18 +192,18 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
 								if(config_data[7] == 0x50)    //protocol code bulk-only transport
 								{
 									printf("Found flash drive interface\n");
-									bot_scsi_iface = config_data[2];   //keep track of this interface
+									bot_scsi_iface = current_iface;
 									/* Set USB device configuration value */
 									printf("Set Cfg: \n");
 									uint8_t set_usb_config_result = USBFSH_SetUsbConfig( RootHubDev[ usb_port ].bEp0MaxPks, cfg_val );
 									if( set_usb_config_result == ERR_SUCCESS )
 									{
 										printf( "OK\n" );
+										enum_result = ERR_SUCCESS;
 									}
 									else
 									{
 										printf( "Err(%02x)\n", set_usb_config_result );
-										enum_result = ERR_USB_UNSUPPORT;
 										continue;
 									}
 									//reset toggles after set configuration
@@ -218,6 +222,20 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
 						break;
 					case USB_DESC_TYPE_ENDPOINT:
 						usb_print_endpoint_descriptor((USB_ENDP_DESCR*)((void*)config_data));
+
+						if(current_iface == bot_scsi_iface)
+						{
+							ep_addr = ((USB_ENDP_DESCR*)((void*)config_data))->bEndpointAddress;
+
+							if(ep_addr & 0x80)	//IN
+							{
+								endp_addr_in = (ep_addr & 0x0F);
+							}
+							else	//OUT
+							{
+								endp_addr_out = (ep_addr & 0x0F);
+							}
+						}
 						break;
 					default:
 						printf("Got an unknown descriptor: %02X\n", descriptor_type);
@@ -233,7 +251,7 @@ uint8_t Udisk_USBH_EnumRootDevice( uint8_t usb_port )
 			continue;
 		}
 
-		enum_result = ERR_SUCCESS;
+		// If we got the descriptor, we're done either way
 		break;
     }
 

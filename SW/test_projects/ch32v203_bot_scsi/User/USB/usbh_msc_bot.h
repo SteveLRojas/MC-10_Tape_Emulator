@@ -117,6 +117,8 @@ BOT_HandleTypeDef;
 
 
 extern BOT_HandleTypeDef hbot;
+extern uint8_t endp_addr_out;
+extern uint8_t endp_addr_in;
 extern uint8_t endp_tog_out;
 extern uint8_t endp_tog_in;
 
