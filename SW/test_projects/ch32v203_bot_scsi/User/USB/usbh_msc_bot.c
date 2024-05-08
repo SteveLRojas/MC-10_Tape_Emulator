@@ -95,30 +95,61 @@ uint8_t USBH_MSC_BOT_Command(uint8_t lun)
 	Delay_Ms(100);
 
 	// ----- BOT_DATA_IN OR BOT_DATA_OUT OR NONE
-	// TODO: Write
 	if (hbot.cbw.field.DataTransferLength != 0U)
 	{
 		/* If there is Data Transfer Stage */
 		if (((hbot.cbw.field.Flags) & USB_EP_DIR_MSK) == USB_EP_DIR_IN)
 		{
 			/* Data Direction is IN */
-			uint16_t data_in_rx_len = 0;
-			uint8_t data_in_status = USBFSH_GetEndpData(endp_addr_in, &endp_tog_in, hbot.pbuf, &data_in_rx_len, hbot.cbw.field.DataTransferLength);
 
-			if(data_in_status != ERR_SUCCESS)
+			uint16_t data_in_rx_len = 0;
+			uint16_t data_in_received_total = 0;
+			while(data_in_received_total < hbot.cbw.field.DataTransferLength)
 			{
-				PRINT("Non-Success data_in_status: 0x%02X\n", data_in_status);
-				//return data_in_status;
+				uint8_t data_in_status = USBFSH_GetEndpData(endp_addr_in, &endp_tog_in, hbot.pbuf + data_in_received_total, &data_in_rx_len, hbot.cbw.field.DataTransferLength - data_in_received_total);
+				data_in_received_total += data_in_rx_len;
+
+				if(data_in_status != ERR_SUCCESS)
+				{
+					PRINT("Non-Success data_in_status: 0x%02X\n", data_in_status);
+					break;
+				}
 			}
-			if(data_in_rx_len != hbot.cbw.field.DataTransferLength)
+
+			if(data_in_received_total != hbot.cbw.field.DataTransferLength)
 			{
-				PRINT("Unexpected data_in_rx_len: %d\n", data_in_rx_len);
+				PRINT("Unexpected data_in_received_total: %d\n", data_in_received_total);
 			}
 		}
 		else
 		{
 			/* Data Direction is OUT */
-			// hbot.state = BOT_DATA_OUT;
+
+			// Default to sending one packet (the most we can send)
+			uint16_t data_to_transfer_len = MAX_PACKET_SIZE;
+			uint16_t data_out_sent_total = 0;
+			while(data_out_sent_total < hbot.cbw.field.DataTransferLength)
+			{
+				// Limit if sending less than 1 packet (default size bigger than remainder)
+				if (data_to_transfer_len > (hbot.cbw.field.DataTransferLength - data_out_sent_total))
+				{
+					data_to_transfer_len = (hbot.cbw.field.DataTransferLength - data_out_sent_total);
+				}
+
+				uint8_t data_in_status = USBFSH_SendEndpData(endp_addr_out, &endp_tog_out, hbot.pbuf + data_out_sent_total, data_to_transfer_len);
+				data_out_sent_total += data_to_transfer_len;
+
+				if(data_in_status != ERR_SUCCESS)
+				{
+					PRINT("Non-Success data_in_status: 0x%02X\n", data_in_status);
+					break;
+				}
+			}
+
+			if(data_out_sent_total != hbot.cbw.field.DataTransferLength)
+			{
+				PRINT("Unexpected data_out_sent_total: %d\n", data_out_sent_total);
+			}
 		}
 	}
 	Delay_Ms(100);

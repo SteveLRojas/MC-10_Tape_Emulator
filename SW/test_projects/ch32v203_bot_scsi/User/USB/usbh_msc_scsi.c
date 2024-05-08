@@ -3,6 +3,8 @@
 #include "usbh_msc_scsi.h"
 #include "usbh_msc_bot.h"
 
+#define USB_DEFAULT_BLOCK_SIZE 512
+
 /**
   * @brief  USBH_MSC_SCSI_TestUnitReady
   *         Issue TestUnitReady command.
@@ -113,6 +115,85 @@ uint8_t USBH_MSC_SCSI_Inquiry(uint8_t lun, SCSI_StdInquiryDataTypeDef *inquiry)
 }
 
 /**
+  * @brief  USBH_MSC_SCSI_Read
+  *         Issue Read10 command.
+  * @param  phost: Host handle
+  * @param  lun: Logical Unit Number
+  * @param  address: sector address
+  * @param  pbuf: pointer to data
+  * @param  length: number of sectors to read
+  * @retval USBH Status
+  */
+uint8_t USBH_MSC_SCSI_Read(uint8_t lun, uint32_t address, uint8_t *pbuf, uint32_t length)
+{
+	uint8_t error;
+
+	/*Prepare the CBW and relevant field*/
+	hbot.cbw.field.DataTransferLength = length * USB_DEFAULT_BLOCK_SIZE;
+	hbot.cbw.field.Flags = USB_EP_DIR_IN;
+	hbot.cbw.field.CBLength = CBW_LENGTH;
+
+	(void)USBH_memset(hbot.cbw.field.CB, 0, CBW_CB_LENGTH);
+
+	hbot.cbw.field.CB[0]  = OPCODE_READ10;
+
+	/*logical block address*/
+	hbot.cbw.field.CB[2]  = (((uint8_t *)(void *)&address)[3]);
+	hbot.cbw.field.CB[3]  = (((uint8_t *)(void *)&address)[2]);
+	hbot.cbw.field.CB[4]  = (((uint8_t *)(void *)&address)[1]);
+	hbot.cbw.field.CB[5]  = (((uint8_t *)(void *)&address)[0]);
+
+	/*Transfer length */
+	hbot.cbw.field.CB[7]  = (((uint8_t *)(void *)&length)[1]);
+	hbot.cbw.field.CB[8]  = (((uint8_t *)(void *)&length)[0]);
+
+	hbot.pbuf = pbuf;
+
+	error = USBH_MSC_BOT_Command(lun);
+
+	return error;
+}
+
+/**
+  * @brief  USBH_MSC_SCSI_Write
+  *         Issue write10 command.
+  * @param  phost: Host handle
+  * @param  lun: Logical Unit Number
+  * @param  address: sector address
+  * @param  pbuf: pointer to data
+  * @param  length: number of sectors to write
+  * @retval USBH Status
+  */
+uint8_t USBH_MSC_SCSI_Write(uint8_t lun, uint32_t address, uint8_t *pbuf, uint32_t length)
+{
+	uint8_t error;
+
+	/*Prepare the CBW and relevant field*/
+	hbot.cbw.field.DataTransferLength = length * USB_DEFAULT_BLOCK_SIZE;
+	hbot.cbw.field.Flags = USB_EP_DIR_OUT;
+	hbot.cbw.field.CBLength = CBW_LENGTH;
+
+	(void) USBH_memset(hbot.cbw.field.CB, 0, CBW_CB_LENGTH);
+	hbot.cbw.field.CB[0] = OPCODE_WRITE10;
+
+	/*logical block address*/
+	hbot.cbw.field.CB[2] = (((uint8_t *) (void *) &address)[3]);
+	hbot.cbw.field.CB[3] = (((uint8_t *) (void *) &address)[2]);
+	hbot.cbw.field.CB[4] = (((uint8_t *) (void *) &address)[1]);
+	hbot.cbw.field.CB[5] = (((uint8_t *) (void *) &address)[0]);
+
+	/*Transfer length */
+	hbot.cbw.field.CB[7] = (((uint8_t *) (void *) &length)[1]);
+	hbot.cbw.field.CB[8] = (((uint8_t *) (void *) &length)[0]);
+
+	hbot.pbuf = pbuf;
+
+	error = USBH_MSC_BOT_Command(lun);
+
+	return error;
+}
+
+/**
   * @brief  USBH_MSC_SCSI_RequestSense
   *         Issue RequestSense command.
   * @param  phost: Host handle
@@ -160,127 +241,6 @@ uint8_t USBH_MSC_SCSI_Inquiry(uint8_t lun, SCSI_StdInquiryDataTypeDef *inquiry)
 //        sense_data->asc  = MSC_Handle->hbot.pbuf[12];
 //        sense_data->ascq = MSC_Handle->hbot.pbuf[13];
 //      }
-//      break;
-//
-//    default:
-//      break;
-//  }
-//
-//  return error;
-//}
-
-/**
-  * @brief  USBH_MSC_SCSI_Write
-  *         Issue write10 command.
-  * @param  phost: Host handle
-  * @param  lun: Logical Unit Number
-  * @param  address: sector address
-  * @param  pbuf: pointer to data
-  * @param  length: number of sector to write
-  * @retval USBH Status
-  */
-//USBH_StatusTypeDef USBH_MSC_SCSI_Write(USBH_HandleTypeDef *phost,
-//                                       uint8_t lun,
-//                                       uint32_t address,
-//                                       uint8_t *pbuf,
-//                                       uint32_t length)
-//{
-//  USBH_StatusTypeDef    error = USBH_FAIL;
-//
-//  MSC_HandleTypeDef *MSC_Handle = (MSC_HandleTypeDef *) phost->pActiveClass->pData;
-//
-//  switch (MSC_Handle->hbot.cmd_state)
-//  {
-//    case BOT_CMD_SEND:
-//
-//      /*Prepare the CBW and relevant field*/
-//      MSC_Handle->hbot.cbw.field.DataTransferLength = length * MSC_Handle->unit[0].capacity.block_size;
-//      MSC_Handle->hbot.cbw.field.Flags = USB_EP_DIR_OUT;
-//      MSC_Handle->hbot.cbw.field.CBLength = CBW_LENGTH;
-//
-//      (void)USBH_memset(MSC_Handle->hbot.cbw.field.CB, 0, CBW_CB_LENGTH);
-//      MSC_Handle->hbot.cbw.field.CB[0]  = OPCODE_WRITE10;
-//
-//      /*logical block address*/
-//      MSC_Handle->hbot.cbw.field.CB[2]  = (((uint8_t *)(void *)&address)[3]);
-//      MSC_Handle->hbot.cbw.field.CB[3]  = (((uint8_t *)(void *)&address)[2]);
-//      MSC_Handle->hbot.cbw.field.CB[4]  = (((uint8_t *)(void *)&address)[1]);
-//      MSC_Handle->hbot.cbw.field.CB[5]  = (((uint8_t *)(void *)&address)[0]);
-//
-//
-//      /*Transfer length */
-//      MSC_Handle->hbot.cbw.field.CB[7]  = (((uint8_t *)(void *)&length)[1]);
-//      MSC_Handle->hbot.cbw.field.CB[8]  = (((uint8_t *)(void *)&length)[0]);
-//
-//
-//      MSC_Handle->hbot.state = BOT_SEND_CBW;
-//      MSC_Handle->hbot.cmd_state = BOT_CMD_WAIT;
-//      MSC_Handle->hbot.pbuf = pbuf;
-//      error = USBH_BUSY;
-//      break;
-//
-//    case BOT_CMD_WAIT:
-//      error = USBH_MSC_BOT_Process(phost, lun);
-//      break;
-//
-//    default:
-//      break;
-//  }
-//
-//  return error;
-//}
-
-/**
-  * @brief  USBH_MSC_SCSI_Read
-  *         Issue Read10 command.
-  * @param  phost: Host handle
-  * @param  lun: Logical Unit Number
-  * @param  address: sector address
-  * @param  pbuf: pointer to data
-  * @param  length: number of sector to read
-  * @retval USBH Status
-  */
-//USBH_StatusTypeDef USBH_MSC_SCSI_Read(USBH_HandleTypeDef *phost,
-//                                      uint8_t lun,
-//                                      uint32_t address,
-//                                      uint8_t *pbuf,
-//                                      uint32_t length)
-//{
-//  USBH_StatusTypeDef    error = USBH_FAIL;
-//  MSC_HandleTypeDef *MSC_Handle = (MSC_HandleTypeDef *) phost->pActiveClass->pData;
-//
-//  switch (MSC_Handle->hbot.cmd_state)
-//  {
-//    case BOT_CMD_SEND:
-//
-//      /*Prepare the CBW and relevant field*/
-//      MSC_Handle->hbot.cbw.field.DataTransferLength = length * MSC_Handle->unit[0].capacity.block_size;
-//      MSC_Handle->hbot.cbw.field.Flags = USB_EP_DIR_IN;
-//      MSC_Handle->hbot.cbw.field.CBLength = CBW_LENGTH;
-//
-//      (void)USBH_memset(MSC_Handle->hbot.cbw.field.CB, 0, CBW_CB_LENGTH);
-//      MSC_Handle->hbot.cbw.field.CB[0]  = OPCODE_READ10;
-//
-//      /*logical block address*/
-//      MSC_Handle->hbot.cbw.field.CB[2]  = (((uint8_t *)(void *)&address)[3]);
-//      MSC_Handle->hbot.cbw.field.CB[3]  = (((uint8_t *)(void *)&address)[2]);
-//      MSC_Handle->hbot.cbw.field.CB[4]  = (((uint8_t *)(void *)&address)[1]);
-//      MSC_Handle->hbot.cbw.field.CB[5]  = (((uint8_t *)(void *)&address)[0]);
-//
-//
-//      /*Transfer length */
-//      MSC_Handle->hbot.cbw.field.CB[7]  = (((uint8_t *)(void *)&length)[1]);
-//      MSC_Handle->hbot.cbw.field.CB[8]  = (((uint8_t *)(void *)&length)[0]);
-//
-//
-//      MSC_Handle->hbot.state = BOT_SEND_CBW;
-//      MSC_Handle->hbot.cmd_state = BOT_CMD_WAIT;
-//      MSC_Handle->hbot.pbuf = pbuf;
-//      error = USBH_BUSY;
-//      break;
-//
-//    case BOT_CMD_WAIT:
-//      error = USBH_MSC_BOT_Process(phost, lun);
 //      break;
 //
 //    default:

@@ -60,6 +60,7 @@ int main(void)
 
     uint8_t usb_state = 0;
     uint8_t bot_reset_status;
+	uint8_t max_lun;
     while(1)
     {
     	switch(usb_state)
@@ -82,7 +83,6 @@ int main(void)
 				printf("BOT reset status: %02X\n", bot_reset_status);
 				Delay_Ms(10);
 
-				uint8_t max_lun;
 				USBH_MSC_BOT_REQ_GetMaxLUN(&max_lun);
 				printf("Max LUN is: %02x\n", max_lun);
 
@@ -124,6 +124,17 @@ int main(void)
 				usb_state = 3;
 				break;
 			case 3:
+				USBH_MSC_BOT_REQ_GetMaxLUN(&max_lun);
+
+				uint8_t single_sector_buf[512];
+				printf("Starting read...\n");
+				USBH_MSC_SCSI_Read(max_lun, 0, single_sector_buf, 1);
+				single_sector_buf[511] = 0;
+				printf("single_sector_buf: %s\n", single_sector_buf);
+
+				usb_state = 4;
+				break;
+			case 4:
 				//idle
 				if(!(USBOTG_H_FS->MIS_ST & USBFS_UMS_DEV_ATTACH))
 				{
@@ -138,13 +149,13 @@ int main(void)
 				else if(!GPIO_ReadInputDataBit(PORT_SW0_SW1, PIN_SW1))
 				{
 					printf("Button 1 pressed!\n");
-					usb_state = 4;
+					usb_state = 5;
 				}
 				break;
-			case 4:
+			case 5:
 				//test
 				Udisk_USBH_EnumRootDevice(0);
-				usb_state = 3;
+				usb_state = 4;
 				break;
 			default: break;
     	}
