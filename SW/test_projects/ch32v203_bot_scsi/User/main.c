@@ -5,12 +5,18 @@
 #include "usbh_msc_bot.h"
 #include "usbh_msc_scsi.h"
 #include "display.h"
+#include "ff.h"
 
 #define PIN_LED GPIO_Pin_1
 #define PIN_SW0 GPIO_Pin_13
 #define PIN_SW1 GPIO_Pin_14
+#define PIN_SW2 GPIO_Pin_8
+#define PIN_SW3 GPIO_Pin_9
 #define PORT_LED GPIOB
 #define PORT_SW0_SW1 GPIOC
+#define PORT_SW2_SW3 GPIOB
+
+char booba_str[] = "deer sneeze";
 
 void platform_init()
 {
@@ -37,9 +43,11 @@ void platform_init()
 	GPIO_WriteBit(PORT_LCD_CTRL, PIN_LCD_CTRL_E, Bit_RESET);
 	GPIO_WriteBit(PORT_LCD_CTRL, PIN_LCD_CTRL_RS, Bit_RESET);
 
-	GPIO_InitStructure.GPIO_Pin = PIN_SW0 | PIN_SW1;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	GPIO_InitStructure.GPIO_Pin = PIN_SW0 | PIN_SW1;
 	GPIO_Init(PORT_SW0_SW1, &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = PIN_SW2 | PIN_SW3;
+	GPIO_Init(PORT_SW2_SW3, &GPIO_InitStructure);
 
 	GPIO_PinRemapConfig(GPIO_Remap_SPI1, ENABLE);
 	GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE);
@@ -53,7 +61,7 @@ int main(void)
     printf( "SystemClk:%d\n", SystemCoreClock );
     lcd_init();
     lcd_cursor_home();
-    lcd_print_string("booba");
+    lcd_print_string(booba_str);
 
     /* General USB Host UDisk Operation Initialization */
     Udisk_USBH_Initialization( );
@@ -61,6 +69,12 @@ int main(void)
     uint8_t usb_state = 0;
     uint8_t bot_reset_status;
 	uint8_t max_lun;
+	//uint8_t single_sector_buf[512];
+	FATFS FatFs;   /* Work area (filesystem object) for logical drive */
+	FIL fil;        /* File object */
+	char buffer[100]; /* File buffer */
+    UINT br, bw;         /* File read/write count */
+
     while(1)
     {
     	switch(usb_state)
@@ -108,6 +122,13 @@ int main(void)
 
 				printf("\nDone.\n\n");
 
+				printf("\n---SCSI RequestSense---\n");
+				SCSI_SenseTypeDef sense_data;
+				USBH_MSC_SCSI_RequestSense(0, &sense_data);
+				printf("key   : %02X\n", sense_data.key);
+				printf("asc   : %02X\n", sense_data.asc);
+				printf("ascq  : %02X\n", sense_data.ascq);
+
 				printf("\n---SCSI Inquiry---\n");
 				SCSI_StdInquiryDataTypeDef inquiry;
 				USBH_MSC_SCSI_Inquiry(0, &inquiry);
@@ -124,17 +145,6 @@ int main(void)
 				usb_state = 3;
 				break;
 			case 3:
-				USBH_MSC_BOT_REQ_GetMaxLUN(&max_lun);
-
-				uint8_t single_sector_buf[512];
-				printf("Starting read...\n");
-				USBH_MSC_SCSI_Read(max_lun, 0, single_sector_buf, 1);
-				single_sector_buf[511] = 0;
-				printf("single_sector_buf: %s\n", single_sector_buf);
-
-				usb_state = 4;
-				break;
-			case 4:
 				//idle
 				if(!(USBOTG_H_FS->MIS_ST & USBFS_UMS_DEV_ATTACH))
 				{
@@ -149,13 +159,79 @@ int main(void)
 				else if(!GPIO_ReadInputDataBit(PORT_SW0_SW1, PIN_SW1))
 				{
 					printf("Button 1 pressed!\n");
+					usb_state = 4;
+				}
+				else if(!GPIO_ReadInputDataBit(PORT_SW2_SW3, PIN_SW2))
+				{
+					printf("Button 2 pressed!\n");
 					usb_state = 5;
 				}
+				else if(!GPIO_ReadInputDataBit(PORT_SW2_SW3, PIN_SW3))
+				{
+					printf("Button 3 pressed!\n");
+					usb_state = 6;
+				}
+				break;
+			case 4:
+				// READ
+//				USBH_MSC_BOT_REQ_GetMaxLUN(&max_lun);
+//
+//				printf("Starting read...\n");
+//				USBH_MSC_SCSI_Read(max_lun, 0, single_sector_buf, 1);
+//				single_sector_buf[511] = 0;
+//				printf("single_sector_buf: %s\n", single_sector_buf);
+
+
+				/* Give a work area to the default drive */
+				f_mount(&FatFs, "", 0);
+
+			    char str[12];
+				f_getlabel("", str, 0);
+				printf("Label: %s\n", str);
+
+				usb_state = 3;
 				break;
 			case 5:
+//				printf("Starting write...\n");
+//				uint16_t i;
+//				for(i = 0; i < 512; i++)
+//				{
+//					single_sector_buf[i] = 0x30;
+//				}
+//
+//				i = 0;
+//				while(booba_str && booba_str[i])
+//				{
+//					single_sector_buf[i] = booba_str[i];
+//					i++;
+//				}
+//
+//				USBH_MSC_SCSI_Write(max_lun, 0, single_sector_buf, 1);
+//				printf("Finished write!\n");
+
+
+				/* Give a work area to the default drive */
+				f_mount(&FatFs, "", 0);
+
+				/* Open a text file */
+				if (!f_open(&fil, "derganqq.txt", FA_READ))
+				{
+					/* Read every line and display it */
+					f_read(&fil, buffer, sizeof(buffer), &br);
+					buffer[br] = 0x00;
+					printf("%s\n", buffer);
+
+					/* Close the file */
+					f_close(&fil);
+				}
+
+				usb_state = 3;
+				break;
+			case 6:
 				//test
+				printf("Starting EnumRootDevice...\n");
 				Udisk_USBH_EnumRootDevice(0);
-				usb_state = 4;
+				usb_state = 3;
 				break;
 			default: break;
     	}

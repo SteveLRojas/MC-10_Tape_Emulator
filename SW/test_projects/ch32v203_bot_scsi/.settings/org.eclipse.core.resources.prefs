@@ -7,7 +7,6 @@ encoding//Peripheral/inc/ch32v20x_exti.h=GBK
 encoding//Startup/startup_ch32v20x_D6.S=GBK
 encoding//Startup/startup_ch32v20x_D8W.S=GBK
 encoding//User/Host_UDisk/UDisk_HW.c=GBK
-encoding//User/Host_UDisk/UDisk_Operation.h=UTF-8
 encoding//User/USB/usbh_conf.h=GBK
 encoding//User/USB/usbh_def.h=GBK
 encoding//User/USB/usbh_msc.h=GBK

@@ -201,51 +201,33 @@ uint8_t USBH_MSC_SCSI_Write(uint8_t lun, uint32_t address, uint8_t *pbuf, uint32
   * @param  capacity: pointer to the sense data structure
   * @retval USBH Status
   */
-//USBH_StatusTypeDef USBH_MSC_SCSI_RequestSense(USBH_HandleTypeDef *phost,
-//                                              uint8_t lun,
-//                                              SCSI_SenseTypeDef *sense_data)
-//{
-//  USBH_StatusTypeDef    error = USBH_FAIL;
-//  MSC_HandleTypeDef *MSC_Handle = (MSC_HandleTypeDef *) phost->pActiveClass->pData;
-//
-//  switch (MSC_Handle->hbot.cmd_state)
-//  {
-//    case BOT_CMD_SEND:
-//
-//      /*Prepare the CBW and relevant field*/
-//      MSC_Handle->hbot.cbw.field.DataTransferLength = DATA_LEN_REQUEST_SENSE;
-//      MSC_Handle->hbot.cbw.field.Flags = USB_EP_DIR_IN;
-//      MSC_Handle->hbot.cbw.field.CBLength = CBW_LENGTH;
-//
-//      (void)USBH_memset(MSC_Handle->hbot.cbw.field.CB, 0, CBW_CB_LENGTH);
-//      MSC_Handle->hbot.cbw.field.CB[0]  = OPCODE_REQUEST_SENSE;
-//      MSC_Handle->hbot.cbw.field.CB[1]  = (lun << 5);
-//      MSC_Handle->hbot.cbw.field.CB[2]  = 0U;
-//      MSC_Handle->hbot.cbw.field.CB[3]  = 0U;
-//      MSC_Handle->hbot.cbw.field.CB[4]  = DATA_LEN_REQUEST_SENSE;
-//      MSC_Handle->hbot.cbw.field.CB[5]  = 0U;
-//
-//      MSC_Handle->hbot.state = BOT_SEND_CBW;
-//      MSC_Handle->hbot.cmd_state = BOT_CMD_WAIT;
-//      MSC_Handle->hbot.pbuf = (uint8_t *)(void *)MSC_Handle->hbot.data;
-//      error = USBH_BUSY;
-//      break;
-//
-//    case BOT_CMD_WAIT:
-//
-//      error = USBH_MSC_BOT_Process(phost, lun);
-//
-//      if (error == USBH_OK)
-//      {
-//        sense_data->key  = MSC_Handle->hbot.pbuf[2] & 0x0FU;
-//        sense_data->asc  = MSC_Handle->hbot.pbuf[12];
-//        sense_data->ascq = MSC_Handle->hbot.pbuf[13];
-//      }
-//      break;
-//
-//    default:
-//      break;
-//  }
-//
-//  return error;
-//}
+uint8_t USBH_MSC_SCSI_RequestSense(uint8_t lun, SCSI_SenseTypeDef *sense_data)
+{
+	uint8_t error;
+
+	/*Prepare the CBW and relevant field*/
+	hbot.cbw.field.DataTransferLength = DATA_LEN_REQUEST_SENSE;
+	hbot.cbw.field.Flags = USB_EP_DIR_IN;
+	hbot.cbw.field.CBLength = CBW_LENGTH;
+
+	(void) USBH_memset(hbot.cbw.field.CB, 0, CBW_CB_LENGTH);
+	hbot.cbw.field.CB[0] = OPCODE_REQUEST_SENSE;
+	hbot.cbw.field.CB[1] = (lun << 5);
+	hbot.cbw.field.CB[2] = 0U;
+	hbot.cbw.field.CB[3] = 0U;
+	hbot.cbw.field.CB[4] = DATA_LEN_REQUEST_SENSE;
+	hbot.cbw.field.CB[5] = 0U;
+
+	hbot.pbuf = (uint8_t *) (void *) hbot.data;
+
+	error = USBH_MSC_BOT_Command(lun);
+
+	if (error == ERR_SUCCESS)
+	{
+		sense_data->key = hbot.pbuf[2] & 0x0FU;
+		sense_data->asc = hbot.pbuf[12];
+		sense_data->ascq = hbot.pbuf[13];
+	}
+
+	return error;
+}
