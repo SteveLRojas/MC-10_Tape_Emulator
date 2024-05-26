@@ -173,15 +173,6 @@ int main(void)
 				}
 				break;
 			case 4:
-				// READ
-//				USBH_MSC_BOT_REQ_GetMaxLUN(&max_lun);
-//
-//				printf("Starting read...\n");
-//				USBH_MSC_SCSI_Read(max_lun, 0, single_sector_buf, 1);
-//				single_sector_buf[511] = 0;
-//				printf("single_sector_buf: %s\n", single_sector_buf);
-
-
 				/* Give a work area to the default drive */
 				f_mount(&FatFs, "", 0);
 
@@ -192,24 +183,6 @@ int main(void)
 				usb_state = 3;
 				break;
 			case 5:
-//				printf("Starting write...\n");
-//				uint16_t i;
-//				for(i = 0; i < 512; i++)
-//				{
-//					single_sector_buf[i] = 0x30;
-//				}
-//
-//				i = 0;
-//				while(booba_str && booba_str[i])
-//				{
-//					single_sector_buf[i] = booba_str[i];
-//					i++;
-//				}
-//
-//				USBH_MSC_SCSI_Write(max_lun, 0, single_sector_buf, 1);
-//				printf("Finished write!\n");
-
-
 				/* Give a work area to the default drive */
 				f_mount(&FatFs, "", 0);
 
@@ -228,9 +201,20 @@ int main(void)
 				usb_state = 3;
 				break;
 			case 6:
-				//test
-				printf("Starting EnumRootDevice...\n");
-				Udisk_USBH_EnumRootDevice(0);
+				//write file
+				/* Give a work area to the default drive */
+				f_mount(&FatFs, "", 0);
+
+				/* Open a text file */
+				if (!f_open(&fil, "derganqq.txt", FA_CREATE_ALWAYS | FA_WRITE | FA_READ))
+				{
+					/* Read every line and display it */
+					f_write(&fil, booba_str, sizeof(booba_str), &bw);
+
+					/* Close the file */
+					f_close(&fil);
+				}
+
 				usb_state = 3;
 				break;
 			default: break;
