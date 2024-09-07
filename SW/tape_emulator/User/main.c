@@ -10,11 +10,12 @@
 //#include "ch32v203_usbd.h"
 #include "ch32v203_usbd_cdc.h"
 //#include "ch32v203_usbfsd.h"
-//#include "ch32v203_usbfsh.h"
+#include "ch32v203_usbfsh.h"
 //#include "pseudo_random.h"
 #include "debug.h"
 #include "support.h"
 #include "lcd.h"
+#include "usbfsh_msc_bot.h"
 
 //Pins:
 // DISP = PA0 - PA7
@@ -97,15 +98,25 @@ int main(void)
 	lcd_init();
 	lcd_print_string("Tape Emulator");
 
+	usbfsh_msc_bot_init();
+
 	uint8_t button_state_prev[4];
+	uint8_t connected_state_prev;
 	button_state_prev[0] = gpio_read_pin(GPIOC, GPIO_PIN_13);
 	button_state_prev[1] = gpio_read_pin(GPIOC, GPIO_PIN_14);
 	button_state_prev[2] = gpio_read_pin(GPIOB, GPIO_PIN_8);
 	button_state_prev[3] = gpio_read_pin(GPIOB, GPIO_PIN_9);
+	connected_state_prev = usbfsh_port_is_attached();
 	while(1)
 	{
 		if(!gpio_read_pin(GPIOC, GPIO_PIN_13) && button_state_prev[0])
+		{
 			printf("S1 Pressed\n");
+			if(usbfsh_msc_bot_configure())
+				printf("Configuration successful\n");
+			else
+				printf("Configuration failed\n");
+		}
 		if(!gpio_read_pin(GPIOC, GPIO_PIN_14) && button_state_prev[1])
 			printf("S2 Pressed\n");
 		if(!gpio_read_pin(GPIOB, GPIO_PIN_8) && button_state_prev[2])
@@ -113,10 +124,16 @@ int main(void)
 		if(!gpio_read_pin(GPIOB, GPIO_PIN_9) && button_state_prev[3])
 			printf("S4 Pressed\n");
 
+		if(usbfsh_port_is_attached() & ~connected_state_prev)
+			printf("Device connected\n");
+		if(~usbfsh_port_is_attached() & connected_state_prev)
+			printf("Device disconnected\n");
+
 		button_state_prev[0] = gpio_read_pin(GPIOC, GPIO_PIN_13);
 		button_state_prev[1] = gpio_read_pin(GPIOC, GPIO_PIN_14);
 		button_state_prev[2] = gpio_read_pin(GPIOB, GPIO_PIN_8);
 		button_state_prev[3] = gpio_read_pin(GPIOB, GPIO_PIN_9);
+		connected_state_prev = usbfsh_port_is_attached();
 
 		Delay_Ms(1);
 	}

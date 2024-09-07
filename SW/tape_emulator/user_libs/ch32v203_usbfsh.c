@@ -54,7 +54,7 @@ uint8_t usbfsh_control_transfer(usbfsh_ep_info_t* ep_info, uint8_t* pbuf)
 	// data stage
 	USBOTG_H_FS->UH_RX_CTRL = USBFS_UEP_R_TOG | USBFS_UEP_R_AUTO_TOG;
 	USBOTG_H_FS->UH_TX_CTRL = USBFS_UEP_T_TOG | USBFS_UEP_T_AUTO_TOG;
-	rem_len = usbfsh_setup_req->wLength;
+	rem_len = usbfsh_setup_req->wLength;	//TODO: wLength not assumed to be aligned due to packed struct
 	if(rem_len && pbuf)
 	{
 		if(usbfsh_setup_req->bRequestType & USB_REQ_TYP_IN)
