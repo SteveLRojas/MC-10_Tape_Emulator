@@ -169,6 +169,24 @@ static const uint8_t usb_request_set_config[] =
 	0x00, 0x00
 };
 
+static const uint8_t usb_request_bot_reset[] =
+{
+	USB_REQ_TYP_OUT | USB_REQ_TYP_CLASS | USB_REQ_RECIP_INTERF,
+	USB_REQ_BOT_RESET,
+	0x00, 0x00,
+	0x00, 0x00,
+	0x00, 0x00
+};
+
+static const uint8_t usb_request_get_max_lun[] =
+{
+	USB_REQ_TYP_IN | USB_REQ_TYP_CLASS | USB_REQ_RECIP_INTERF,
+	USB_REQ_GET_MAX_LUN,
+	0x00, 0x00,
+	0x00, 0x00,
+	0x01, 0x00
+};
+
 void usbfsh_msc_bot_init(void)
 {
 	usbfsh_init();
@@ -397,4 +415,80 @@ uint8_t usbfsh_msc_bot_configure(void)
     } while(++retry_count < 6);
 
 	return 0;	//failed too many times
+}
+
+uint8_t usbfsh_msc_bot_reset(void)
+{
+	uint8_t response;
+
+	(void)memcpy(usbfsh_tx_buf, usb_request_bot_reset, 8);
+	response = usbfsh_control_transfer(&usbfsh_msc_bot_ep0_info, usbfsh_msc_bot_common_buf);
+
+	return (response == USB_PID_DATA1);
+}
+
+//HINT: returns the maximum LUN supported by the device, or 0xFF if the request fails.
+uint8_t usbfsh_msc_bot_get_max_lun(void)
+{
+	uint8_t response;
+
+	(void)memcpy(usbfsh_tx_buf, usb_request_get_max_lun, 8);
+	response = usbfsh_control_transfer(&usbfsh_msc_bot_ep0_info, usbfsh_msc_bot_common_buf);
+
+	return (response == USB_PID_ACK) ? usbfsh_msc_bot_common_buf[0] : 0xFF;
+}
+
+uint8_t usbfsh_msc_bot_command(uint8_t lun, uint8_t* pbuf)
+{
+	uint8_t response;
+
+	//Send CBW
+	usbfsh_msc_bot_cbw->LUN = lun;
+	response = usbfsh_out_transfer(&usbfsh_msc_bot_ep_out_info, usbfsh_msc_bot_common_buf, BOT_CBW_LENGTH);
+
+	if(response != USB_PID_ACK)
+	{
+		printf("Non-Success CBW response: 0x%02X\n", response);
+		//return 0;
+	}
+	Delay_Ms(100);	//TODO: remove this delay?
+
+	//Transfer data
+	if (usbfsh_msc_bot_cbw->DataTransferLength)
+	{
+		if ((usbfsh_msc_bot_cbw->Flags & MSC_BOT_DIR_MSK) == MSC_BOT_DIR_IN)
+		{
+			//Data direction is IN
+			response = usbfsh_in_transfer(&usbfsh_msc_bot_ep_in_info, pbuf, usbfsh_msc_bot_cbw->DataTransferLength);
+
+			if((response != USB_PID_DATA0) && (response != USB_PID_DATA1))
+			{
+				printf("Non-Success data IN response: 0x%02X\n", response);
+				//return 0;
+			}
+		}
+		else
+		{
+			//Data direction is OUT
+			response = usbfsh_out_transfer(&usbfsh_msc_bot_ep_out_info, pbuf, usbfsh_msc_bot_cbw->DataTransferLength);
+
+			if(response != USB_PID_ACK)
+			{
+				printf("Non-Success data OUT response: 0x%02X\n", response);
+				//return 0;
+			}
+		}
+	}
+	Delay_Ms(100);	//TODO: remove this delay?
+
+	//Receive CSW
+	response = usbfsh_in_transfer(&usbfsh_msc_bot_ep_in_info, usbfsh_msc_bot_common_buf, BOT_CSW_LENGTH);
+
+	if((response != USB_PID_DATA0) && (response != USB_PID_DATA1))
+	{
+		printf("Non-Success CSW response: 0x%02X\n", response);
+		//return 0;
+	}
+
+	return 1;
 }

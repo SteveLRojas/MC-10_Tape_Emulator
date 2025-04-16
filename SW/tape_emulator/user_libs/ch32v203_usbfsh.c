@@ -13,6 +13,7 @@ uint8_t usbfsh_tx_buf[64] __attribute__ ((aligned(4)));
 uint8_t usbfsh_ep_pid;
 uint16_t usbfsh_in_transfer_nak_limit;
 uint16_t usbfsh_out_transfer_nak_limit;
+uint16_t usbfsh_bytes_received;
 
 void usbfsh_init(void)
 {
@@ -36,7 +37,7 @@ void usbfsh_init(void)
 }
 
 //HINT: copy control request to tx_buf before calling this function
-// For control write transfers check U_TOG_OK, for control read transfers check the return value.
+// For control write transfers response should be DATA1, for control read transfers response should be ACK.
 uint8_t usbfsh_control_transfer(usbfsh_ep_info_t* ep_info, uint8_t* pbuf)
 {
 	uint8_t response;
@@ -59,17 +60,19 @@ uint8_t usbfsh_control_transfer(usbfsh_ep_info_t* ep_info, uint8_t* pbuf)
 	{
 		if(usbfsh_setup_req->bRequestType & USB_REQ_TYP_IN)
 		{
+			usbfsh_bytes_received = 0;
 			usbfsh_ep_pid = (USB_PID_IN << 4) | ep_info->ep_num;
 			do
 			{
 				response = usbfsh_transact(0xFFFF);
 				// U_TOG_OK is not cleared if no response is received?
-				if(!(USBOTG_H_FS->USB_INT_FG & USBFS_U_TOG_OK) || !response)
+				if(!(USBOTG_H_FS->USB_INT_FG & USBFS_U_TOG_OK) || !response)	//TODO: if((response != USB_PID_DATA0) && (response != USB_PID_DATA1))
 					return response;
 
 				bytes_to_copy = (uint8_t)USBOTG_H_FS->USB_RX_LEN;
 				if(bytes_to_copy > rem_len)
 					bytes_to_copy = rem_len;
+				usbfsh_bytes_received += bytes_to_copy;
 				rem_len -= bytes_to_copy;
 
 				for(uint8_t idx = 0; idx < bytes_to_copy; ++idx)
@@ -128,13 +131,14 @@ uint8_t usbfsh_in_transfer(usbfsh_ep_info_t* ep_info, uint8_t* dest, uint16_t nu
 	uint8_t response;
 	uint8_t bytes_to_copy;
 
+	usbfsh_bytes_received = 0;
 	USBOTG_H_FS->UH_RX_CTRL = ep_info->rx_tog_res | USBFS_UEP_R_AUTO_TOG;
 	usbfsh_ep_pid = (USB_PID_IN << 4) | ep_info->ep_num;
 
 	do
 	{
 		response = usbfsh_transact(usbfsh_in_transfer_nak_limit);
-		if(!(USBOTG_H_FS->USB_INT_FG & USBFS_U_TOG_OK) || !response)
+		if(!(USBOTG_H_FS->USB_INT_FG & USBFS_U_TOG_OK) || !response)	//TODO: if((response != USB_PID_DATA0) && (response != USB_PID_DATA1))
 		{
 			ep_info->rx_tog_res = USBOTG_H_FS->UH_RX_CTRL;
 			return response;
@@ -143,6 +147,7 @@ uint8_t usbfsh_in_transfer(usbfsh_ep_info_t* ep_info, uint8_t* dest, uint16_t nu
 		bytes_to_copy = (uint8_t)USBOTG_H_FS->USB_RX_LEN;
 		if(bytes_to_copy > num_bytes)
 			bytes_to_copy = num_bytes;
+		usbfsh_bytes_received += bytes_to_copy;
 		num_bytes -= bytes_to_copy;
 
 		for(uint8_t idx = 0; idx < bytes_to_copy; ++idx)

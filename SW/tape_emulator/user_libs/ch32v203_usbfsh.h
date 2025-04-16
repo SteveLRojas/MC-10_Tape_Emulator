@@ -206,6 +206,7 @@ extern uint8_t usbfsh_rx_buf[64];
 extern uint8_t usbfsh_tx_buf[64];
 extern uint16_t usbfsh_in_transfer_nak_limit;
 extern uint16_t usbfsh_out_transfer_nak_limit;
+extern uint16_t usbfsh_bytes_received;
 
 #define usbfsh_setup_req ((USB_SETUP_REQ*)usbfsh_tx_buf)
 

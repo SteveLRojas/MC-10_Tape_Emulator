@@ -38,7 +38,46 @@
 #define  USB_DESC_TYPE_HID_REPORT                          0x22U
 #endif
 
+#define USB_REQ_BOT_RESET       0xFFU
+#define USB_REQ_GET_MAX_LUN     0xFEU
+
+#define BOT_CBW_SIGNATURE   0x43425355U
+#define BOT_CBW_TAG         0x20304050U
+#define BOT_CSW_SIGNATURE   0x53425355U
+#define BOT_CBW_LENGTH      31U
+#define BOT_CSW_LENGTH      13U
+
+#define  MSC_BOT_DIR_OUT    0x00U
+#define  MSC_BOT_DIR_IN     0x80U
+#define  MSC_BOT_DIR_MSK    0x80U
+
+typedef struct _MSC_BOT_CBW
+{
+	uint32_t Signature;
+	uint32_t Tag;
+	uint32_t DataTransferLength;
+	uint8_t  Flags;
+	uint8_t  LUN;
+	uint8_t  CBLength;
+	uint8_t  CB[16];
+} msc_bot_cbw_t;
+
+typedef struct _MSC_BOT_CSW
+{
+	uint32_t Signature;
+	uint32_t Tag;
+	uint32_t DataResidue;
+	uint8_t  Status;
+} msc_bot_csw_t;
+
+//HINT: User interface begins below this line
+#define usbfsh_msc_bot_cbw ((msc_bot_cbw_t*)usbfsh_msc_bot_common_buf)
+#define usbfsh_msc_bot_csw ((msc_bot_csw_t*)usbfsh_msc_bot_common_buf)
+
 void usbfsh_msc_bot_init(void);
 uint8_t usbfsh_msc_bot_configure(void);
+uint8_t usbfsh_msc_bot_reset(void);
+uint8_t usbfsh_msc_bot_get_max_lun(void);
+uint8_t usbfsh_msc_bot_command(uint8_t lun, uint8_t* pbuf);
 
 #endif /* USER_USBFSH_MSC_BOT_H_ */
